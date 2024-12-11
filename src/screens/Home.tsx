@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,8 +11,16 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Pressable,
+  ScrollView,
 } from "react-native";
-import { CrownIcon, MenuIcon, PasteIcon, CloseIcon } from "@/components/icon";
+import {
+  CrownIcon,
+  MenuIcon,
+  PasteIcon,
+  CloseIcon,
+  ShareIcon,
+  CopyIcon,
+} from "@/components/icon";
 import RightIcon from "@/components/icon/RightIcon";
 import * as Clipboard from "expo-clipboard";
 import Animated, {
@@ -44,6 +52,8 @@ const Home = () => {
   const opacity = useSharedValue(1);
   const closeButtonOpacity = useSharedValue(0);
   const hideHeading = useSharedValue(1);
+  const resultAnim = useSharedValue(1);
+  const [showResult, setShowResult] = useState(false);
 
   const handleTextChange = (newText: string) => {
     setText(newText);
@@ -67,6 +77,16 @@ const Home = () => {
     closeButtonOpacity.value = withTiming(0, { duration: 200 });
   };
 
+  const handleCheck = () => {
+    setShowResult(true);
+  };
+
+  useEffect(() => {
+    if (showResult) {
+      resultAnim.value = withTiming(0, { duration: 200 });
+    }
+  }, [showResult]);
+
   const closeButtonAnimatedStyle = useAnimatedStyle(() => ({
     opacity: closeButtonOpacity.value,
   }));
@@ -76,6 +96,14 @@ const Home = () => {
     height: interpolate(hideHeading.value, [0, 1], [0, 100]),
     marginBottom: interpolate(hideHeading.value, [0, 1], [0, 24]),
     display: hideHeading.value === 0 ? "none" : "flex",
+  }));
+
+  const resultAnimatedStyle = useAnimatedStyle(() => ({
+    flex: interpolate(resultAnim.value, [0, 1], [0.5, 1]),
+  }));
+
+  const animatedResultStyle = useAnimatedStyle(() => ({
+    flex: interpolate(resultAnim.value, [1, 0], [0, 0.5]),
   }));
 
   return (
@@ -88,10 +116,14 @@ const Home = () => {
             style={styles.keyboardAvoidingView}
           >
             <View style={styles.content}>
-              <Animated.Text style={[styles.heading, headingAnimatedStyle]}>
-                Check your{"\n"}Grammar !
-              </Animated.Text>
-              <View style={styles.inputContainer}>
+              {!showResult && (
+                <Animated.Text style={[styles.heading, headingAnimatedStyle]}>
+                  Check your{"\n"}Grammar !
+                </Animated.Text>
+              )}
+              <Animated.View
+                style={[styles.inputContainer, resultAnimatedStyle]}
+              >
                 <TextInput
                   style={styles.input}
                   multiline
@@ -127,8 +159,40 @@ const Home = () => {
                     <CloseIcon width={10.57} height={10.57} />
                   </Pressable>
                 </Animated.View>
-              </View>
-              <TouchableOpacity style={styles.checkButton}>
+              </Animated.View>
+              {/* result box */}
+              {showResult && (
+                <Animated.View style={[styles.resultBox, animatedResultStyle]}>
+                  <ScrollView
+                    contentContainerStyle={{
+                      padding: 16,
+                      paddingBottom: 72,
+                    }}
+                    style={{ flex: 1 }}
+                    showsVerticalScrollIndicator={true}
+                  >
+                    <Text style={styles.correctedText}>Hi, how are you</Text>
+                  </ScrollView>
+                  <TouchableOpacity style={styles.shareIconWrapper}>
+                    <ShareIcon
+                      width={20}
+                      height={20}
+                      fill="rgba(34, 39, 47, 1)"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.copyIconWrapper}>
+                    <CopyIcon
+                      width={20}
+                      height={20}
+                      fill="rgba(34, 39, 47, 1)"
+                    />
+                  </TouchableOpacity>
+                </Animated.View>
+              )}
+              <TouchableOpacity
+                style={styles.checkButton}
+                onPress={handleCheck}
+              >
                 <Text style={styles.checkButtonText}>Check</Text>
               </TouchableOpacity>
             </View>
@@ -212,7 +276,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     marginBottom: 24,
-    paddingBottom: 64,
+    // paddingBottom: 64,
   },
   input: {
     flex: 1,
@@ -220,6 +284,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontWeight: "400",
     color: "rgba(0, 0, 0, 1)",
+    paddingBottom: 64,
   },
   pasteButton: {
     position: "absolute",
@@ -270,6 +335,61 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  resultBox: {
+    flex: 0.5,
+    backgroundColor: "rgba(0, 0, 0, 0.05)",
+    borderRadius: 16,
+    borderColor: "rgba(0, 0, 0, 0.1)",
+    borderWidth: 1,
+    marginBottom: 24,
+    flexDirection: "column",
+  },
+  resultText: {
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: "500",
+    color: "rgba(0, 0, 0, 0.5)",
+    marginBottom: 8,
+  },
+  correctedText: {
+    fontSize: 14,
+    lineHeight: 20,
+    color: "#000",
+    marginBottom: 16,
+  },
+  resultActions: {
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-between",
+    // marginTop: "auto",
+    position: "absolute",
+    bottom: 16,
+    left: 16,
+  },
+
+  shareIconWrapper: {
+    width: 40,
+    height: 40,
+    backgroundColor: "#fff",
+    borderRadius: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    bottom: 16,
+    left: 16,
+  },
+
+  copyIconWrapper: {
+    width: 40,
+    height: 40,
+    backgroundColor: "#fff",
+    borderRadius: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    bottom: 16,
+    right: 16,
   },
 });
 
