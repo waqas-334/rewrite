@@ -6,10 +6,21 @@ import {
   TextInput,
   TouchableOpacity,
   SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Pressable,
 } from "react-native";
-import { CrownIcon, MenuIcon, PasteIcon } from "@/components/icon";
+import { CrownIcon, MenuIcon, PasteIcon, CloseIcon } from "@/components/icon";
 import RightIcon from "@/components/icon/RightIcon";
 import * as Clipboard from "expo-clipboard";
+import Animated, {
+  withTiming,
+  useAnimatedStyle,
+  useSharedValue,
+  interpolate,
+} from "react-native-reanimated";
 
 const Header = () => {
   return (
@@ -30,37 +41,100 @@ const Header = () => {
 
 const Home = () => {
   const [text, setText] = useState("");
+  const opacity = useSharedValue(1);
+  const closeButtonOpacity = useSharedValue(0);
+  const hideHeading = useSharedValue(1);
+
+  const handleTextChange = (newText: string) => {
+    setText(newText);
+    closeButtonOpacity.value = withTiming(newText.length > 0 ? 1 : 0, {
+      duration: 200,
+    });
+    opacity.value = withTiming(newText.length > 0 ? 0 : 1, {
+      duration: 200,
+    });
+  };
 
   const handlePaste = async () => {
     const clipboardText = await Clipboard.getStringAsync();
     if (clipboardText) {
-      setText(clipboardText);
+      setText((prevState) => prevState + clipboardText);
     }
   };
 
+  const handleClear = () => {
+    setText("");
+    closeButtonOpacity.value = withTiming(0, { duration: 200 });
+  };
+
+  const closeButtonAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: closeButtonOpacity.value,
+  }));
+
+  const headingAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: hideHeading.value,
+    height: interpolate(hideHeading.value, [0, 1], [0, 100]),
+    marginBottom: interpolate(hideHeading.value, [0, 1], [0, 24]),
+    display: hideHeading.value === 0 ? "none" : "flex",
+  }));
+
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
-      <View style={styles.content}>
-        <Text style={styles.heading}>Check your{"\n"}Grammar !</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            multiline
-            placeholder="Enter your text"
-            placeholderTextColor="rgba(0, 0, 0, 0.5)"
-            value={text}
-            onChangeText={setText}
-          />
-          <TouchableOpacity onPress={handlePaste} style={styles.pasteButton}>
-            <PasteIcon width={12.92} height={15.42} />
-            <Text style={styles.pasteText}>Paste</Text>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity style={styles.checkButton}>
-          <Text style={styles.checkButtonText}>Check</Text>
-        </TouchableOpacity>
-      </View>
+      <>
+        <Header />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.keyboardAvoidingView}
+          >
+            <View style={styles.content}>
+              <Animated.Text style={[styles.heading, headingAnimatedStyle]}>
+                Check your{"\n"}Grammar !
+              </Animated.Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.input}
+                  multiline
+                  placeholder="Enter your text"
+                  placeholderTextColor="rgba(0, 0, 0, 0.5)"
+                  value={text}
+                  onChangeText={handleTextChange}
+                  onFocus={() => {
+                    hideHeading.value = withTiming(0, { duration: 200 });
+                  }}
+                  onBlur={() => {
+                    if (text.length === 0) {
+                      hideHeading.value = withTiming(1, { duration: 200 });
+                    }
+                  }}
+                />
+                <Animated.View style={[styles.pasteButton]}>
+                  <TouchableOpacity
+                    onPress={handlePaste}
+                    style={styles.pasteButtonContent}
+                  >
+                    <PasteIcon width={12.92} height={15.42} />
+                    <Text style={styles.pasteText}>Paste</Text>
+                  </TouchableOpacity>
+                </Animated.View>
+                <Animated.View
+                  style={[styles.closeButton, closeButtonAnimatedStyle]}
+                >
+                  <Pressable
+                    onPress={handleClear}
+                    style={styles.closeButtonContent}
+                  >
+                    <CloseIcon width={10.57} height={10.57} />
+                  </Pressable>
+                </Animated.View>
+              </View>
+              <TouchableOpacity style={styles.checkButton}>
+                <Text style={styles.checkButtonText}>Check</Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </>
     </SafeAreaView>
   );
 };
@@ -117,6 +191,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  keyboardAvoidingView: {
+    flex: 1,
+  },
   content: {
     flex: 1,
     paddingHorizontal: 24,
@@ -135,6 +212,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     marginBottom: 24,
+    paddingBottom: 64,
   },
   input: {
     flex: 1,
@@ -147,13 +225,15 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 16,
     left: 16,
-    flexDirection: "row",
-    alignItems: "center",
-    // opacity: 0.5,
     backgroundColor: "rgba(0, 0, 0, 0.05)",
     width: 83,
     height: 40,
     borderRadius: 100,
+  },
+  pasteButtonContent: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
     justifyContent: "center",
   },
   pasteText: {
@@ -176,6 +256,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     lineHeight: 20,
+  },
+  closeButton: {
+    position: "absolute",
+    bottom: 16,
+    right: 16,
+    backgroundColor: "rgba(0, 0, 0, 0.05)",
+    width: 40,
+    height: 40,
+    borderRadius: 100,
+  },
+  closeButtonContent: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
