@@ -1,0 +1,15 @@
+export { default as CloseIcon } from "./CloseIcon";
+export { default as CopyIcon } from "./CopyIcon";
+export { default as CrownIcon } from "./CrownIcon";
+export { default as DocIcon } from "./DocIcon";
+export { default as InfoIcon } from "./InfoIcon";
+export { default as MailIcon } from "./MailIcon";
+export { default as MenuIcon } from "./MenuIcon";
+export { default as PasteIcon } from "./PasteIcon";
+export { default as PrivacyIcon } from "./PrivacyIcon";
+export { default as ShareIcon } from "./ShareIcon";
+export { default as SignatureIcon } from "./SignatureIcon";
+export { default as StarIcon } from "./StarIcon";
+export { default as TranslationsIcon } from "./TranslationsIcon";
+export { default as TrashIcon } from "./TrashIcon";
+export { default as UserIcon } from "./UserIcon";

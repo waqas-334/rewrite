@@ -1,6 +1,20 @@
 {
-  "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
-  }
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@a/*": ["assets/*"]
+    },
+    "jsx": "react"
+  },
+  "extends": "expo/tsconfig.base",
+  "include": [
+    "src/types/env.d.ts",
+    "src/**/*",
+    "assets/**/*",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": ["./editor-web"]
 }
