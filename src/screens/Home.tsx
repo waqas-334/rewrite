@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,6 +12,9 @@ import {
   Keyboard,
   Pressable,
   ScrollView,
+  ActivityIndicator,
+  Linking,
+  Share,
 } from "react-native";
 import {
   CrownIcon,
@@ -20,6 +23,8 @@ import {
   CloseIcon,
   ShareIcon,
   CopyIcon,
+  TrashIcon,
+  RepeatIcon,
 } from "@/components/icon";
 import RightIcon from "@/components/icon/RightIcon";
 import * as Clipboard from "expo-clipboard";
@@ -29,31 +34,49 @@ import Animated, {
   useSharedValue,
   interpolate,
 } from "react-native-reanimated";
+import useGrammar from "@/hooks/useGrammar";
+import MoreModal from "@/components/MoreModal";
+import { useNavigation } from "@react-navigation/native";
 
-const Header = () => {
+const Header = ({ onMenuPress }: { onMenuPress: () => void }) => {
+  const navigation: any = useNavigation();
+
   return (
     <View style={styles.header}>
       <Text style={styles.title}>Home</Text>
 
-      <TouchableOpacity style={styles.trialButton}>
+      <TouchableOpacity
+        style={styles.trialButton}
+        onPress={() => navigation.navigate("Subscription")}
+      >
         <CrownIcon width={20} height={16} fill="#FF9200" />
         <Text style={styles.trialText}>Free Trial</Text>
         <RightIcon />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.menuButtonContainer}>
+      <TouchableOpacity
+        style={styles.menuButtonContainer}
+        onPress={onMenuPress}
+      >
         <MenuIcon width={16} height={10} />
       </TouchableOpacity>
     </View>
   );
 };
 
-const Home = () => {
+const Home = ({ navigation }: { navigation: any }) => {
   const [text, setText] = useState("");
   const opacity = useSharedValue(1);
   const closeButtonOpacity = useSharedValue(0);
   const hideHeading = useSharedValue(1);
   const resultAnim = useSharedValue(1);
   const [showResult, setShowResult] = useState(false);
+  const [result, setResult] = useState("");
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showMoreModal, setShowMoreModal] = useState(false);
+  const inputRef = useRef<TextInput>(null);
+
+  const { checkGrammar } = useGrammar();
 
   const handleTextChange = (newText: string) => {
     setText(newText);
@@ -75,17 +98,49 @@ const Home = () => {
   const handleClear = () => {
     setText("");
     closeButtonOpacity.value = withTiming(0, { duration: 200 });
+    setShowResult(false);
   };
 
-  const handleCheck = () => {
-    setShowResult(true);
+  const handleCheck = async () => {
+    setIsLoading(true);
+    try {
+      inputRef?.current?.blur?.();
+      Keyboard.dismiss();
+      const result = await checkGrammar(text);
+      setResult(result);
+      setShowResult(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
     if (showResult) {
       resultAnim.value = withTiming(0, { duration: 200 });
+    } else {
+      resultAnim.value = withTiming(1, { duration: 200 });
     }
   }, [showResult]);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setIsKeyboardVisible(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setIsKeyboardVisible(false);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const closeButtonAnimatedStyle = useAnimatedStyle(() => ({
     opacity: closeButtonOpacity.value,
@@ -109,7 +164,7 @@ const Home = () => {
   return (
     <SafeAreaView style={styles.container}>
       <>
-        <Header />
+        <Header onMenuPress={() => setShowMoreModal(true)} />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -139,6 +194,7 @@ const Home = () => {
                       hideHeading.value = withTiming(1, { duration: 200 });
                     }
                   }}
+                  ref={inputRef}
                 />
                 <Animated.View style={[styles.pasteButton]}>
                   <TouchableOpacity
@@ -171,33 +227,101 @@ const Home = () => {
                     style={{ flex: 1 }}
                     showsVerticalScrollIndicator={true}
                   >
-                    <Text style={styles.correctedText}>Hi, how are you</Text>
+                    <Text style={styles.correctedText}>{result}</Text>
                   </ScrollView>
                   <TouchableOpacity style={styles.shareIconWrapper}>
                     <ShareIcon
                       width={20}
                       height={20}
-                      fill="rgba(34, 39, 47, 1)"
+                      color="rgba(0, 0, 0, 0.5)"
                     />
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.copyIconWrapper}>
                     <CopyIcon
                       width={20}
                       height={20}
-                      fill="rgba(34, 39, 47, 1)"
+                      color="rgba(0, 0, 0, 0.5)"
                     />
                   </TouchableOpacity>
                 </Animated.View>
               )}
-              <TouchableOpacity
-                style={styles.checkButton}
-                onPress={handleCheck}
-              >
-                <Text style={styles.checkButtonText}>Check</Text>
-              </TouchableOpacity>
+              {showResult ? (
+                <View style={styles.resultFooter}>
+                  <TouchableOpacity
+                    style={styles.trashButton}
+                    onPress={handleClear}
+                  >
+                    <TrashIcon width={17.92} height={17.92} fill="#000" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[
+                      styles.againButton,
+                      isLoading && styles.disabledButton,
+                    ]}
+                    onPress={() => {
+                      handleCheck();
+                    }}
+                    disabled={isLoading}
+                  >
+                    <View style={styles.againContent}>
+                      {isLoading ? (
+                        <ActivityIndicator color="#fff" />
+                      ) : (
+                        <>
+                          <RepeatIcon width={16} height={16} fill="#fff" />
+                          <Text style={styles.againText}>Again</Text>
+                        </>
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <TouchableOpacity
+                  style={[
+                    styles.checkButton,
+                    isLoading && styles.disabledButton,
+                  ]}
+                  onPress={handleCheck}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={styles.checkButtonText}>Check</Text>
+                  )}
+                </TouchableOpacity>
+              )}
             </View>
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
+
+        <MoreModal
+          visible={showMoreModal}
+          onClose={() => setShowMoreModal(false)}
+          navigation={navigation}
+          onTrialPress={() => {
+            setShowMoreModal(false);
+            navigation.navigate("Subscription");
+          }}
+          onRatePress={() => {
+            // Handle rate press
+          }}
+          onSharePress={() => {
+            Share.share({
+              message: "Check out this amazing app: [App Link]",
+              url: "https://example.com", // Replace with your app's URL
+              title: "Grammar App",
+            })
+              .then((_) => {})
+              .catch((error) => console.log(error));
+          }}
+          onPrivacyPress={() => {
+            Linking.openURL("https://deployglobal.ee/corrector/privacy");
+          }}
+          onSupportPress={() => {
+            Linking.openURL("https://deployglobal.ee/support");
+          }}
+        />
       </>
     </SafeAreaView>
   );
@@ -390,6 +514,42 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 16,
     right: 16,
+  },
+  resultFooter: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginBottom: 24,
+  },
+  trashButton: {
+    width: 48,
+    height: 48,
+    backgroundColor: "rgba(0, 0, 0, 0.05)",
+    borderRadius: 100,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  againButton: {
+    flex: 1,
+    backgroundColor: "#000",
+    borderRadius: 100,
+    height: 48,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  againContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  againText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
+    lineHeight: 20,
+  },
+  disabledButton: {
+    opacity: 0.7,
   },
 });
 

@@ -13,16 +13,21 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.deploy.grammarai"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.deploy.grammarai"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "env": {
+      "OPENAI_API_KEY": "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"
     }
   }
 }

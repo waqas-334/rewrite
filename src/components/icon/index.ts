@@ -13,3 +13,5 @@ export { default as StarIcon } from "./StarIcon";
 export { default as TranslationsIcon } from "./TranslationsIcon";
 export { default as TrashIcon } from "./TrashIcon";
 export { default as UserIcon } from "./UserIcon";
+export { default as RepeatIcon } from "./RepeatIcon";
+export { default as RightIcon } from "./RightIcon";
