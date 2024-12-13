@@ -6,7 +6,8 @@
       "@/*": ["src/*"],
       "@a/*": ["assets/*"]
     },
-    "jsx": "react"
+    "jsx": "react",
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   },
   "extends": "expo/tsconfig.base",
   "include": [

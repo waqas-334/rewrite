@@ -7,14 +7,35 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "experiments": {
+      "tsconfigPaths": true
+    },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FFF9F1",
+          "image": "./assets/splash-icon.png",
+          "dark": {
+            "image": "./assets/splash-icon.png",
+            "backgroundColor": "#FFF9F1"
+          },
+          "imageWidth": 160,
+          "imageHeight": 160
+        }
+      ]
+    ],
     "splash": {
       "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFF9F1",
+      "imageWidth": 160,
+      "imageHeight": 160
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.deploy.grammarai"
+      "bundleIdentifier": "com.deploy.grammarai",
+      "buildNumber": "1.0.1",
+      "icon": "./assets/icon.png"
     },
     "android": {
       "adaptiveIcon": {
@@ -26,8 +47,11 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "env": {
-      "OPENAI_API_KEY": "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"
+
+    "extra": {
+      "eas": {
+        "projectId": "166fa6ee-b94e-45cd-8185-eddcd29dfd48"
+      }
     }
   }
 }

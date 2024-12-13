@@ -15,6 +15,7 @@ import {
   ActivityIndicator,
   Linking,
   Share,
+  Alert,
 } from "react-native";
 import {
   CrownIcon,
@@ -23,7 +24,6 @@ import {
   CloseIcon,
   ShareIcon,
   CopyIcon,
-  TrashIcon,
   RepeatIcon,
 } from "@/components/icon";
 import RightIcon from "@/components/icon/RightIcon";
@@ -37,22 +37,30 @@ import Animated, {
 import useGrammar from "@/hooks/useGrammar";
 import MoreModal from "@/components/MoreModal";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useStore } from "@/store/useStore";
+import EditIcon from "@/components/icon/EditIcon";
+import { showMessage } from "react-native-flash-message";
+import { useTranslation } from "@/i18n";
 
 const Header = ({ onMenuPress }: { onMenuPress: () => void }) => {
   const navigation: any = useNavigation();
+  const isPremiumUser = useStore((state) => state.isPremiumUser);
 
   return (
     <View style={styles.header}>
       <Text style={styles.title}>Home</Text>
 
-      <TouchableOpacity
-        style={styles.trialButton}
-        onPress={() => navigation.navigate("Subscription")}
-      >
-        <CrownIcon width={20} height={16} fill="#FF9200" />
-        <Text style={styles.trialText}>Free Trial</Text>
-        <RightIcon />
-      </TouchableOpacity>
+      {!isPremiumUser && (
+        <TouchableOpacity
+          style={styles.trialButton}
+          onPress={() => navigation.navigate("Subscription")}
+        >
+          <CrownIcon width={20} height={16} fill="#FF9200" />
+          <Text style={styles.trialText}>Free Trial</Text>
+          <RightIcon />
+        </TouchableOpacity>
+      )}
       <TouchableOpacity
         style={styles.menuButtonContainer}
         onPress={onMenuPress}
@@ -71,10 +79,11 @@ const Home = ({ navigation }: { navigation: any }) => {
   const resultAnim = useSharedValue(1);
   const [showResult, setShowResult] = useState(false);
   const [result, setResult] = useState("");
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showMoreModal, setShowMoreModal] = useState(false);
   const inputRef = useRef<TextInput>(null);
+  const isPremiumUser = useStore((state) => state.isPremiumUser);
+  const { t } = useTranslation("home");
 
   const { checkGrammar } = useGrammar();
 
@@ -100,17 +109,68 @@ const Home = ({ navigation }: { navigation: any }) => {
     closeButtonOpacity.value = withTiming(0, { duration: 200 });
     setShowResult(false);
   };
-
   const handleCheck = async () => {
-    setIsLoading(true);
+    if (text.length === 0) {
+      return;
+    }
+
     try {
+      if (!isPremiumUser) {
+        const today = new Date().toDateString();
+        const storedData = await AsyncStorage.getItem("grammarChecks");
+        const checks = storedData ? JSON.parse(storedData) : {};
+
+        const todayChecks = checks[today] || 0;
+
+        if (todayChecks >= 3) {
+          Alert.alert(t("dailyLimitTitle"), t("dailyLimitMessage"), [
+            {
+              text: t("upgrade"),
+              onPress: () => navigation.navigate("Subscription"),
+            },
+            {
+              text: t("cancel"),
+              style: "cancel",
+            },
+          ]);
+          return;
+        }
+
+        checks[today] = todayChecks + 1;
+        await AsyncStorage.setItem("grammarChecks", JSON.stringify(checks));
+      }
+
+      setIsLoading(true);
       inputRef?.current?.blur?.();
       Keyboard.dismiss();
+
       const result = await checkGrammar(text);
       setResult(result);
       setShowResult(true);
+    } catch (error) {
+      console.error("Error:", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleCopy = async () => {
+    try {
+      await Clipboard.setStringAsync(result);
+      showMessage({
+        message: t("copySuccess"),
+        type: "success",
+        duration: 2000,
+        style: {
+          backgroundColor: "#000",
+        },
+        titleStyle: {
+          fontFamily: "Inter",
+          fontWeight: "500",
+        },
+      });
+    } catch (error) {
+      console.error("Failed to copy text:", error);
     }
   };
 
@@ -121,26 +181,6 @@ const Home = ({ navigation }: { navigation: any }) => {
       resultAnim.value = withTiming(1, { duration: 200 });
     }
   }, [showResult]);
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => {
-        setIsKeyboardVisible(true);
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        setIsKeyboardVisible(false);
-      }
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
 
   const closeButtonAnimatedStyle = useAnimatedStyle(() => ({
     opacity: closeButtonOpacity.value,
@@ -173,7 +213,7 @@ const Home = ({ navigation }: { navigation: any }) => {
             <View style={styles.content}>
               {!showResult && (
                 <Animated.Text style={[styles.heading, headingAnimatedStyle]}>
-                  Check your{"\n"}Grammar !
+                  {t("checkGrammar")}
                 </Animated.Text>
               )}
               <Animated.View
@@ -182,7 +222,7 @@ const Home = ({ navigation }: { navigation: any }) => {
                 <TextInput
                   style={styles.input}
                   multiline
-                  placeholder="Enter your text"
+                  placeholder={t("enterText")}
                   placeholderTextColor="rgba(0, 0, 0, 0.5)"
                   value={text}
                   onChangeText={handleTextChange}
@@ -202,7 +242,7 @@ const Home = ({ navigation }: { navigation: any }) => {
                     style={styles.pasteButtonContent}
                   >
                     <PasteIcon width={12.92} height={15.42} />
-                    <Text style={styles.pasteText}>Paste</Text>
+                    <Text style={styles.pasteText}>{t("paste")}</Text>
                   </TouchableOpacity>
                 </Animated.View>
                 <Animated.View
@@ -229,14 +269,26 @@ const Home = ({ navigation }: { navigation: any }) => {
                   >
                     <Text style={styles.correctedText}>{result}</Text>
                   </ScrollView>
-                  <TouchableOpacity style={styles.shareIconWrapper}>
+                  <TouchableOpacity
+                    style={styles.shareIconWrapper}
+                    onPress={() => {
+                      Share.share({
+                        message: result,
+                      })
+                        .then((res) => console.log(res))
+                        .catch((error) => console.log(error));
+                    }}
+                  >
                     <ShareIcon
                       width={20}
                       height={20}
                       color="rgba(0, 0, 0, 0.5)"
                     />
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.copyIconWrapper}>
+                  <TouchableOpacity
+                    style={styles.copyIconWrapper}
+                    onPress={handleCopy}
+                  >
                     <CopyIcon
                       width={20}
                       height={20}
@@ -251,7 +303,7 @@ const Home = ({ navigation }: { navigation: any }) => {
                     style={styles.trashButton}
                     onPress={handleClear}
                   >
-                    <TrashIcon width={17.92} height={17.92} fill="#000" />
+                    <EditIcon width={17.92} height={17.92} fill="#000" />
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[
@@ -269,7 +321,7 @@ const Home = ({ navigation }: { navigation: any }) => {
                       ) : (
                         <>
                           <RepeatIcon width={16} height={16} fill="#fff" />
-                          <Text style={styles.againText}>Again</Text>
+                          <Text style={styles.againText}>{t("reCheck")}</Text>
                         </>
                       )}
                     </View>
@@ -287,7 +339,7 @@ const Home = ({ navigation }: { navigation: any }) => {
                   {isLoading ? (
                     <ActivityIndicator color="#fff" />
                   ) : (
-                    <Text style={styles.checkButtonText}>Check</Text>
+                    <Text style={styles.checkButtonText}>{t("check")}</Text>
                   )}
                 </TouchableOpacity>
               )}
@@ -308,9 +360,9 @@ const Home = ({ navigation }: { navigation: any }) => {
           }}
           onSharePress={() => {
             Share.share({
-              message: "Check out this amazing app: [App Link]",
+              message: t("shareMessage"),
               url: "https://example.com", // Replace with your app's URL
-              title: "Grammar App",
+              title: t("shareTitle"),
             })
               .then((_) => {})
               .catch((error) => console.log(error));
@@ -320,6 +372,9 @@ const Home = ({ navigation }: { navigation: any }) => {
           }}
           onSupportPress={() => {
             Linking.openURL("https://deployglobal.ee/support");
+          }}
+          onTermsPress={() => {
+            Linking.openURL("https://deployglobal.ee/corrector/terms");
           }}
         />
       </>

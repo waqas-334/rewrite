@@ -15,3 +15,4 @@ export { default as TrashIcon } from "./TrashIcon";
 export { default as UserIcon } from "./UserIcon";
 export { default as RepeatIcon } from "./RepeatIcon";
 export { default as RightIcon } from "./RightIcon";
+export { default as TermsIcon } from "./TermsIcon";

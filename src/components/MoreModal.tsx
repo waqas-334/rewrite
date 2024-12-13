@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -13,7 +13,16 @@ import {
   PrivacyIcon,
   MailIcon,
   RightIcon,
+  TermsIcon,
 } from "@/components/icon";
+import Animated, {
+  interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import { useStore } from "@/store/useStore";
+import { useTranslation } from "@/i18n";
 
 interface MoreModalProps {
   visible: boolean;
@@ -21,6 +30,7 @@ interface MoreModalProps {
   onTrialPress?: () => void;
   onRatePress?: () => void;
   onSharePress?: () => void;
+  onTermsPress?: () => void;
   onPrivacyPress?: () => void;
   onSupportPress?: () => void;
   navigation: any;
@@ -32,76 +42,109 @@ const MoreModal = ({
   onTrialPress,
   onRatePress,
   onSharePress,
+  onTermsPress,
   onPrivacyPress,
   onSupportPress,
   navigation,
 }: MoreModalProps) => {
+  const opacity = useSharedValue(0);
+  const isPremiumUser = useStore((s) => s.isPremiumUser);
+  const { t } = useTranslation("more");
+
+  useEffect(() => {
+    if (visible) {
+      setTimeout(() => {
+        opacity.value = withTiming(0.5, { duration: 250 });
+      }, 400);
+    } else {
+      opacity.value = 0;
+    }
+  }, [visible]);
+
+  const animatedOverlayStyle = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(
+      opacity.value,
+      [0, 0.5],
+      ["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0.5)"]
+    ),
+  }));
+
   return (
     <Modal
       visible={visible}
       transparent
-      animationType="fade"
+      animationType="slide"
       onRequestClose={onClose}
     >
-      <Pressable style={styles.overlay} onPress={onClose}>
-        <View style={styles.modalContainer}>
-          <View style={styles.header}>
-            <Text style={styles.title}>More</Text>
-            <TouchableOpacity onPress={onClose}>
-              <Text style={styles.closeButton}>✕</Text>
+      <Pressable onPress={onClose} style={{ flex: 1 }}>
+        <Animated.View style={[styles.overlay, animatedOverlayStyle]}>
+          <View style={styles.modalContainer}>
+            <View style={styles.header}>
+              <Text style={styles.title}>{t("more")}</Text>
+              <TouchableOpacity onPress={onClose}>
+                <Text style={styles.closeButton}>✕</Text>
+              </TouchableOpacity>
+            </View>
+
+            {!isPremiumUser && (
+              <TouchableOpacity
+                style={styles.trialBanner}
+                onPress={() => {
+                  onClose();
+                  navigation.navigate("Subscription");
+                }}
+              >
+                <View>
+                  <Text style={styles.trialText}>{t("trialNotClaimed")}</Text>
+                  <Text style={styles.tapText}>{t("tapToClaim")}</Text>
+                </View>
+                <View style={styles.giftIcon}>
+                  <Text style={{ fontSize: 38 }}>🎁</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+
+            {/* <TouchableOpacity style={styles.menuItem} onPress={onRatePress}>
+              <View style={styles.menuIconContainer}>
+                <StarIcon width={20} height={20} />
+              </View>
+              <Text style={styles.menuText}>{t("rateUs")}</Text>
+              <RightIcon color="rgba(0, 0, 0, 0.5)" />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.menuItem} onPress={onSharePress}>
+              <View style={styles.menuIconContainer}>
+                <ShareIcon width={20} height={20} color="#000" />
+              </View>
+              <Text style={styles.menuText}>{t("share")}</Text>
+              <RightIcon color="rgba(0, 0, 0, 0.5)" />
+            </TouchableOpacity> */}
+
+            <TouchableOpacity style={styles.menuItem} onPress={onPrivacyPress}>
+              <View style={styles.menuIconContainer}>
+                <PrivacyIcon width={20} height={20} />
+              </View>
+              <Text style={styles.menuText}>{t("privacyPolicy")}</Text>
+              <RightIcon color="rgba(0, 0, 0, 0.5)" />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.menuItem} onPress={onTermsPress}>
+              <View style={styles.menuIconContainer}>
+                <TermsIcon width={20} height={20} />
+              </View>
+              <Text style={styles.menuText}>{t("termsOfUse")}</Text>
+              <RightIcon color="rgba(0, 0, 0, 0.5)" />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.menuItem} onPress={onSupportPress}>
+              <View style={styles.menuIconContainer}>
+                <MailIcon width={20} height={20} />
+              </View>
+              <Text style={styles.menuText}>{t("support")}</Text>
+              <RightIcon color="rgba(0, 0, 0, 0.5)" />
             </TouchableOpacity>
           </View>
-
-          <TouchableOpacity
-            style={styles.trialBanner}
-            onPress={() => {
-              onClose();
-              navigation.navigate("Subscription");
-            }}
-          >
-            <View>
-              <Text style={styles.trialText}>
-                Your Free Trial hasn't been claimed
-              </Text>
-              <Text style={styles.tapText}>Tap to claim</Text>
-            </View>
-            <View style={styles.giftIcon}>
-              <Text style={{ fontSize: 38 }}>🎁</Text>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuItem} onPress={onRatePress}>
-            <View style={styles.menuIconContainer}>
-              <StarIcon width={20} height={20} />
-            </View>
-            <Text style={styles.menuText}>Rate us</Text>
-            <RightIcon color="rgba(0, 0, 0, 0.5)" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuItem} onPress={onSharePress}>
-            <View style={styles.menuIconContainer}>
-              <ShareIcon width={20} height={20} color="#000" />
-            </View>
-            <Text style={styles.menuText}>Share</Text>
-            <RightIcon color="rgba(0, 0, 0, 0.5)" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuItem} onPress={onPrivacyPress}>
-            <View style={styles.menuIconContainer}>
-              <PrivacyIcon width={20} height={20} />
-            </View>
-            <Text style={styles.menuText}>Privacy Policy</Text>
-            <RightIcon color="rgba(0, 0, 0, 0.5)" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuItem} onPress={onSupportPress}>
-            <View style={styles.menuIconContainer}>
-              <MailIcon width={20} height={20} />
-            </View>
-            <Text style={styles.menuText}>Support</Text>
-            <RightIcon color="rgba(0, 0, 0, 0.5)" />
-          </TouchableOpacity>
-        </View>
+        </Animated.View>
       </Pressable>
     </Modal>
   );
@@ -110,7 +153,7 @@ const MoreModal = ({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    // backgroundColor: "rgba(0, 0, 0)",
     justifyContent: "flex-end",
   },
   modalContainer: {
