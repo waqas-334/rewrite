@@ -27,14 +27,27 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
-  useAdapt();
-  useInitApp();
+  const { isPremiumUser, initLoading } = useAdapt();
+  const { appLoading, showSubscription } = useInitApp();
+
+  if (initLoading || appLoading) {
+    return null;
+  }
+
+  let initialScreen: keyof RootStackParamList = "Home";
+
+  if (showSubscription && !isPremiumUser) {
+    initialScreen = "Subscription";
+  }
 
   return (
     <View style={{ flex: 1 }}>
       <FlashMessage position="top" />
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Navigator
+          initialRouteName={initialScreen}
+          screenOptions={{ headerShown: false }}
+        >
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen
             name="Subscription"
