@@ -16,6 +16,7 @@ import { useStore } from "@/store/useStore";
 import { adapty } from "react-native-adapty";
 import { showMessage } from "react-native-flash-message";
 import { useTranslation } from "@/i18n";
+import { CircularProgress } from "react-native-circular-progress";
 
 const Offer = () => {
   const navigation = useNavigation();
@@ -24,17 +25,24 @@ const Offer = () => {
     (p) => p.vendorProductId === "grammar.annual.premium.with_offer"
   );
   console.log({ product });
-  const [timeLeft, setTimeLeft] = useState(3600);
+  const [timeLeft, setTimeLeft] = useState(120);
   const [purchaseLoading, setPurchaseLoading] = useState(false);
   const { t } = useTranslation("offer");
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          navigation.goBack();
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [navigation]);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -80,7 +88,17 @@ const Offer = () => {
             onPress={() => navigation.goBack()}
             style={styles.closeButton}
           >
-            <CloseIcon width={11} height={11} color="#000" />
+            <CircularProgress
+              size={29}
+              width={2.5}
+              fill={(timeLeft / 120) * 100}
+              tintColor="#000"
+              backgroundColor="transparent"
+              rotation={0}
+              lineCap="round"
+            >
+              {() => <CloseIcon width={11} height={11} color="#000" />}
+            </CircularProgress>
           </TouchableOpacity>
         </View>
 
@@ -183,9 +201,6 @@ const styles = StyleSheet.create({
   closeButton: {
     width: 29,
     height: 29,
-    borderColor: "#000",
-    borderWidth: 2.5,
-    borderRadius: 16,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -225,14 +240,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   exclusiveText: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: "#000",
+    fontSize: 16,
+    fontWeight: "500",
+    color: "rgba(0, 0, 0, 0.5)",
     marginBottom: 8,
   },
   timerText: {
     fontSize: 16,
-    color: "rgba(0, 0, 0, 0.7)",
+    color: "rgba(0, 0, 0, 0.5)",
     marginBottom: 24,
   },
   featuresContainer: {

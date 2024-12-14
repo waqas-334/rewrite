@@ -8,6 +8,8 @@ interface Store {
   setProducts: (products: AdaptyPaywallProduct[]) => void;
   setIsPremiumUser: (isPremium: boolean) => void;
   setCurrentLanguage: (language: string) => void;
+  globalLoading: boolean;
+  setGlobalLoading: (loading: boolean) => void;
 }
 
 export const useStore = create<Store>((set) => ({
@@ -17,4 +19,6 @@ export const useStore = create<Store>((set) => ({
   setProducts: (products: AdaptyPaywallProduct[]) => set({ products }),
   setIsPremiumUser: (isPremiumUser: boolean) => set({ isPremiumUser }),
   setCurrentLanguage: (currentLanguage: string) => set({ currentLanguage }),
+  globalLoading: true,
+  setGlobalLoading: (loading: boolean) => set({ globalLoading: loading }),
 }));

@@ -9,16 +9,17 @@ const useInitApp = () => {
   useEffect(() => {
     try {
       const locales = RNLocalize.getLocales();
-      console.log(locales);
 
       if (locales?.length > 0) {
         const primaryLocale = locales?.[0];
-        console.log(primaryLocale);
         setCurrentLanguage(primaryLocale?.languageCode || "en");
       }
-    } catch (error) {}
-
-    setAppLoading(false);
+    } catch (error) {
+      console.log(error);
+      setCurrentLanguage("en");
+    } finally {
+      setAppLoading(false);
+    }
   }, []);
 
   return { appLoading };

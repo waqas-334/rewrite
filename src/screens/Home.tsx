@@ -46,6 +46,7 @@ import { useTranslation } from "@/i18n";
 const Header = ({ onMenuPress }: { onMenuPress: () => void }) => {
   const navigation: any = useNavigation();
   const isPremiumUser = useStore((state) => state.isPremiumUser);
+  const globalLoading = useStore((state) => state.globalLoading);
 
   return (
     <View style={styles.header}>
@@ -53,12 +54,18 @@ const Header = ({ onMenuPress }: { onMenuPress: () => void }) => {
 
       {!isPremiumUser && (
         <TouchableOpacity
-          style={styles.trialButton}
+          style={[styles.trialButton, globalLoading && { opacity: 0.5 }]}
           onPress={() => navigation.navigate("Subscription")}
+          disabled={globalLoading}
         >
-          <CrownIcon width={20} height={16} fill="#FF9200" />
-          <Text style={styles.trialText}>Free Trial</Text>
-          <RightIcon />
+          {!globalLoading && (
+            <>
+              <CrownIcon width={20} height={16} fill="#FF9200" />
+
+              <Text style={styles.trialText}>Free Trial</Text>
+              <RightIcon />
+            </>
+          )}
         </TouchableOpacity>
       )}
       <TouchableOpacity
@@ -82,10 +89,40 @@ const Home = ({ navigation }: { navigation: any }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showMoreModal, setShowMoreModal] = useState(false);
   const inputRef = useRef<TextInput>(null);
+  const [showSubscription, setShowSubscription] = useState(false);
   const isPremiumUser = useStore((state) => state.isPremiumUser);
+  const globalLoading = useStore((state) => state.globalLoading);
   const { t } = useTranslation("home");
 
   const { checkGrammar } = useGrammar();
+
+  useEffect(() => {
+    checkFirstLaunch();
+  }, []);
+
+  useEffect(() => {
+    if (!globalLoading && !isPremiumUser && showSubscription) {
+      navigation.navigate("Subscription");
+    }
+  }, [globalLoading, isPremiumUser, showSubscription]);
+
+  const checkFirstLaunch = async () => {
+    try {
+      const hasLaunched = await AsyncStorage.getItem("hasLaunched");
+
+      if (!hasLaunched) {
+        AsyncStorage.setItem("hasLaunched", "true");
+        setShowSubscription(true);
+      } else {
+        const randomNumber = Math.floor(Math.random() * 3) + 1;
+        if (randomNumber === 1) {
+          setShowSubscription(true);
+        }
+      }
+    } catch (error) {
+      console.error("Error checking first launch:", error);
+    }
+  };
 
   const handleTextChange = (newText: string) => {
     setText(newText);
@@ -417,6 +454,8 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 100,
     gap: 6,
+    width: 119,
+    height: 36,
   },
   trialText: {
     fontSize: 12,
@@ -455,7 +494,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     marginBottom: 24,
-    // paddingBottom: 64,
+    paddingBottom: 64,
   },
   input: {
     flex: 1,

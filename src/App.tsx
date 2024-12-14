@@ -10,12 +10,12 @@ import FlashMessage from "react-native-flash-message";
 import Offer from "./screens/Offer";
 import useInitApp from "./hooks/useInitApp";
 
-SplashScreen.preventAutoHideAsync();
+// SplashScreen.preventAutoHideAsync();
 
-SplashScreen.setOptions({
-  duration: 500,
-  fade: true,
-});
+// SplashScreen.setOptions({
+//   duration: 500,
+//   fade: true,
+// });
 
 export type RootStackParamList = {
   Home: undefined;
@@ -27,21 +27,11 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
-  const { initLoading } = useAdapt();
-  const { appLoading } = useInitApp();
-
-  const onLayoutRootView = useCallback(async () => {
-    if (!initLoading && !appLoading) {
-      await SplashScreen.hideAsync();
-    }
-  }, [initLoading, appLoading]);
-
-  if (initLoading) {
-    return null;
-  }
+  useAdapt();
+  useInitApp();
 
   return (
-    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+    <View style={{ flex: 1 }}>
       <FlashMessage position="top" />
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>

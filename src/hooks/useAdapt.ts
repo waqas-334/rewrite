@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { adapty, AdaptyProfile } from "react-native-adapty";
 import { useStore } from "../store/useStore";
-import { ADAPTY_PLACEMENT_ID, ADAPTY_PUBLIC_KEY } from "@env";
 
 const useAdapt = () => {
   const [initLoading, setInitLoading] = useState(false);
   const [inited, setInited] = useState(false);
-  const [storeKitError, setStoreKitError] = useState<string | null>(null);
-  const { setProducts, setIsPremiumUser } = useStore();
+  const { setProducts, setIsPremiumUser, setGlobalLoading } = useStore();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -17,13 +15,8 @@ const useAdapt = () => {
       setInited(true);
       try {
         const locale = "en";
-
-        if (!ADAPTY_PUBLIC_KEY || !ADAPTY_PLACEMENT_ID) {
-          throw new Error("Missing Adapty configuration keys");
-        }
-
         try {
-          await adapty.activate(ADAPTY_PUBLIC_KEY);
+          await adapty.activate("public_live_GTSAGdVj.BGgKoTo4Q88NKnjtMora");
         } catch (error) {
           console.error("Adapty activation failed");
           throw error;
@@ -31,7 +24,10 @@ const useAdapt = () => {
 
         let products = [];
         try {
-          const paywall = await adapty.getPaywall(ADAPTY_PLACEMENT_ID, locale);
+          const paywall = await adapty.getPaywall(
+            "grammar.standard.placement",
+            locale
+          );
 
           if (!paywall) {
             console.warn("Paywall is null or undefined");
@@ -51,7 +47,6 @@ const useAdapt = () => {
           console.error("Paywall or products fetch failed");
         }
 
-        // Simplified premium status check
         try {
           const adaptyProfile = await adapty.getProfile();
           const isPremium = !!adaptyProfile?.accessLevels?.premium?.isActive;
@@ -59,21 +54,26 @@ const useAdapt = () => {
           if (!isPremium) {
             try {
               console.log("Checking for previous purchases...");
-              const restoreProfile = await adapty.restorePurchases();
-              const isSubscribed =
-                !!restoreProfile?.accessLevels?.premium?.isActive;
+              adapty
+                .restorePurchases()
+                .then((profile) => {
+                  const isSubscribed =
+                    !!profile?.accessLevels?.premium?.isActive;
 
-              if (isSubscribed) {
-                console.log("Premium subscription restored");
-                setIsPremiumUser(true);
-              } else {
-                console.log(
-                  "No previous premium subscription found - this is normal for new users"
-                );
-                setIsPremiumUser(false);
-              }
+                  if (isSubscribed) {
+                    console.log("Premium subscription restored");
+                    setIsPremiumUser(true);
+                  } else {
+                    console.log(
+                      "No previous premium subscription found - this is normal for new users"
+                    );
+                    setIsPremiumUser(false);
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error restoring purchases:", error);
+                });
             } catch (restoreError: any) {
-              // This is not necessarily an error - just means no purchases to restore
               console.log("No purchases to restore");
               setIsPremiumUser(false);
             }
@@ -85,7 +85,6 @@ const useAdapt = () => {
           console.error("Profile check failed");
         }
 
-        // Enhanced event listener
         adapty.addEventListener(
           "onLatestProfileLoad",
           (profile: AdaptyProfile) => {
@@ -101,6 +100,7 @@ const useAdapt = () => {
         console.error("Adapty initialization failed:", e);
       } finally {
         setInitLoading(false);
+        setGlobalLoading(false);
       }
     };
 
@@ -109,7 +109,7 @@ const useAdapt = () => {
     return () => adapty?.removeAllListeners();
   }, []);
 
-  return { initLoading, storeKitError };
+  return { initLoading };
 };
 
 export default useAdapt;

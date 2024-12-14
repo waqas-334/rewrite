@@ -10,6 +10,7 @@ import {
   ScrollView,
   Linking,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { CloseIcon, InfoIcon } from "@/components/icon";
@@ -17,23 +18,22 @@ import { useStore } from "@/store/useStore";
 import { adapty } from "react-native-adapty";
 import Animated, {
   useAnimatedStyle,
-  withSpring,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
 import { showMessage } from "react-native-flash-message";
 import { useTranslation } from "@/i18n";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SubscriptionScreen = () => {
   const navigation: any = useNavigation();
   const { products, setIsPremiumUser } = useStore();
   const [selectedPlan, setSelectedPlan] = useState<
-    "weekly" | "monthly" | "yearly" | "weekly_with_trial"
+    "weekly" | "monthly" | "yearly" | "annual_with_trial"
   >("yearly");
   const [trialEnabled, setTrialEnabled] = useState(false);
   const switchAnimation = useSharedValue(0);
   const [purchaseLoading, setPurchaseLoading] = useState<string | null>(null);
-  const [purchaseError, setPurchaseError] = useState<string | null>(null);
   const { t } = useTranslation("subscription");
 
   const toggleSwitch = () => {
@@ -43,9 +43,9 @@ const SubscriptionScreen = () => {
 
     // If enabling trial, force select weekly plan
     if (newTrialEnabled) {
-      setSelectedPlan("weekly_with_trial");
+      setSelectedPlan("annual_with_trial");
     } else {
-      setSelectedPlan("weekly");
+      setSelectedPlan("yearly");
     }
   };
 
@@ -60,10 +60,9 @@ const SubscriptionScreen = () => {
   });
 
   const handlePurchase = async (
-    productType: "weekly" | "monthly" | "yearly" | "weekly_with_trial"
+    productType: "weekly" | "monthly" | "yearly" | "annual_with_trial"
   ) => {
     setPurchaseLoading(productType);
-    setPurchaseError(null);
 
     try {
       const product = products.find((p) => {
@@ -75,8 +74,8 @@ const SubscriptionScreen = () => {
             p.vendorProductId === "grammar.monthly.premium") ||
           (productType === "yearly" &&
             p.vendorProductId === "grammar.annual.premium") ||
-          (productType === "weekly_with_trial" &&
-            p.vendorProductId === "grammar.weekly.premium.with_trial")
+          (productType === "annual_with_trial" &&
+            p.vendorProductId === "grammar.annual.premium.with_trial")
         );
       });
 
@@ -92,21 +91,21 @@ const SubscriptionScreen = () => {
       }
     } catch (error: any) {
       console.error(`Purchase failed for ${productType}:`, error);
-      setPurchaseError(
-        error?.message || "Purchase failed. Please try again later."
-      );
     } finally {
       setPurchaseLoading(null);
     }
   };
 
   const getProductPrice = (
-    productType: "weekly" | "monthly" | "yearly" | "weekly_with_trial"
+    productType: "weekly" | "monthly" | "yearly" | "annual_with_trial"
   ) => {
-    if (productType === "weekly_with_trial") {
-      const productId = "grammar.weekly.premium.with_trial";
-      return products.find((p) => p.vendorProductId === productId)?.price
-        ?.localizedString;
+    if (productType === "annual_with_trial") {
+      const productId = "grammar.annual.premium.with_trial";
+      return [
+        products.find((p) => p.vendorProductId === productId)?.price?.amount,
+        products.find((p) => p.vendorProductId === productId)?.price
+          ?.currencySymbol,
+      ];
     }
 
     const product = products.find(
@@ -114,14 +113,16 @@ const SubscriptionScreen = () => {
         p.vendorProductId ===
         `grammar.${productType === "yearly" ? "annual" : productType}.premium`
     );
-    return product?.price?.localizedString || "";
+    return [product?.price?.amount, product?.price?.currencySymbol];
   };
 
   // Helper function to check if plan should be disabled
   const isPlanDisabled = (
-    planType: "weekly" | "monthly" | "yearly" | "weekly_with_trial"
+    planType: "weekly" | "monthly" | "yearly" | "annual_with_trial"
   ) => {
-    return trialEnabled && planType !== "weekly";
+    console.log(planType, trialEnabled && planType !== "annual_with_trial");
+
+    return trialEnabled && planType !== "annual_with_trial";
   };
 
   const handleInfoPress = () => {
@@ -166,6 +167,35 @@ const SubscriptionScreen = () => {
     }
   };
 
+  const calculateWeeklyPrice = (
+    productType: "weekly" | "monthly" | "yearly" | "annual_with_trial"
+  ) => {
+    const [fullPrice, currencySymbol] = getProductPrice(productType);
+
+    const fullPriceNumber = Number(fullPrice);
+
+    if (isNaN(fullPriceNumber)) {
+      return "";
+    }
+
+    // Extract number from price string (assuming format like "$11.99")
+
+    let weeklyPrice;
+    if (productType === "monthly") {
+      weeklyPrice = fullPriceNumber * (7 / 30); // Assuming 4 weeks per month
+    } else if (
+      productType === "yearly" ||
+      productType === "annual_with_trial"
+    ) {
+      weeklyPrice = fullPriceNumber * (7 / 365); // 52 weeks per year
+    } else {
+      weeklyPrice = fullPriceNumber; // Weekly price stays the same
+    }
+
+    // Format to 2 decimal places and add currency symbol
+    return `${weeklyPrice.toFixed(2)}${currencySymbol}`;
+  };
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -186,8 +216,15 @@ const SubscriptionScreen = () => {
             onPress={() => {
               navigation.goBack();
 
-              setTimeout(() => {
-                navigation.navigate("Offer");
+              setTimeout(async () => {
+                const hasViewedOffer = await AsyncStorage.getItem(
+                  "hasViewedOffer"
+                );
+
+                if (!hasViewedOffer) {
+                  navigation.navigate("Offer");
+                  AsyncStorage.setItem("hasViewedOffer", "true");
+                }
               }, 1000);
             }}
             style={{
@@ -240,37 +277,25 @@ const SubscriptionScreen = () => {
             <Pressable
               style={[
                 styles.planOption,
-                (selectedPlan === "weekly" ||
-                  selectedPlan === "weekly_with_trial") &&
-                  styles.selectedPlan,
-                (purchaseLoading === "weekly" ||
-                  purchaseLoading === "weekly_with_trial") &&
-                  styles.loadingPlan,
-                isPlanDisabled("weekly") &&
-                  isPlanDisabled("weekly_with_trial") &&
-                  styles.disabledPlan,
+                selectedPlan === "weekly" && styles.selectedPlan,
+                purchaseLoading === "weekly" && styles.loadingPlan,
+                isPlanDisabled("weekly") && styles.disabledPlan,
               ]}
-              onPress={() =>
-                setSelectedPlan(trialEnabled ? "weekly_with_trial" : "weekly")
-              }
-              disabled={!!purchaseLoading}
+              onPress={() => setSelectedPlan("weekly")}
+              disabled={!!purchaseLoading || isPlanDisabled("weekly")}
             >
               <View
                 style={[
                   styles.radioButton,
-                  (selectedPlan === "weekly" ||
-                    selectedPlan === "weekly_with_trial") &&
-                    styles.activeRadio,
+                  selectedPlan === "weekly" && styles.activeRadio,
                 ]}
               />
               <View style={styles.planInfo}>
                 <Text style={styles.planText}>{t("payWeekly")}</Text>
-                <View style={styles.popularBadge}>
-                  <Text style={styles.popularText}>{t("popular")}</Text>
-                </View>
               </View>
               <Text style={styles.planPrice}>
-                {getProductPrice(trialEnabled ? "weekly_with_trial" : "weekly")}
+                {calculateWeeklyPrice("weekly")}
+                {t("per_week")}
               </Text>
             </Pressable>
 
@@ -293,33 +318,56 @@ const SubscriptionScreen = () => {
               <View style={styles.planInfo}>
                 <Text style={styles.planText}>{t("payMonthly")}</Text>
               </View>
-              <Text style={styles.planPrice}>{getProductPrice("monthly")}</Text>
+              <Text style={styles.planPrice}>
+                {calculateWeeklyPrice("monthly")} {t("per_week")}
+              </Text>
             </Pressable>
 
             <Pressable
               style={[
                 styles.planOption,
-                selectedPlan === "yearly" && styles.selectedPlan,
-                purchaseLoading === "yearly" && styles.loadingPlan,
-                isPlanDisabled("yearly") && styles.disabledPlan,
+                (selectedPlan === "yearly" ||
+                  selectedPlan === "annual_with_trial") &&
+                  styles.selectedPlan,
+                (purchaseLoading === "yearly" ||
+                  purchaseLoading === "annual_with_trial") &&
+                  styles.loadingPlan,
+                isPlanDisabled(trialEnabled ? "annual_with_trial" : "yearly") &&
+                  styles.disabledPlan,
+                // { width: 330 },
               ]}
-              onPress={() => setSelectedPlan("yearly")}
-              disabled={!!purchaseLoading || isPlanDisabled("yearly")}
+              onPress={() =>
+                setSelectedPlan(trialEnabled ? "annual_with_trial" : "yearly")
+              }
+              disabled={
+                !!purchaseLoading ||
+                isPlanDisabled(trialEnabled ? "annual_with_trial" : "yearly")
+              }
             >
               <View
                 style={[
                   styles.radioButton,
-                  selectedPlan === "yearly" && styles.activeRadio,
+                  selectedPlan ===
+                    (trialEnabled ? "annual_with_trial" : "yearly") &&
+                    styles.activeRadio,
                 ]}
               />
               <View style={styles.planInfo}>
                 <Text style={styles.planText}>{t("payYearly")}</Text>
+                {Dimensions.get("window").width > 385 && (
+                  <View style={styles.popularBadge}>
+                    <Text style={styles.popularText}>{t("popular")}</Text>
+                  </View>
+                )}
               </View>
               <View style={styles.yearlyPriceContainer}>
                 <Text style={styles.planPrice}>
-                  {getProductPrice("yearly")}
+                  {calculateWeeklyPrice(
+                    trialEnabled ? "annual_with_trial" : "yearly"
+                  )}{" "}
+                  {t("per_week")}
                 </Text>
-                <Text style={styles.originalPrice}>$99.99</Text>
+                {/* <Text style={styles.originalPrice}>$99.99</Text> */}
               </View>
             </Pressable>
           </View>
@@ -333,8 +381,10 @@ const SubscriptionScreen = () => {
               <ActivityIndicator color="#fff" />
             ) : (
               <Text style={styles.subscribeButtonText}>
-                {t("pay")}{" "}
-                {selectedPlan === "weekly_with_trial" ? "weekly" : selectedPlan}{" "}
+                {selectedPlan !== "annual_with_trial" && t("pay")}{" "}
+                {selectedPlan === "annual_with_trial"
+                  ? t("freeTrial3Days")
+                  : selectedPlan}{" "}
                 {getProductPrice(selectedPlan)}
               </Text>
             )}

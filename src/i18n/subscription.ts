@@ -1,8 +1,8 @@
 const subscriptionStrings: any = {
   en: {
     restore: "Restore",
-    boostWritingSkills: "Boost Your\nWriting Skills",
-    unlimitedGrammar: "Unlimited grammar checks\nwith 10+ language support.",
+    boostWritingSkills: "Your Writing\nPartner",
+    unlimitedGrammar: "Unlimited grammar checks with\n10+ language support.",
     freeTrial: "3 Day Free Trial",
     freeTrialInfo: "Free Trial Info",
     freeTrialDescription:
@@ -21,6 +21,8 @@ const subscriptionStrings: any = {
     termsOfUse: "Terms of Use",
     privacyPolicy: "Privacy Policy",
     pay: "Pay",
+    freeTrial3Days: "3 Days for free, then",
+    per_week: " per week",
   },
   fil: {
     restore: "Ibalik",
@@ -45,6 +47,8 @@ const subscriptionStrings: any = {
     termsOfUse: "Mga Tuntunin ng Paggamit",
     privacyPolicy: "Patakaran sa Privacy",
     pay: "Bayad",
+    freeTrial3Days: "3 Araw na libre, pagkatapos ay",
+    per_week: " kada linggo",
   },
   fr: {
     restore: "Restaurer",
@@ -69,6 +73,8 @@ const subscriptionStrings: any = {
     termsOfUse: "Conditions d'utilisation",
     privacyPolicy: "Politique de confidentialité",
     pay: "Payer",
+    freeTrial3Days: "3 jours gratuits, puis",
+    per_week: " par semaine",
   },
   de: {
     restore: "Wiederherstellen",
@@ -93,6 +99,8 @@ const subscriptionStrings: any = {
     termsOfUse: "Nutzungsbedingungen",
     privacyPolicy: "Datenschutzrichtlinie",
     pay: "Zahlen",
+    freeTrial3Days: "3 Tage kostenlos, dann",
+    per_week: " pro Woche",
   },
   it: {
     restore: "Ripristina",
@@ -117,6 +125,8 @@ const subscriptionStrings: any = {
     termsOfUse: "Termini di utilizzo",
     privacyPolicy: "Informativa sulla privacy",
     pay: "Paga",
+    freeTrial3Days: "3 giorni gratis, poi",
+    per_week: " per settimana",
   },
   ja: {
     restore: "復元",
@@ -139,6 +149,8 @@ const subscriptionStrings: any = {
     termsOfUse: "利用規約",
     privacyPolicy: "プライバシーポリシー",
     pay: "支払う",
+    freeTrial3Days: "3日間無料、その後",
+    per_week: " 毎週",
   },
   ko: {
     restore: "복원",
@@ -162,6 +174,8 @@ const subscriptionStrings: any = {
     termsOfUse: "이용약관",
     privacyPolicy: "개인정보 처리방침",
     pay: "결제",
+    freeTrial3Days: "3일 무료, 이후",
+    per_week: " 매주",
   },
   ms: {
     restore: "Pulihkan",
@@ -186,6 +200,8 @@ const subscriptionStrings: any = {
     termsOfUse: "Syarat Penggunaan",
     privacyPolicy: "Dasar Privasi",
     pay: "Bayar",
+    freeTrial3Days: "3 Hari percuma, kemudian",
+    per_week: " setiap minggu",
   },
   pl: {
     restore: "Przywróć",
@@ -210,6 +226,8 @@ const subscriptionStrings: any = {
     termsOfUse: "Warunki użytkowania",
     privacyPolicy: "Polityka prywatności",
     pay: "Zapłać",
+    freeTrial3Days: "3 dni za darmo, następnie",
+    per_week: " tygodniowo",
   },
   pt: {
     restore: "Restaurar",
@@ -234,6 +252,8 @@ const subscriptionStrings: any = {
     termsOfUse: "Termos de uso",
     privacyPolicy: "Política de privacidade",
     pay: "Pagar",
+    freeTrial3Days: "3 dias grátis, depois",
+    per_week: " por semana",
   },
   ru: {
     restore: "Восстановить",
@@ -258,6 +278,8 @@ const subscriptionStrings: any = {
     termsOfUse: "Условия использования",
     privacyPolicy: "Политика конфиденциальности",
     pay: "Оплатить",
+    freeTrial3Days: "3 дня бесплатно, затем",
+    per_week: " в неделю",
   },
   zh: {
     restore: "恢复",
@@ -280,6 +302,8 @@ const subscriptionStrings: any = {
     termsOfUse: "使用条款",
     privacyPolicy: "隐私政策",
     pay: "支付",
+    freeTrial3Days: "3天免费，之后",
+    per_week: " 每周",
   },
   es: {
     restore: "Restaurar",
@@ -304,6 +328,8 @@ const subscriptionStrings: any = {
     termsOfUse: "Términos de uso",
     privacyPolicy: "Política de privacidad",
     pay: "Pagar",
+    freeTrial3Days: "3 días gratis, luego",
+    per_week: " por semana",
   },
   th: {
     restore: "กู้คืน",
@@ -326,6 +352,8 @@ const subscriptionStrings: any = {
     termsOfUse: "เงื่อนไขการใช้งาน",
     privacyPolicy: "นโยบายความเป็นส่วนตัว",
     pay: "จ่าย",
+    freeTrial3Days: "ฟรี 3 วัน จากนั้น",
+    per_week: " ต่อสัปดาห์",
   },
   "zh-Hant": {
     restore: "恢復",
@@ -348,6 +376,8 @@ const subscriptionStrings: any = {
     termsOfUse: "使用條款",
     privacyPolicy: "隱私政策",
     pay: "支付",
+    freeTrial3Days: "3天免費，之後",
+    per_week: " 每週",
   },
 };
 
