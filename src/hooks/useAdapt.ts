@@ -5,7 +5,8 @@ import { useStore } from "../store/useStore";
 const useAdapt = () => {
   const [initLoading, setInitLoading] = useState(false);
   const [inited, setInited] = useState(false);
-  const { setProducts, setIsPremiumUser, setGlobalLoading } = useStore();
+  const { setProducts, setIsPremiumUser, setGlobalLoading, isPremiumUser } =
+    useStore();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -109,7 +110,7 @@ const useAdapt = () => {
     return () => adapty?.removeAllListeners();
   }, []);
 
-  return { initLoading };
+  return { initLoading, isPremiumUser };
 };
 
 export default useAdapt;

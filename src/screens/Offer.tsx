@@ -145,7 +145,7 @@ const Offer = () => {
           <View style={styles.priceContainer}>
             <Text style={styles.priceText}>
               {t("pricePrefix")}{" "}
-              <Text style={styles.strikethroughPrice}>$29.99</Text> $
+              <Text style={styles.strikethroughPrice}>$29.99</Text>
               {product?.price?.localizedString}
               {t("yearSuffix")}
             </Text>

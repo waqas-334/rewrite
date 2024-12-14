@@ -214,7 +214,9 @@ const SubscriptionScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.goBack();
+              navigation.canGoBack()
+                ? navigation.goBack()
+                : navigation.navigate("Home");
 
               setTimeout(async () => {
                 const hasViewedOffer = await AsyncStorage.getItem(

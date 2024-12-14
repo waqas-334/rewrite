@@ -89,40 +89,11 @@ const Home = ({ navigation }: { navigation: any }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showMoreModal, setShowMoreModal] = useState(false);
   const inputRef = useRef<TextInput>(null);
-  const [showSubscription, setShowSubscription] = useState(false);
   const isPremiumUser = useStore((state) => state.isPremiumUser);
-  const globalLoading = useStore((state) => state.globalLoading);
+  const [isKeyboardFocused, setIsKeyboardFocused] = useState(false);
   const { t } = useTranslation("home");
 
   const { checkGrammar } = useGrammar();
-
-  useEffect(() => {
-    checkFirstLaunch();
-  }, []);
-
-  useEffect(() => {
-    if (!globalLoading && !isPremiumUser && showSubscription) {
-      navigation.navigate("Subscription");
-    }
-  }, [globalLoading, isPremiumUser, showSubscription]);
-
-  const checkFirstLaunch = async () => {
-    try {
-      const hasLaunched = await AsyncStorage.getItem("hasLaunched");
-
-      if (!hasLaunched) {
-        AsyncStorage.setItem("hasLaunched", "true");
-        setShowSubscription(true);
-      } else {
-        const randomNumber = Math.floor(Math.random() * 3) + 1;
-        if (randomNumber === 1) {
-          setShowSubscription(true);
-        }
-      }
-    } catch (error) {
-      console.error("Error checking first launch:", error);
-    }
-  };
 
   const handleTextChange = (newText: string) => {
     setText(newText);
@@ -265,11 +236,13 @@ const Home = ({ navigation }: { navigation: any }) => {
                   onChangeText={handleTextChange}
                   onFocus={() => {
                     hideHeading.value = withTiming(0, { duration: 200 });
+                    setIsKeyboardFocused(true);
                   }}
                   onBlur={() => {
                     if (text.length === 0) {
                       hideHeading.value = withTiming(1, { duration: 200 });
                     }
+                    setIsKeyboardFocused(false);
                   }}
                   ref={inputRef}
                 />
@@ -295,43 +268,57 @@ const Home = ({ navigation }: { navigation: any }) => {
               </Animated.View>
               {/* result box */}
               {showResult && (
-                <Animated.View style={[styles.resultBox, animatedResultStyle]}>
-                  <ScrollView
-                    contentContainerStyle={{
-                      padding: 16,
-                      paddingBottom: 72,
-                    }}
-                    style={{ flex: 1 }}
-                    showsVerticalScrollIndicator={true}
-                  >
-                    <Text style={styles.correctedText}>{result}</Text>
-                  </ScrollView>
-                  <TouchableOpacity
-                    style={styles.shareIconWrapper}
-                    onPress={() => {
-                      Share.share({
-                        message: result,
-                      })
-                        .then((res) => console.log(res))
-                        .catch((error) => console.log(error));
-                    }}
-                  >
-                    <ShareIcon
-                      width={20}
-                      height={20}
-                      color="rgba(0, 0, 0, 0.5)"
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.copyIconWrapper}
-                    onPress={handleCopy}
-                  >
-                    <CopyIcon
-                      width={20}
-                      height={20}
-                      color="rgba(0, 0, 0, 0.5)"
-                    />
-                  </TouchableOpacity>
+                <Animated.View
+                  style={[
+                    styles.resultBox,
+                    animatedResultStyle,
+                    isKeyboardFocused && {
+                      paddingBottom: 0,
+                    },
+                  ]}
+                >
+                  <TextInput
+                    value={result}
+                    multiline
+                    style={[
+                      styles.correctedText,
+                      {
+                        padding: 16,
+                        paddingBottom: isKeyboardFocused ? 0 : 16,
+                      },
+                    ]}
+                    editable={false}
+                  />
+                  {!isKeyboardFocused && (
+                    <>
+                      <TouchableOpacity
+                        style={styles.shareIconWrapper}
+                        onPress={() => {
+                          Share.share({
+                            message: result,
+                          })
+                            .then((res) => console.log(res))
+                            .catch((error) => console.log(error));
+                        }}
+                      >
+                        <ShareIcon
+                          width={20}
+                          height={20}
+                          color="rgba(0, 0, 0, 0.5)"
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.copyIconWrapper}
+                        onPress={handleCopy}
+                      >
+                        <CopyIcon
+                          width={20}
+                          height={20}
+                          color="rgba(0, 0, 0, 0.5)"
+                        />
+                      </TouchableOpacity>
+                    </>
+                  )}
                 </Animated.View>
               )}
               {showResult ? (
@@ -562,6 +549,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 24,
     flexDirection: "column",
+    paddingBottom: 44,
   },
   resultText: {
     fontSize: 12,
