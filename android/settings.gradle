@@ -21,7 +21,7 @@ extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
   }
 }
 
-rootProject.name = 'grammar'
+rootProject.name = 'AI Rewrite'
 
 dependencyResolutionManagement {
   versionCatalogs {

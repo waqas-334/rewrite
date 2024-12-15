@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "grammar",
+    "name": "AI Rewrite",
     "slug": "grammar",
-    "version": "1.0.0",
+    "version": "1.0.6",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -32,9 +32,9 @@
       "imageHeight": 160
     },
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.deploy.grammarai",
-      "buildNumber": "1.0.3",
+      "buildNumber": "1.0.6",
       "icon": "./assets/icon.png"
     },
     "android": {
@@ -47,11 +47,11 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-
     "extra": {
       "eas": {
         "projectId": "166fa6ee-b94e-45cd-8185-eddcd29dfd48"
       }
-    }
+    },
+    "owner": "data2004"
   }
 }

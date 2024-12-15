@@ -26,6 +26,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="com.deploy.grammarai"/>
         <data android:scheme="exp+grammar"/>
+        <data android:scheme="exp+ai-rewrite"/>
       </intent-filter>
     </activity>
   </application>
