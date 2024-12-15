@@ -89,7 +89,7 @@ const Home = ({ navigation }: { navigation: any }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showMoreModal, setShowMoreModal] = useState(false);
   const inputRef = useRef<TextInput>(null);
-  const isPremiumUser = useStore((state) => state.isPremiumUser);
+  const isPremiumUser = true || useStore((state) => state.isPremiumUser);
   const [isKeyboardFocused, setIsKeyboardFocused] = useState(false);
   const { t } = useTranslation("home");
 
@@ -275,6 +275,7 @@ const Home = ({ navigation }: { navigation: any }) => {
                     isKeyboardFocused && {
                       paddingBottom: 0,
                     },
+                    { maxHeight: 300 },
                   ]}
                 >
                   <TextInput
