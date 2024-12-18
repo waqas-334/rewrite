@@ -24,7 +24,6 @@ const Offer = () => {
   const product = products.find(
     (p) => p.vendorProductId === "grammar.annual.premium.with_offer"
   );
-  console.log({ product });
   const [timeLeft, setTimeLeft] = useState(120);
   const [purchaseLoading, setPurchaseLoading] = useState(false);
   const { t } = useTranslation("offer");

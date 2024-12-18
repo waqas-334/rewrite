@@ -122,13 +122,19 @@ const Home = ({ navigation }: { navigation: any }) => {
       return;
     }
 
+    let checks: any = {};
+
     try {
       if (!isPremiumUser) {
         const today = new Date().toDateString();
         const storedData = await AsyncStorage.getItem("grammarChecks");
-        const checks = storedData ? JSON.parse(storedData) : {};
+        checks = storedData ? JSON.parse(storedData) : {};
 
         const todayChecks = checks[today] || 0;
+
+        // if (todayChecks === 2) {
+        //   navigation.navigate("Offer");
+        // }
 
         if (todayChecks >= 3) {
           Alert.alert(t("dailyLimitTitle"), t("dailyLimitMessage"), [

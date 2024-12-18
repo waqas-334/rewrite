@@ -120,8 +120,6 @@ const SubscriptionScreen = () => {
   const isPlanDisabled = (
     planType: "weekly" | "monthly" | "yearly" | "annual_with_trial"
   ) => {
-    console.log(planType, trialEnabled && planType !== "annual_with_trial");
-
     return trialEnabled && planType !== "annual_with_trial";
   };
 
@@ -213,12 +211,15 @@ const SubscriptionScreen = () => {
             <Text style={styles.restoreText}>{t("restore")}</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => {
+            onPress={async () => {
               navigation.canGoBack()
                 ? navigation.goBack()
                 : navigation.navigate("Home");
 
-              setTimeout(async () => {
+              const today = new Date();
+              const activateDate = new Date("2024-12-21");
+
+              if (today > activateDate) {
                 const hasViewedOffer = await AsyncStorage.getItem(
                   "hasViewedOffer"
                 );
@@ -227,7 +228,7 @@ const SubscriptionScreen = () => {
                   navigation.navigate("Offer");
                   AsyncStorage.setItem("hasViewedOffer", "true");
                 }
-              }, 1000);
+              }
             }}
             style={{
               width: 29,

@@ -2,7 +2,7 @@
   "expo": {
     "name": "AI Rewrite",
     "slug": "grammar",
-    "version": "1.0.6",
+    "version": "1.0.8",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -34,7 +34,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.deploy.grammarai",
-      "buildNumber": "1.0.6",
+      "buildNumber": "1.0.8",
       "icon": "./assets/icon.png"
     },
     "android": {
