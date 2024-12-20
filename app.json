@@ -29,7 +29,11 @@
       "image": "./assets/splash-icon.png",
       "backgroundColor": "#FFF9F1",
       "imageWidth": 160,
-      "imageHeight": 160
+      "imageHeight": 160,
+      "dark": {
+        "image": "./assets/splash-icon.png",
+        "backgroundColor": "#161616"
+      }
     },
     "ios": {
       "supportsTablet": true,
