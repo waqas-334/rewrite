@@ -216,18 +216,13 @@ const SubscriptionScreen = () => {
                 ? navigation.goBack()
                 : navigation.navigate("Home");
 
-              const today = new Date();
-              const activateDate = new Date("2024-12-21");
+              const hasViewedOffer = await AsyncStorage.getItem(
+                "hasViewedOffer"
+              );
 
-              if (today > activateDate) {
-                const hasViewedOffer = await AsyncStorage.getItem(
-                  "hasViewedOffer"
-                );
-
-                if (!hasViewedOffer) {
-                  navigation.navigate("Offer");
-                  AsyncStorage.setItem("hasViewedOffer", "true");
-                }
+              if (!hasViewedOffer) {
+                navigation.navigate("Offer");
+                AsyncStorage.setItem("hasViewedOffer", "true");
               }
             }}
             style={{
@@ -240,7 +235,7 @@ const SubscriptionScreen = () => {
               alignItems: "center",
             }}
           >
-            <CloseIcon width={11} height={11} color={"#fff"} />
+            <CloseIcon width={11} height={11} color={"black"} />
           </TouchableOpacity>
         </View>
 

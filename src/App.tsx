@@ -9,6 +9,8 @@ import useAdapt from "./hooks/useAdapt";
 import FlashMessage from "react-native-flash-message";
 import Offer from "./screens/Offer";
 import useInitApp from "./hooks/useInitApp";
+import useAdjust from "./hooks/useAdjust";
+import { initializeClarity } from "./configs/clarity";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -26,7 +28,10 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
+initializeClarity();
+
 export default function App() {
+  useAdjust();
   const { isPremiumUser, initLoading } = useAdapt();
   const { appLoading, showSubscription } = useInitApp();
 

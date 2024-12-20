@@ -23,6 +23,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useStore } from "@/store/useStore";
 import { useTranslation } from "@/i18n";
+import { useSystemColor } from "@/hooks/useSystemColor";
 
 interface MoreModalProps {
   visible: boolean;
@@ -50,6 +51,7 @@ const MoreModal = ({
   const opacity = useSharedValue(0);
   const isPremiumUser = useStore((s) => s.isPremiumUser);
   const { t } = useTranslation("more");
+  const { getColor } = useSystemColor();
 
   useEffect(() => {
     if (visible) {
@@ -78,17 +80,34 @@ const MoreModal = ({
     >
       <Pressable onPress={onClose} style={{ flex: 1 }}>
         <Animated.View style={[styles.overlay, animatedOverlayStyle]}>
-          <View style={styles.modalContainer}>
+          <View
+            style={[
+              styles.modalContainer,
+              { backgroundColor: getColor("modalBg") },
+            ]}
+          >
             <View style={styles.header}>
-              <Text style={styles.title}>{t("more")}</Text>
+              <Text style={[styles.title, { color: getColor("lightInherit") }]}>
+                {t("more")}
+              </Text>
               <TouchableOpacity onPress={onClose}>
-                <Text style={styles.closeButton}>✕</Text>
+                <Text
+                  style={[
+                    styles.closeButton,
+                    { color: getColor("lightInherit") },
+                  ]}
+                >
+                  ✕
+                </Text>
               </TouchableOpacity>
             </View>
 
             {!isPremiumUser && (
               <TouchableOpacity
-                style={styles.trialBanner}
+                style={[
+                  styles.trialBanner,
+                  { backgroundColor: getColor("trialColor") },
+                ]}
                 onPress={() => {
                   onClose();
                   navigation.navigate("Subscription");
@@ -104,44 +123,143 @@ const MoreModal = ({
               </TouchableOpacity>
             )}
 
-            {/* <TouchableOpacity style={styles.menuItem} onPress={onRatePress}>
-              <View style={styles.menuIconContainer}>
-                <StarIcon width={20} height={20} />
+            <TouchableOpacity
+              style={[
+                styles.menuItem,
+                { borderBottomColor: getColor("borderBottomColor") },
+              ]}
+              onPress={() => {
+                onRatePress?.();
+              }}
+            >
+              <View
+                style={[
+                  styles.menuIconContainer,
+                  { backgroundColor: getColor("backOpacity") },
+                ]}
+              >
+                <StarIcon
+                  width={20}
+                  height={20}
+                  color={getColor("lightInherit")}
+                />
               </View>
-              <Text style={styles.menuText}>{t("rateUs")}</Text>
-              <RightIcon color="rgba(0, 0, 0, 0.5)" />
+              <Text
+                style={[styles.menuText, { color: getColor("lightInherit") }]}
+              >
+                {t("rateUs")}
+              </Text>
+              <RightIcon color={getColor("rightIcon")} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.menuItem} onPress={onSharePress}>
-              <View style={styles.menuIconContainer}>
-                <ShareIcon width={20} height={20} color="#000" />
+            <TouchableOpacity
+              style={[
+                styles.menuItem,
+                { borderBottomColor: getColor("borderBottomColor") },
+              ]}
+              onPress={() => {
+                onSharePress?.();
+              }}
+            >
+              <View
+                style={[
+                  styles.menuIconContainer,
+                  { backgroundColor: getColor("backOpacity") },
+                ]}
+              >
+                <ShareIcon
+                  width={20}
+                  height={20}
+                  color={getColor("lightInherit")}
+                />
               </View>
-              <Text style={styles.menuText}>{t("share")}</Text>
-              <RightIcon color="rgba(0, 0, 0, 0.5)" />
-            </TouchableOpacity> */}
-
-            <TouchableOpacity style={styles.menuItem} onPress={onPrivacyPress}>
-              <View style={styles.menuIconContainer}>
-                <PrivacyIcon width={20} height={20} />
-              </View>
-              <Text style={styles.menuText}>{t("privacyPolicy")}</Text>
-              <RightIcon color="rgba(0, 0, 0, 0.5)" />
+              <Text
+                style={[styles.menuText, { color: getColor("lightInherit") }]}
+              >
+                {t("share")}
+              </Text>
+              <RightIcon color={getColor("rightIcon")} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.menuItem} onPress={onTermsPress}>
-              <View style={styles.menuIconContainer}>
-                <TermsIcon width={20} height={20} />
+            <TouchableOpacity
+              style={[
+                styles.menuItem,
+                { borderBottomColor: getColor("borderBottomColor") },
+              ]}
+              onPress={onPrivacyPress}
+            >
+              <View
+                style={[
+                  styles.menuIconContainer,
+                  { backgroundColor: getColor("backOpacity") },
+                ]}
+              >
+                <PrivacyIcon
+                  width={20}
+                  height={20}
+                  color={getColor("lightInherit")}
+                />
               </View>
-              <Text style={styles.menuText}>{t("termsOfUse")}</Text>
-              <RightIcon color="rgba(0, 0, 0, 0.5)" />
+              <Text
+                style={[styles.menuText, { color: getColor("lightInherit") }]}
+              >
+                {t("privacyPolicy")}
+              </Text>
+              <RightIcon color={getColor("rightIcon")} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.menuItem} onPress={onSupportPress}>
-              <View style={styles.menuIconContainer}>
-                <MailIcon width={20} height={20} />
+            <TouchableOpacity
+              style={[
+                styles.menuItem,
+                { borderBottomColor: getColor("borderBottomColor") },
+              ]}
+              onPress={onTermsPress}
+            >
+              <View
+                style={[
+                  styles.menuIconContainer,
+                  { backgroundColor: getColor("backOpacity") },
+                ]}
+              >
+                <TermsIcon
+                  width={20}
+                  height={20}
+                  color={getColor("lightInherit")}
+                />
               </View>
-              <Text style={styles.menuText}>{t("support")}</Text>
-              <RightIcon color="rgba(0, 0, 0, 0.5)" />
+              <Text
+                style={[styles.menuText, { color: getColor("lightInherit") }]}
+              >
+                {t("termsOfUse")}
+              </Text>
+              <RightIcon color={getColor("rightIcon")} />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.menuItem,
+                { borderBottomColor: getColor("borderBottomColor") },
+              ]}
+              onPress={onSupportPress}
+            >
+              <View
+                style={[
+                  styles.menuIconContainer,
+                  { backgroundColor: getColor("backOpacity") },
+                ]}
+              >
+                <MailIcon
+                  width={20}
+                  height={20}
+                  color={getColor("lightInherit")}
+                />
+              </View>
+              <Text
+                style={[styles.menuText, { color: getColor("lightInherit") }]}
+              >
+                {t("support")}
+              </Text>
+              <RightIcon color={getColor("rightIcon")} />
             </TouchableOpacity>
           </View>
         </Animated.View>

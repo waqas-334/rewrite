@@ -2,7 +2,13 @@ PODS:
   - Adapty (3.0.3)
   - AdaptyUI (3.0.3):
     - Adapty (= 3.0.3)
+  - Adjust (5.0.1):
+    - Adjust/Adjust (= 5.0.1)
+  - Adjust/Adjust (5.0.1):
+    - AdjustSignature (~> 3.18)
+  - AdjustSignature (3.35.2)
   - boost (1.84.0)
+  - Clarity (3.0.2)
   - DoubleConversion (1.1.6)
   - EXConstants (17.0.3):
     - ExpoModulesCore
@@ -320,6 +326,7 @@ PODS:
     - React-RCTText (= 0.76.5)
     - React-RCTVibration (= 0.76.5)
   - React-callinvoker (0.76.5)
+  - React-Codegen (0.1.0)
   - React-Core (0.76.5):
     - glog
     - hermes-engine
@@ -1523,6 +1530,17 @@ PODS:
     - Adapty (= 3.0.3)
     - AdaptyUI (= 3.0.3)
     - React
+  - react-native-adjust (5.0.3):
+    - Adjust (= 5.0.1)
+    - React-Core
+  - react-native-clarity (4.0.4):
+    - Clarity (= 3.0.2)
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - ReactCommon/turbomodule/core
   - react-native-safe-area-context (4.12.0):
     - DoubleConversion
     - glog
@@ -2135,6 +2153,8 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - react-native-adapty-sdk (from `../node_modules/react-native-adapty`)
+  - react-native-adjust (from `../node_modules/react-native-adjust`)
+  - "react-native-clarity (from `../node_modules/@microsoft/react-native-clarity`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
@@ -2175,6 +2195,10 @@ SPEC REPOS:
   trunk:
     - Adapty
     - AdaptyUI
+    - Adjust
+    - AdjustSignature
+    - Clarity
+    - React-Codegen
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -2287,6 +2311,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
   react-native-adapty-sdk:
     :path: "../node_modules/react-native-adapty"
+  react-native-adjust:
+    :path: "../node_modules/react-native-adjust"
+  react-native-clarity:
+    :path: "../node_modules/@microsoft/react-native-clarity"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   React-nativeconfig:
@@ -2361,7 +2389,10 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Adapty: 1e48516a56a5a888875091c326593d6bb2d4e177
   AdaptyUI: 6529315c657960743ce3c2df58620a4d154605fa
+  Adjust: f27daaa40d0df5550b89dd428cd8545d812e1f6d
+  AdjustSignature: 23b9e5d4adcadffc303bb6b410fde617dd88504f
   boost: 1dca942403ed9342f98334bf4c3621f011aa7946
+  Clarity: 1050b2588ff68a80baf6080ca9558929ccad7897
   DoubleConversion: f16ae600a246532c4020132d54af21d0ddb2a385
   EXConstants: dd2fe64c6cdb1383b694c309a63028a8e9f2be6d
   Exify: 2138930067129d6f7159def83762fe1430a713e1
@@ -2391,6 +2422,7 @@ SPEC CHECKSUMS:
   RCTTypeSafety: e9a6e7d48184646eb0610295b74c0dd02768cbb2
   React: fffb3cf1b0d7aee03c4eb4952b2d58783615e9fa
   React-callinvoker: 3c6ecc0315d42924e01b3ddc25cf2e49d33da169
+  React-Codegen: 4b8b4817cea7a54b83851d4c1f91f79aa73de30a
   React-Core: d2143ba58d0c8563cf397f96f699c6069eba951c
   React-CoreModules: b3cbc5e3090a8c23116c0c7dd8998e0637e29619
   React-cxxreact: 68fb9193582c4a411ce99d0b23f7b3d8da1c2e4a
@@ -2415,6 +2447,8 @@ SPEC CHECKSUMS:
   React-Mapbuffer: c174e11bdea12dce07df8669d6c0dc97eb0c7706
   React-microtasksnativemodule: 8a80099ad7391f4e13a48b12796d96680f120dc6
   react-native-adapty-sdk: 890829ba2b88139ae812f38b336cfcd6bdae1397
+  react-native-adjust: 59b523d8ef1dc2c0516fb7120ed04cdfc5510a90
+  react-native-clarity: 135b5b0f334d7ef0cae082f2ea20f0beabf649b7
   react-native-safe-area-context: 458f6b948437afcb59198016b26bbd02ff9c3b47
   React-nativeconfig: f7ab6c152e780b99a8c17448f2d99cf5f69a2311
   React-NativeModulesApple: 70600f7edfc2c2a01e39ab13a20fd59f4c60df0b

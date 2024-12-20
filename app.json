@@ -32,10 +32,14 @@
       "imageHeight": 160
     },
     "ios": {
-      "supportsTablet": false,
+      "supportsTablet": true,
       "bundleIdentifier": "com.deploy.grammarai",
       "buildNumber": "1.0.8",
       "icon": "./assets/icon.png"
+    },
+    "macOS": {
+      "supportsM1": true,
+      "bundleIdentifier": "com.deploy.grammarai"
     },
     "android": {
       "adaptiveIcon": {

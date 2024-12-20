@@ -16,6 +16,7 @@ import {
   Linking,
   Share,
   Alert,
+  useColorScheme,
 } from "react-native";
 import {
   CrownIcon,
@@ -42,19 +43,27 @@ import { useStore } from "@/store/useStore";
 import EditIcon from "@/components/icon/EditIcon";
 import { showMessage } from "react-native-flash-message";
 import { useTranslation } from "@/i18n";
+import { useSystemColor } from "@/hooks/useSystemColor";
 
 const Header = ({ onMenuPress }: { onMenuPress: () => void }) => {
   const navigation: any = useNavigation();
   const isPremiumUser = useStore((state) => state.isPremiumUser);
   const globalLoading = useStore((state) => state.globalLoading);
+  const { getColor } = useSystemColor();
 
   return (
     <View style={styles.header}>
-      <Text style={styles.title}>Home</Text>
+      <Text style={[styles.title, { color: getColor("lightInherit") }]}>
+        Home
+      </Text>
 
       {!isPremiumUser && (
         <TouchableOpacity
-          style={[styles.trialButton, globalLoading && { opacity: 0.5 }]}
+          style={[
+            styles.trialButton,
+            { backgroundColor: getColor("trialButton") },
+            globalLoading && { opacity: 0.5 },
+          ]}
           onPress={() => navigation.navigate("Subscription")}
           disabled={globalLoading}
         >
@@ -62,17 +71,24 @@ const Header = ({ onMenuPress }: { onMenuPress: () => void }) => {
             <>
               <CrownIcon width={20} height={16} fill="#FF9200" />
 
-              <Text style={styles.trialText}>Free Trial</Text>
-              <RightIcon />
+              <Text
+                style={[styles.trialText, { color: getColor("lightInherit") }]}
+              >
+                Free Trial
+              </Text>
+              <RightIcon color={getColor("lightInherit")} />
             </>
           )}
         </TouchableOpacity>
       )}
       <TouchableOpacity
-        style={styles.menuButtonContainer}
+        style={[
+          styles.menuButtonContainer,
+          { backgroundColor: getColor("backOpacity") },
+        ]}
         onPress={onMenuPress}
       >
-        <MenuIcon width={16} height={10} />
+        <MenuIcon width={16} height={10} color={getColor("lightInherit")} />
       </TouchableOpacity>
     </View>
   );
@@ -94,6 +110,7 @@ const Home = ({ navigation }: { navigation: any }) => {
   const { t } = useTranslation("home");
 
   const { checkGrammar } = useGrammar();
+  const { getColor } = useSystemColor();
 
   const handleTextChange = (newText: string) => {
     setText(newText);
@@ -136,19 +153,17 @@ const Home = ({ navigation }: { navigation: any }) => {
         //   navigation.navigate("Offer");
         // }
 
-        if (todayChecks >= 3) {
-          Alert.alert(t("dailyLimitTitle"), t("dailyLimitMessage"), [
-            {
-              text: t("upgrade"),
-              onPress: () => navigation.navigate("Subscription"),
-            },
-            {
-              text: t("cancel"),
-              style: "cancel",
-            },
-          ]);
-          return;
-        }
+        Alert.alert(t("dailyLimitTitle"), t("dailyLimitMessage"), [
+          {
+            text: t("upgrade"),
+            onPress: () => navigation.navigate("Subscription"),
+          },
+          {
+            text: t("cancel"),
+            style: "cancel",
+          },
+        ]);
+        return;
 
         checks[today] = todayChecks + 1;
         await AsyncStorage.setItem("grammarChecks", JSON.stringify(checks));
@@ -216,7 +231,9 @@ const Home = ({ navigation }: { navigation: any }) => {
   }));
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: getColor("primary") }]}
+    >
       <>
         <Header onMenuPress={() => setShowMoreModal(true)} />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -226,18 +243,28 @@ const Home = ({ navigation }: { navigation: any }) => {
           >
             <View style={styles.content}>
               {!showResult && (
-                <Animated.Text style={[styles.heading, headingAnimatedStyle]}>
+                <Animated.Text
+                  style={[
+                    styles.heading,
+                    { color: getColor("lightInherit") },
+                    headingAnimatedStyle,
+                  ]}
+                >
                   {t("checkGrammar")}
                 </Animated.Text>
               )}
               <Animated.View
-                style={[styles.inputContainer, resultAnimatedStyle]}
+                style={[
+                  styles.inputContainer,
+                  { borderColor: getColor("border") },
+                  resultAnimatedStyle,
+                ]}
               >
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, { color: getColor("lightInherit") }]}
                   multiline
                   placeholder={t("enterText")}
-                  placeholderTextColor="rgba(0, 0, 0, 0.5)"
+                  placeholderTextColor={getColor("placeholder")}
                   value={text}
                   onChangeText={handleTextChange}
                   onFocus={() => {
@@ -252,23 +279,47 @@ const Home = ({ navigation }: { navigation: any }) => {
                   }}
                   ref={inputRef}
                 />
-                <Animated.View style={[styles.pasteButton]}>
+                <Animated.View
+                  style={[
+                    styles.pasteButton,
+                    { backgroundColor: getColor("backOpacity") },
+                  ]}
+                >
                   <TouchableOpacity
                     onPress={handlePaste}
-                    style={styles.pasteButtonContent}
+                    style={[styles.pasteButtonContent]}
                   >
-                    <PasteIcon width={12.92} height={15.42} />
-                    <Text style={styles.pasteText}>{t("paste")}</Text>
+                    <PasteIcon
+                      color={getColor("lightInherit")}
+                      width={12.92}
+                      height={15.42}
+                    />
+                    <Text
+                      style={[
+                        styles.pasteText,
+                        { color: getColor("lightInherit") },
+                      ]}
+                    >
+                      {t("paste")}
+                    </Text>
                   </TouchableOpacity>
                 </Animated.View>
                 <Animated.View
-                  style={[styles.closeButton, closeButtonAnimatedStyle]}
+                  style={[
+                    styles.closeButton,
+                    { backgroundColor: getColor("backOpacity") },
+                    closeButtonAnimatedStyle,
+                  ]}
                 >
                   <Pressable
                     onPress={handleClear}
                     style={styles.closeButtonContent}
                   >
-                    <CloseIcon width={10.57} height={10.57} />
+                    <CloseIcon
+                      color={getColor("lightInherit")}
+                      width={10.57}
+                      height={10.57}
+                    />
                   </Pressable>
                 </Animated.View>
               </Animated.View>
@@ -277,6 +328,10 @@ const Home = ({ navigation }: { navigation: any }) => {
                 <Animated.View
                   style={[
                     styles.resultBox,
+                    {
+                      backgroundColor: getColor("resultBg"),
+                      borderColor: getColor("resultBorder"),
+                    },
                     animatedResultStyle,
                     isKeyboardFocused && {
                       paddingBottom: 0,
@@ -289,17 +344,22 @@ const Home = ({ navigation }: { navigation: any }) => {
                     multiline
                     style={[
                       styles.correctedText,
+                      { color: getColor("lightInherit") },
                       {
                         padding: 16,
                         paddingBottom: isKeyboardFocused ? 0 : 16,
                       },
                     ]}
+                    placeholderTextColor={getColor("placeholder")}
                     editable={false}
                   />
                   {!isKeyboardFocused && (
                     <>
                       <TouchableOpacity
-                        style={styles.shareIconWrapper}
+                        style={[
+                          styles.shareIconWrapper,
+                          { backgroundColor: getColor("backOpacity") },
+                        ]}
                         onPress={() => {
                           Share.share({
                             message: result,
@@ -311,17 +371,20 @@ const Home = ({ navigation }: { navigation: any }) => {
                         <ShareIcon
                           width={20}
                           height={20}
-                          color="rgba(0, 0, 0, 0.5)"
+                          color={getColor("lightInherit")}
                         />
                       </TouchableOpacity>
                       <TouchableOpacity
-                        style={styles.copyIconWrapper}
+                        style={[
+                          styles.copyIconWrapper,
+                          { backgroundColor: getColor("backOpacityRes") },
+                        ]}
                         onPress={handleCopy}
                       >
                         <CopyIcon
                           width={20}
                           height={20}
-                          color="rgba(0, 0, 0, 0.5)"
+                          color={getColor("lightInherit")}
                         />
                       </TouchableOpacity>
                     </>
@@ -331,14 +394,22 @@ const Home = ({ navigation }: { navigation: any }) => {
               {showResult ? (
                 <View style={styles.resultFooter}>
                   <TouchableOpacity
-                    style={styles.trashButton}
+                    style={[
+                      styles.trashButton,
+                      { backgroundColor: getColor("backOpacity") },
+                    ]}
                     onPress={handleClear}
                   >
-                    <EditIcon width={17.92} height={17.92} fill="#000" />
+                    <EditIcon
+                      color={getColor("lightInherit")}
+                      width={17.92}
+                      height={17.92}
+                    />
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[
                       styles.againButton,
+                      { backgroundColor: getColor("lightInherit") },
                       isLoading && styles.disabledButton,
                     ]}
                     onPress={() => {
@@ -351,8 +422,19 @@ const Home = ({ navigation }: { navigation: any }) => {
                         <ActivityIndicator color="#fff" />
                       ) : (
                         <>
-                          <RepeatIcon width={16} height={16} fill="#fff" />
-                          <Text style={styles.againText}>{t("reCheck")}</Text>
+                          <RepeatIcon
+                            width={16}
+                            height={16}
+                            color={getColor("darkInherit")}
+                          />
+                          <Text
+                            style={[
+                              styles.againText,
+                              { color: getColor("darkInherit") },
+                            ]}
+                          >
+                            {t("reCheck")}
+                          </Text>
                         </>
                       )}
                     </View>
@@ -362,15 +444,23 @@ const Home = ({ navigation }: { navigation: any }) => {
                 <TouchableOpacity
                   style={[
                     styles.checkButton,
+                    { backgroundColor: getColor("lightInherit") },
                     isLoading && styles.disabledButton,
                   ]}
                   onPress={handleCheck}
                   disabled={isLoading}
                 >
                   {isLoading ? (
-                    <ActivityIndicator color="#fff" />
+                    <ActivityIndicator color={getColor("primary")} />
                   ) : (
-                    <Text style={styles.checkButtonText}>{t("check")}</Text>
+                    <Text
+                      style={[
+                        styles.checkButtonText,
+                        { color: getColor("darkInherit") },
+                      ]}
+                    >
+                      {t("check")}
+                    </Text>
                   )}
                 </TouchableOpacity>
               )}
@@ -387,16 +477,31 @@ const Home = ({ navigation }: { navigation: any }) => {
             navigation.navigate("Subscription");
           }}
           onRatePress={() => {
-            // Handle rate press
+            Alert.alert(
+              "Are you enjoying our app?",
+              "",
+              [
+                {
+                  text: "Not really",
+                  onPress: () => {
+                    Linking.openURL("https://deployglobal.ee/support");
+                  },
+                },
+                {
+                  text: "Yes, I love it!",
+                  onPress: () => {
+                    Linking.openURL("https://apps.apple.com/app/id6739363989");
+                  },
+                },
+              ],
+              { cancelable: true }
+            );
           }}
           onSharePress={() => {
             Share.share({
-              message: t("shareMessage"),
-              url: "https://example.com", // Replace with your app's URL
-              title: t("shareTitle"),
-            })
-              .then((_) => {})
-              .catch((error) => console.log(error));
+              message: "AI Rewrite & Spell Checker app!",
+              url: "https://apps.apple.com/app/id6739363989",
+            }).catch((e) => console.log(e));
           }}
           onPrivacyPress={() => {
             Linking.openURL("https://deployglobal.ee/corrector/privacy");
@@ -416,7 +521,6 @@ const Home = ({ navigation }: { navigation: any }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
   },
   header: {
     flexDirection: "row",
@@ -462,7 +566,6 @@ const styles = StyleSheet.create({
   menuButtonContainer: {
     width: 48,
     height: 48,
-    backgroundColor: "rgba(0, 0, 0, 0.05)",
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
@@ -557,13 +660,6 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     flexDirection: "column",
     paddingBottom: 44,
-  },
-  resultText: {
-    fontSize: 12,
-    lineHeight: 16,
-    fontWeight: "500",
-    color: "rgba(0, 0, 0, 0.5)",
-    marginBottom: 8,
   },
   correctedText: {
     fontSize: 14,
