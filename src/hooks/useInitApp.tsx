@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import * as RNLocalize from "react-native-localize";
 import { useStore } from "../store/useStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import strings from "@/i18n/strings";
 
 const useInitApp = () => {
   const [appLoading, setAppLoading] = useState(true);
@@ -30,10 +31,18 @@ const useInitApp = () => {
     try {
       const locales = RNLocalize.getLocales();
 
+      let currentLanguage = "en";
+
       if (locales?.length > 0) {
-        const primaryLocale = locales?.[0];
-        setCurrentLanguage(primaryLocale?.languageCode || "en");
+        let primaryLocale = locales?.[0];
+        const supportedLanguages = Object.keys(strings.home);
+
+        if (supportedLanguages.includes(primaryLocale?.languageCode)) {
+          currentLanguage = primaryLocale?.languageCode;
+        }
       }
+
+      setCurrentLanguage(currentLanguage);
     } catch (error) {
       console.log(error);
       setCurrentLanguage("en");
