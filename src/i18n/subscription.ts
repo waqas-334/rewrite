@@ -23,6 +23,9 @@ const subscriptionStrings: any = {
     pay: "Pay",
     freeTrial3Days: "3 Days for free, then",
     per_week: " per week",
+    feature1: "Gain unlimited access to all features",
+    feature2: "Enjoy faster and higher-quality results",
+    feature3: "Unlock the most advanced AI model",
   },
   fil: {
     restore: "Ibalik",
@@ -49,6 +52,9 @@ const subscriptionStrings: any = {
     pay: "Bayad",
     freeTrial3Days: "3 Araw na libre, pagkatapos ay",
     per_week: " kada linggo",
+    feature1: "Magkaroon ng walang limitasyong access sa lahat ng features",
+    feature2: "Mag-enjoy ng mas mabilis at mas mataas na kalidad na resulta",
+    feature3: "I-unlock ang pinakamaunlad na AI model",
   },
   fr: {
     restore: "Restaurer",
@@ -75,6 +81,9 @@ const subscriptionStrings: any = {
     pay: "Payer",
     freeTrial3Days: "3 jours gratuits, puis",
     per_week: " par semaine",
+    feature1: "Accédez de manière illimitée à toutes les fonctionnalités",
+    feature2: "Profitez de résultats plus rapides et de meilleure qualité",
+    feature3: "Débloquez le modèle d'IA le plus avancé",
   },
   de: {
     restore: "Wiederherstellen",
@@ -101,6 +110,9 @@ const subscriptionStrings: any = {
     pay: "Zahlen",
     freeTrial3Days: "3 Tage kostenlos, dann",
     per_week: " pro Woche",
+    feature1: "Erhalten Sie unbegrenzten Zugriff auf alle Funktionen",
+    feature2: "Genießen Sie schnellere und qualitativ hochwertigere Ergebnisse",
+    feature3: "Schalten Sie das fortschrittlichste KI-Modell frei",
   },
   it: {
     restore: "Ripristina",
@@ -127,6 +139,9 @@ const subscriptionStrings: any = {
     pay: "Paga",
     freeTrial3Days: "3 giorni gratis, poi",
     per_week: " per settimana",
+    feature1: "Ottieni accesso illimitato a tutte le funzionalità",
+    feature2: "Goditi risultati più veloci e di qualità superiore",
+    feature3: "Sblocca il modello di IA più avanzato",
   },
   ja: {
     restore: "復元",
@@ -151,6 +166,9 @@ const subscriptionStrings: any = {
     pay: "支払う",
     freeTrial3Days: "3日間無料、その後",
     per_week: " 毎週",
+    feature1: "すべての機能への無制限アクセスを獲得",
+    feature2: "より速く、より高品質な結果を体験",
+    feature3: "最先端のAIモデルをアンロック",
   },
   ko: {
     restore: "복원",
@@ -176,6 +194,9 @@ const subscriptionStrings: any = {
     pay: "결제",
     freeTrial3Days: "3일 무료, 이후",
     per_week: " 매주",
+    feature1: "모든 기능에 무제한 액세스",
+    feature2: "더 빠르고 높은 품질의 결과 경험",
+    feature3: "가장 진보된 AI 모델 잠금 해제",
   },
   ms: {
     restore: "Pulihkan",
@@ -202,6 +223,9 @@ const subscriptionStrings: any = {
     pay: "Bayar",
     freeTrial3Days: "3 Hari percuma, kemudian",
     per_week: " setiap minggu",
+    feature1: "Dapatkan akses tanpa had ke semua ciri",
+    feature2: "Nikmati hasil yang lebih cepat dan berkualiti tinggi",
+    feature3: "Buka kunci model AI yang paling canggih",
   },
   pl: {
     restore: "Przywróć",
@@ -228,6 +252,9 @@ const subscriptionStrings: any = {
     pay: "Zapłać",
     freeTrial3Days: "3 dni za darmo, następnie",
     per_week: " tygodniowo",
+    feature1: "Uzyskaj nieograniczony dostęp do wszystkich funkcji",
+    feature2: "Ciesz się szybszymi i lepszej jakości wynikami",
+    feature3: "Odblokuj najbardziej zaawansowany model AI",
   },
   pt: {
     restore: "Restaurar",
@@ -254,6 +281,9 @@ const subscriptionStrings: any = {
     pay: "Pagar",
     freeTrial3Days: "3 dias grátis, depois",
     per_week: " por semana",
+    feature1: "Obtenha acesso ilimitado a todos os recursos",
+    feature2: "Desfrute de resultados mais rápidos e de maior qualidade",
+    feature3: "Desbloqueie o modelo de IA mais avançado",
   },
   ru: {
     restore: "Восстановить",
@@ -280,6 +310,9 @@ const subscriptionStrings: any = {
     pay: "Оплатить",
     freeTrial3Days: "3 дня бесплатно, затем",
     per_week: " в неделю",
+    feature1: "Получите неограниченный доступ ко всем функциям",
+    feature2: "Наслаждайтесь более быстрыми и качественными результатами",
+    feature3: "Разблокируйте самую продвинутую модель ИИ",
   },
   zh: {
     restore: "恢复",
@@ -304,6 +337,9 @@ const subscriptionStrings: any = {
     pay: "支付",
     freeTrial3Days: "3天免费，之后",
     per_week: " 每周",
+    feature1: "获得所有功能的无限访问权限",
+    feature2: "享受更快速和更高品質的結果",
+    feature3: "解锁最先进的人工智能模型",
   },
   es: {
     restore: "Restaurar",
@@ -330,6 +366,9 @@ const subscriptionStrings: any = {
     pay: "Pagar",
     freeTrial3Days: "3 días gratis, luego",
     per_week: " por semana",
+    feature1: "Obtén acceso ilimitado a todas las funciones",
+    feature2: "Disfruta de resultados más rápidos y de mayor calidad",
+    feature3: "Desbloquea el modelo de IA más avanzado",
   },
   th: {
     restore: "กู้คืน",
@@ -354,6 +393,9 @@ const subscriptionStrings: any = {
     pay: "จ่าย",
     freeTrial3Days: "ฟรี 3 วัน จากนั้น",
     per_week: " ต่อสัปดาห์",
+    feature1: "รับสิทธิ์การเข้าถึงฟีเจอร์ทั้งหมดแบบไม่จำกัด",
+    feature2: "เพลิดเพลินกับผลลัพธ์ที่เร็วขึ้นและมีคุณภาพสูงขึ้น",
+    feature3: "ปลดล็อกโมเดล AI ที่ล้ำสมัยที่สุด",
   },
   "zh-Hant": {
     restore: "恢復",
@@ -378,6 +420,9 @@ const subscriptionStrings: any = {
     pay: "支付",
     freeTrial3Days: "3天免費，之後",
     per_week: " 每週",
+    feature1: "獲得所有功能的無限訪問權限",
+    feature2: "享受更快速和更高品質的結果",
+    feature3: "解鎖最先進的人工智能模型",
   },
 };
 

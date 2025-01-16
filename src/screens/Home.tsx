@@ -44,17 +44,19 @@ import EditIcon from "@/components/icon/EditIcon";
 import { showMessage } from "react-native-flash-message";
 import { useTranslation } from "@/i18n";
 import { useSystemColor } from "@/hooks/useSystemColor";
+import * as StoreReview from "expo-store-review";
 
 const Header = ({ onMenuPress }: { onMenuPress: () => void }) => {
   const navigation: any = useNavigation();
   const isPremiumUser = useStore((state) => state.isPremiumUser);
   const globalLoading = useStore((state) => state.globalLoading);
   const { getColor } = useSystemColor();
+  const { t } = useTranslation("home");
 
   return (
     <View style={styles.header}>
       <Text style={[styles.title, { color: getColor("lightInherit") }]}>
-        Home
+        {t("home")}
       </Text>
 
       {!isPremiumUser && (
@@ -74,7 +76,7 @@ const Header = ({ onMenuPress }: { onMenuPress: () => void }) => {
               <Text
                 style={[styles.trialText, { color: getColor("lightInherit") }]}
               >
-                Free Trial
+                {t("freeTrial")}
               </Text>
               <RightIcon color={getColor("lightInherit")} />
             </>
@@ -107,6 +109,7 @@ const Home = ({ navigation }: { navigation: any }) => {
   const inputRef = useRef<TextInput>(null);
   const isPremiumUser = useStore((state) => state.isPremiumUser);
   const [isKeyboardFocused, setIsKeyboardFocused] = useState(false);
+  const [hasStoreReviewAction, setHasStoreReviewAction] = useState(false);
   const { t } = useTranslation("home");
 
   const { checkGrammar } = useGrammar();
@@ -129,6 +132,25 @@ const Home = ({ navigation }: { navigation: any }) => {
     }
   };
 
+  const showReviewAlert = () => {
+    Alert.alert(
+      "Are you enjoying our app?",
+      "Your feedback help us improve. Let us know if you're enjoying our app!",
+      [
+        {
+          text: "Not really",
+          onPress: () => {
+            Linking.openURL("https://deployglobal.ee/support");
+          },
+        },
+        {
+          text: "Yes, I love it!",
+          onPress: reviewApp,
+        },
+      ]
+    );
+  };
+
   const handleClear = () => {
     setText("");
     closeButtonOpacity.value = withTiming(0, { duration: 200 });
@@ -142,6 +164,8 @@ const Home = ({ navigation }: { navigation: any }) => {
     let checks: any = {};
 
     try {
+      setIsLoading(true);
+
       if (!isPremiumUser) {
         const today = new Date().toDateString();
         const storedData = await AsyncStorage.getItem("grammarChecks");
@@ -149,27 +173,15 @@ const Home = ({ navigation }: { navigation: any }) => {
 
         const todayChecks = checks[today] || 0;
 
-        // if (todayChecks === 2) {
-        //   navigation.navigate("Offer");
-        // }
-
-        Alert.alert(t("dailyLimitTitle"), t("dailyLimitMessage"), [
-          {
-            text: t("upgrade"),
-            onPress: () => navigation.navigate("Subscription"),
-          },
-          {
-            text: t("cancel"),
-            style: "cancel",
-          },
-        ]);
-        return;
+        if (todayChecks === 3) {
+          navigation.navigate("Subscription");
+          return setIsLoading(false);
+        }
 
         checks[today] = todayChecks + 1;
-        await AsyncStorage.setItem("grammarChecks", JSON.stringify(checks));
+        AsyncStorage.setItem("grammarChecks", JSON.stringify(checks));
       }
 
-      setIsLoading(true);
       inputRef?.current?.blur?.();
       Keyboard.dismiss();
 
@@ -180,6 +192,17 @@ const Home = ({ navigation }: { navigation: any }) => {
       console.error("Error:", error);
     } finally {
       setIsLoading(false);
+
+      setTimeout(async () => {
+        const hasSeenStoreReview = await AsyncStorage.getItem(
+          "hasSeenStoreReview"
+        );
+
+        if (!hasSeenStoreReview) {
+          showReviewAlert();
+          AsyncStorage.setItem("hasSeenStoreReview", "true");
+        }
+      }, 1000);
     }
   };
 
@@ -210,6 +233,29 @@ const Home = ({ navigation }: { navigation: any }) => {
       resultAnim.value = withTiming(1, { duration: 200 });
     }
   }, [showResult]);
+
+  useEffect(() => {
+    const hasStoreReviewAction = async () => {
+      try {
+        const hasAction = await StoreReview.hasAction();
+        setHasStoreReviewAction(hasAction);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    hasStoreReviewAction();
+  }, []);
+
+  const reviewApp = async () => {
+    if (hasStoreReviewAction) {
+      await StoreReview.requestReview();
+    } else {
+      Linking.openURL(
+        "https://apps.apple.com/us/app/ai-rewrite-spell-checker/id6739363989?action=write-review"
+      );
+    }
+  };
 
   const closeButtonAnimatedStyle = useAnimatedStyle(() => ({
     opacity: closeButtonOpacity.value,
@@ -476,27 +522,7 @@ const Home = ({ navigation }: { navigation: any }) => {
             setShowMoreModal(false);
             navigation.navigate("Subscription");
           }}
-          onRatePress={() => {
-            Alert.alert(
-              "Are you enjoying our app?",
-              "",
-              [
-                {
-                  text: "Not really",
-                  onPress: () => {
-                    Linking.openURL("https://deployglobal.ee/support");
-                  },
-                },
-                {
-                  text: "Yes, I love it!",
-                  onPress: () => {
-                    Linking.openURL("https://apps.apple.com/app/id6739363989");
-                  },
-                },
-              ],
-              { cancelable: true }
-            );
-          }}
+          onRatePress={showReviewAlert}
           onSharePress={() => {
             Share.share({
               message: "AI Rewrite & Spell Checker app!",

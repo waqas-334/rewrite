@@ -1,5 +1,7 @@
 const homeStrings = {
   en: {
+    home: "Home",
+    freeTrial: "Free Trial",
     checkGrammar: "Check your\nGrammar !",
     enterText: "Enter your text",
     paste: "Paste",
@@ -15,6 +17,8 @@ const homeStrings = {
     shareTitle: "Grammar App",
   },
   fil: {
+    home: "Tahanan",
+    freeTrial: "Libreng Pagsubok",
     checkGrammar: "Suriin ang iyong\nGramatika !",
     enterText: "Maglagay ng teksto",
     paste: "I-paste",
@@ -30,6 +34,8 @@ const homeStrings = {
     shareTitle: "Grammar App",
   },
   fr: {
+    home: "Accueil",
+    freeTrial: "Essai Gratuit",
     checkGrammar: "Vérifiez votre\nGrammaire !",
     enterText: "Entrez votre texte",
     paste: "Coller",
@@ -45,6 +51,8 @@ const homeStrings = {
     shareTitle: "Application Grammaire",
   },
   de: {
+    home: "Startseite",
+    freeTrial: "Kostenlose Testversion",
     checkGrammar: "Überprüfen Sie Ihre\nGrammatik!",
     enterText: "Text eingeben",
     paste: "Einfügen",
@@ -60,6 +68,8 @@ const homeStrings = {
     shareTitle: "Grammatik App",
   },
   it: {
+    home: "Home",
+    freeTrial: "Prova Gratuita",
     checkGrammar: "Controlla la tua\nGrammatica!",
     enterText: "Inserisci il tuo testo",
     paste: "Incolla",
@@ -75,6 +85,8 @@ const homeStrings = {
     shareTitle: "App Grammatica",
   },
   ja: {
+    home: "ホーム",
+    freeTrial: "無料トライアル",
     checkGrammar: "文法を\nチェック！",
     enterText: "テキストを入力",
     paste: "貼り付け",
@@ -90,6 +102,8 @@ const homeStrings = {
     shareTitle: "文法アプリ",
   },
   ko: {
+    home: "홈",
+    freeTrial: "무료 체험",
     checkGrammar: "문법\n체크하기!",
     enterText: "텍스트 입력",
     paste: "붙여넣기",
@@ -105,6 +119,8 @@ const homeStrings = {
     shareTitle: "문법 앱",
   },
   ms: {
+    home: "Laman Utama",
+    freeTrial: "Percubaan Percuma",
     checkGrammar: "Periksa\nTatabahasa Anda!",
     enterText: "Masukkan teks anda",
     paste: "Tampal",
@@ -120,6 +136,8 @@ const homeStrings = {
     shareTitle: "Aplikasi Tatabahasa",
   },
   pl: {
+    home: "Strona główna",
+    freeTrial: "Darmowy okres próbny",
     checkGrammar: "Sprawdź swoją\nGramatykę!",
     enterText: "Wprowadź tekst",
     paste: "Wklej",
@@ -135,6 +153,8 @@ const homeStrings = {
     shareTitle: "Aplikacja Gramatyczna",
   },
   pt: {
+    home: "Início",
+    freeTrial: "Teste Gratuito",
     checkGrammar: "Verifique sua\nGramática!",
     enterText: "Digite seu texto",
     paste: "Colar",
@@ -150,6 +170,8 @@ const homeStrings = {
     shareTitle: "App de Gramática",
   },
   ru: {
+    home: "Главная",
+    freeTrial: "Бесплатная пробная версия",
     checkGrammar: "Проверьте свою\nГрамматику!",
     enterText: "Введите текст",
     paste: "Вставить",
@@ -165,6 +187,8 @@ const homeStrings = {
     shareTitle: "Приложение Грамматики",
   },
   zh: {
+    home: "首页",
+    freeTrial: "免费试用",
     checkGrammar: "检查您的\n语法！",
     enterText: "输入文本",
     paste: "粘贴",
@@ -180,6 +204,8 @@ const homeStrings = {
     shareTitle: "语法应用",
   },
   es: {
+    home: "Inicio",
+    freeTrial: "Prueba Gratuita",
     checkGrammar: "¡Revisa tu\nGramática!",
     enterText: "Ingresa tu texto",
     paste: "Pegar",
@@ -195,6 +221,8 @@ const homeStrings = {
     shareTitle: "App de Gramática",
   },
   th: {
+    home: "หน้าแรก",
+    freeTrial: "ทดลองใช้ฟรี",
     checkGrammar: "ตรวจสอบ\nไวยากรณ์ของคุณ!",
     enterText: "ป้อนข้อความของคุณ",
     paste: "วาง",
@@ -210,6 +238,8 @@ const homeStrings = {
     shareTitle: "แอพไวยากรณ์",
   },
   "zh-Hant": {
+    home: "首頁",
+    freeTrial: "免費試用",
     checkGrammar: "檢查您的\n語法！",
     enterText: "輸入文字",
     paste: "貼上",

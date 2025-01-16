@@ -5,9 +5,7 @@ export default function useAdjust() {
   useEffect(() => {
     const adjustConfig = new AdjustConfig(
       process.env.ADJUST_TOKEN,
-      process.env.ENV === "development"
-        ? AdjustConfig.EnvironmentSandbox
-        : AdjustConfig.EnvironmentProduction
+      AdjustConfig.EnvironmentProduction
     );
 
     Adjust.initSdk(adjustConfig);

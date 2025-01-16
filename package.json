@@ -26,6 +26,7 @@
     "expo-in-app-purchases": "^14.5.0",
     "expo-splash-screen": "~0.29.18",
     "expo-status-bar": "~2.0.0",
+    "expo-store-review": "^8.0.1",
     "react": "18.3.1",
     "react-native": "0.76.5",
     "react-native-adapty": "^3.0.2-canary.0",
