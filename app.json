@@ -2,7 +2,7 @@
   "expo": {
     "name": "AI Rewrite",
     "slug": "grammar",
-    "version": "1.1.1",
+    "version": "1.1.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -14,31 +14,31 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#FFF9F1",
+          "backgroundColor": "rgba(250, 246, 255, 1)",
           "image": "./assets/splash-icon.png",
           "dark": {
             "image": "./assets/splash-icon.png",
-            "backgroundColor": "#FFF9F1"
+            "backgroundColor": "rgba(250, 246, 255, 1)"
           },
-          "imageWidth": 160,
-          "imageHeight": 160
+          "imageWidth": 128,
+          "imageHeight": 128
         }
       ]
     ],
     "splash": {
       "image": "./assets/splash-icon.png",
-      "backgroundColor": "#FFF9F1",
-      "imageWidth": 160,
-      "imageHeight": 160,
+      "backgroundColor": "rgba(250, 246, 255, 1)",
+      "imageWidth": 128,
+      "imageHeight": 128,
       "dark": {
         "image": "./assets/splash-icon.png",
-        "backgroundColor": "#161616"
+        "backgroundColor": "rgba(250, 246, 255, 1)"
       }
     },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.deploy.grammarai",
-      "buildNumber": "1.1.1",
+      "buildNumber": "1.1.3",
       "icon": "./assets/icon.png",
       "appStoreUrl": "https://apps.apple.com/us/app/ai-rewrite-spell-checker/id6739363989"
     },

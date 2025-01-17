@@ -10,6 +10,7 @@ import Offer from "./screens/Offer";
 import useInitApp from "./hooks/useInitApp";
 import useAdjust from "./hooks/useAdjust";
 import { initializeClarity } from "./configs/clarity";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // SplashScreen.preventAutoHideAsync();
 

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -16,15 +16,13 @@ import { useNavigation } from "@react-navigation/native";
 import { CloseIcon, InfoIcon } from "@/components/icon";
 import { useStore } from "@/store/useStore";
 import { adapty } from "react-native-adapty";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+
 import { showMessage } from "react-native-flash-message";
 import { useTranslation } from "@/i18n";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CheckIcon from "@/components/icon/CheckIcon";
+import { LinearGradient } from "expo-linear-gradient";
+import CircularProgress from "react-native-circular-progress-indicator";
 
 const { width } = Dimensions.get("window");
 const starsHeight = width / (1152 / 600);
@@ -37,7 +35,6 @@ const Circles = ({ topOffset }: { topOffset: number }) => (
       height: width - 92,
       alignSelf: "center",
       position: "absolute",
-      // backgroundColor: "red",
       top: "-50%",
       transform: [{ translateY: topOffset }],
     }}
@@ -46,40 +43,17 @@ const Circles = ({ topOffset }: { topOffset: number }) => (
 
 const SubscriptionScreen = () => {
   const navigation: any = useNavigation();
-  const { products, setIsPremiumUser, isPremiumUser } = useStore();
+  const { products, setIsPremiumUser, isPremiumUser, setOfferTimeLeft } =
+    useStore();
   const [selectedPlan, setSelectedPlan] = useState<
-    "weekly" | "monthly" | "yearly" | "annual_with_trial"
-  >("yearly");
-  const [trialEnabled, setTrialEnabled] = useState(false);
-  const switchAnimation = useSharedValue(0);
+    "weekly" | "monthly" | "annual_with_trial"
+  >("annual_with_trial");
   const [purchaseLoading, setPurchaseLoading] = useState<string | null>(null);
   const { t } = useTranslation("subscription");
-
-  const toggleSwitch = () => {
-    switchAnimation.value = withTiming(trialEnabled ? 0 : 1);
-    const newTrialEnabled = !trialEnabled;
-    setTrialEnabled(newTrialEnabled);
-
-    // If enabling trial, force select weekly plan
-    if (newTrialEnabled) {
-      setSelectedPlan("annual_with_trial");
-    } else {
-      setSelectedPlan("yearly");
-    }
-  };
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: switchAnimation.value * 17,
-        },
-      ],
-    };
-  });
+  const [canClose, setCanClose] = useState(false);
 
   const handlePurchase = async (
-    productType: "weekly" | "monthly" | "yearly" | "annual_with_trial"
+    productType: "weekly" | "monthly" | "annual_with_trial"
   ) => {
     setPurchaseLoading(productType);
 
@@ -91,8 +65,6 @@ const SubscriptionScreen = () => {
             p.vendorProductId === "grammar.weekly.premium") ||
           (productType === "monthly" &&
             p.vendorProductId === "grammar.monthly.premium") ||
-          (productType === "yearly" &&
-            p.vendorProductId === "grammar.annual.premium") ||
           (productType === "annual_with_trial" &&
             p.vendorProductId === "grammar.annual.premium.with_trial")
         );
@@ -123,7 +95,7 @@ const SubscriptionScreen = () => {
   };
 
   const getProductPrice = (
-    productType: "weekly" | "monthly" | "yearly" | "annual_with_trial"
+    productType: "weekly" | "monthly" | "annual_with_trial"
   ) => {
     if (productType === "annual_with_trial") {
       const productId = "grammar.annual.premium.with_trial";
@@ -135,33 +107,9 @@ const SubscriptionScreen = () => {
     }
 
     const product = products.find(
-      (p) =>
-        p.vendorProductId ===
-        `grammar.${productType === "yearly" ? "annual" : productType}.premium`
+      (p) => p.vendorProductId === `grammar.${productType}.premium`
     );
     return [product?.price?.amount, product?.price?.currencySymbol];
-  };
-
-  // Helper function to check if plan should be disabled
-  const isPlanDisabled = (
-    planType: "weekly" | "monthly" | "yearly" | "annual_with_trial"
-  ) => {
-    return trialEnabled && planType !== "annual_with_trial";
-  };
-
-  const handleInfoPress = () => {
-    showMessage({
-      message: t("freeTrialInfo"),
-      description: t("freeTrialDescription"),
-      type: "info",
-      duration: 4000,
-      style: {
-        backgroundColor: "#000",
-      },
-      titleStyle: {
-        fontWeight: "600",
-      },
-    });
   };
 
   const handleRestore = async () => {
@@ -192,7 +140,7 @@ const SubscriptionScreen = () => {
   };
 
   const calculateWeeklyPrice = (
-    productType: "weekly" | "monthly" | "yearly" | "annual_with_trial"
+    productType: "weekly" | "monthly" | "annual_with_trial"
   ) => {
     const [fullPrice, currencySymbol] = getProductPrice(productType);
 
@@ -207,10 +155,7 @@ const SubscriptionScreen = () => {
     let weeklyPrice;
     if (productType === "monthly") {
       weeklyPrice = fullPriceNumber * (7 / 30); // Assuming 4 weeks per month
-    } else if (
-      productType === "yearly" ||
-      productType === "annual_with_trial"
-    ) {
+    } else if (productType === "annual_with_trial") {
       weeklyPrice = fullPriceNumber * (7 / 365); // 52 weeks per year
     } else {
       weeklyPrice = fullPriceNumber; // Weekly price stays the same
@@ -221,6 +166,8 @@ const SubscriptionScreen = () => {
   };
 
   const handleGoBack = async () => {
+    if (!canClose) return;
+
     navigation.canGoBack() ? navigation.goBack() : navigation.navigate("Home");
 
     if (isPremiumUser) {
@@ -229,9 +176,16 @@ const SubscriptionScreen = () => {
 
     const hasViewedOffer = await AsyncStorage.getItem("hasViewedOffer");
 
-    if (!hasViewedOffer) {
-      navigation.navigate("Offer");
-      AsyncStorage.setItem("hasViewedOffer", "true");
+    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+    if (!hasViewedOffer || new Date(hasViewedOffer) < oneWeekAgo) {
+      navigation.navigate("Offer", { timeLeft: 120 });
+      const currentDate = new Date();
+
+      setOfferTimeLeft(currentDate.getTime());
+
+      const date = new Date().toISOString();
+      AsyncStorage.setItem("hasViewedOffer", date);
     }
   };
 
@@ -263,6 +217,7 @@ const SubscriptionScreen = () => {
         paddingBottom: 44,
       }}
       style={{ flex: 1, backgroundColor: "rgba(71, 40, 104, 1)" }}
+      showsVerticalScrollIndicator={false}
     >
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
@@ -272,20 +227,30 @@ const SubscriptionScreen = () => {
           >
             <Text style={styles.restoreText}>{t("restore")}</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleGoBack}
-            style={{
-              width: 29,
-              height: 29,
-              borderColor: "white",
-              borderWidth: 2.5,
-              borderRadius: 16,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+
+          <Pressable
+            style={styles.closeButton}
+            onPress={() => canClose && handleGoBack()}
+            disabled={!canClose}
           >
-            <CloseIcon width={11} height={11} color={"white"} />
-          </TouchableOpacity>
+            <CircularProgress
+              value={100}
+              radius={16}
+              duration={15000}
+              progressValueColor={"transparent"}
+              activeStrokeColor={"white"}
+              inActiveStrokeColor={"rgba(255,255,255,0.3)"}
+              inActiveStrokeWidth={2.5}
+              activeStrokeWidth={2.5}
+              onAnimationComplete={() => setCanClose(true)}
+            />
+            <CloseIcon
+              style={{ position: "absolute" }}
+              width={11}
+              height={11}
+              color={canClose ? "white" : "rgba(255,255,255,0.3)"}
+            />
+          </Pressable>
         </View>
 
         <View style={styles.content}>
@@ -306,78 +271,63 @@ const SubscriptionScreen = () => {
           </View>
 
           <View style={{ width: "100%", top: -33 }}>
-            <View style={styles.trialContainer}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text style={styles.trialText}>{t("freeTrial")}</Text>
-                <View style={{ marginLeft: 8 }}>
-                  <Pressable hitSlop={20} onPress={handleInfoPress}>
-                    <InfoIcon width={14.33} height={14.33} color={"white"} />
-                  </Pressable>
-                </View>
-              </View>
-              <Pressable
-                onPress={toggleSwitch}
-                style={[
-                  styles.trialSwitch,
-                  trialEnabled && styles.trialSwitchActive,
-                ]}
-              >
-                <Animated.View style={[styles.switchKnob, animatedStyle]} />
-              </Pressable>
-            </View>
-
             <View style={styles.plansContainer}>
               <Pressable
                 style={[
                   styles.planOption,
-                  selectedPlan === "weekly" && styles.selectedPlan,
-                  purchaseLoading === "weekly" && styles.loadingPlan,
-                  isPlanDisabled("weekly") && styles.disabledPlan,
+                  selectedPlan === "annual_with_trial" && styles.selectedPlan,
+                  purchaseLoading === "annual_with_trial" && styles.loadingPlan,
                 ]}
-                onPress={() => setSelectedPlan("weekly")}
-                disabled={!!purchaseLoading || isPlanDisabled("weekly")}
+                onPress={() => setSelectedPlan("annual_with_trial")}
+                disabled={!!purchaseLoading}
               >
                 <View
                   style={[
                     styles.radioButton,
-                    selectedPlan === "weekly" && styles.activeRadio,
+                    selectedPlan === "annual_with_trial" && styles.activeRadio,
                   ]}
                 />
                 <View style={styles.planInfo}>
                   <Text
                     style={[
                       styles.planText,
-                      selectedPlan === "weekly" && {
+                      selectedPlan === "annual_with_trial" && {
                         color: "rgba(117, 198, 137, 1)",
                       },
                     ]}
                   >
-                    {t("payWeekly")}
+                    {t("payYearly")}
                   </Text>
                 </View>
-                <Text
-                  style={[
-                    styles.planPrice,
-                    {
-                      color:
-                        selectedPlan === "weekly"
-                          ? "rgba(117, 198, 137, 1)"
-                          : "white",
-                    },
-                  ]}
-                >
-                  {calculateWeeklyPrice("weekly")}
+                <View style={styles.yearlyPriceContainer}>
                   <Text
-                    style={{
-                      color:
-                        selectedPlan === "weekly"
-                          ? "rgba(117, 198, 137, 1)"
-                          : "rgba(255, 255, 255, 0.64)",
-                    }}
+                    style={[
+                      styles.planPrice,
+                      {
+                        color:
+                          selectedPlan === "annual_with_trial"
+                            ? "rgba(117, 198, 137, 1)"
+                            : "white",
+                      },
+                    ]}
                   >
-                    {t("per_week")}
+                    {calculateWeeklyPrice("annual_with_trial")}{" "}
+                    <Text
+                      style={{
+                        color:
+                          selectedPlan === "annual_with_trial"
+                            ? "rgba(117, 198, 137, 1)"
+                            : "rgba(255, 255, 255, 0.64)",
+                      }}
+                    >
+                      {t("per_week")}
+                    </Text>
                   </Text>
-                </Text>
+                  {/* <Text style={styles.originalPrice}>$99.99</Text> */}
+                </View>
+                <View style={styles.popularBadge}>
+                  <Text style={styles.popularText}>{t("popular")}</Text>
+                </View>
               </Pressable>
 
               <Pressable
@@ -385,10 +335,9 @@ const SubscriptionScreen = () => {
                   styles.planOption,
                   selectedPlan === "monthly" && styles.selectedPlan,
                   purchaseLoading === "monthly" && styles.loadingPlan,
-                  isPlanDisabled("monthly") && styles.disabledPlan,
                 ]}
                 onPress={() => setSelectedPlan("monthly")}
-                disabled={!!purchaseLoading || isPlanDisabled("monthly")}
+                disabled={!!purchaseLoading}
               >
                 <View
                   style={[
@@ -436,98 +385,93 @@ const SubscriptionScreen = () => {
               <Pressable
                 style={[
                   styles.planOption,
-                  (selectedPlan === "yearly" ||
-                    selectedPlan === "annual_with_trial") &&
-                    styles.selectedPlan,
-                  (purchaseLoading === "yearly" ||
-                    purchaseLoading === "annual_with_trial") &&
-                    styles.loadingPlan,
-                  isPlanDisabled(
-                    trialEnabled ? "annual_with_trial" : "yearly"
-                  ) && styles.disabledPlan,
-                  // { width: 330 },
+                  selectedPlan === "weekly" && styles.selectedPlan,
+                  purchaseLoading === "weekly" && styles.loadingPlan,
                 ]}
-                onPress={() =>
-                  setSelectedPlan(trialEnabled ? "annual_with_trial" : "yearly")
-                }
-                disabled={
-                  !!purchaseLoading ||
-                  isPlanDisabled(trialEnabled ? "annual_with_trial" : "yearly")
-                }
+                onPress={() => setSelectedPlan("weekly")}
+                disabled={!!purchaseLoading}
               >
                 <View
                   style={[
                     styles.radioButton,
-                    selectedPlan ===
-                      (trialEnabled ? "annual_with_trial" : "yearly") &&
-                      styles.activeRadio,
+                    selectedPlan === "weekly" && styles.activeRadio,
                   ]}
                 />
                 <View style={styles.planInfo}>
                   <Text
                     style={[
                       styles.planText,
-                      (selectedPlan === "yearly" ||
-                        selectedPlan === "annual_with_trial") && {
+                      selectedPlan === "weekly" && {
                         color: "rgba(117, 198, 137, 1)",
                       },
                     ]}
                   >
-                    {t("payYearly")}
+                    {t("payWeekly")}
                   </Text>
                 </View>
-                <View style={styles.yearlyPriceContainer}>
+                <Text
+                  style={[
+                    styles.planPrice,
+                    {
+                      color:
+                        selectedPlan === "weekly"
+                          ? "rgba(117, 198, 137, 1)"
+                          : "white",
+                    },
+                  ]}
+                >
+                  {calculateWeeklyPrice("weekly")}
                   <Text
-                    style={[
-                      styles.planPrice,
-                      {
-                        color:
-                          selectedPlan === "yearly" ||
-                          selectedPlan === "annual_with_trial"
-                            ? "rgba(117, 198, 137, 1)"
-                            : "white",
-                      },
-                    ]}
+                    style={{
+                      color:
+                        selectedPlan === "weekly"
+                          ? "rgba(117, 198, 137, 1)"
+                          : "rgba(255, 255, 255, 0.64)",
+                    }}
                   >
-                    {calculateWeeklyPrice(
-                      trialEnabled ? "annual_with_trial" : "yearly"
-                    )}{" "}
-                    <Text
-                      style={{
-                        color:
-                          selectedPlan === "yearly" ||
-                          selectedPlan === "annual_with_trial"
-                            ? "rgba(117, 198, 137, 1)"
-                            : "rgba(255, 255, 255, 0.64)",
-                      }}
-                    >
-                      {t("per_week")}
-                    </Text>
+                    {t("per_week")}
                   </Text>
-                  {/* <Text style={styles.originalPrice}>$99.99</Text> */}
-                </View>
-                <View style={styles.popularBadge}>
-                  <Text style={styles.popularText}>{t("popular")}</Text>
-                </View>
+                </Text>
               </Pressable>
             </View>
 
+            {selectedPlan === "annual_with_trial" && (
+              <Text
+                style={{
+                  color: "rgba(255, 255, 255, 0.8)",
+                  fontSize: 16,
+                  fontWeight: "500",
+                  marginBottom: 8,
+                  textAlign: "center",
+                }}
+              >
+                {t("freeTrial3Days")} {getProductPrice(selectedPlan).join("")}
+              </Text>
+            )}
+
             <TouchableOpacity
-              style={styles.subscribeButton}
               onPress={() => !purchaseLoading && handlePurchase(selectedPlan)}
               disabled={!!purchaseLoading}
             >
-              {purchaseLoading === selectedPlan ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.subscribeButtonText}>
-                  {selectedPlan !== "annual_with_trial" && t("pay")}{" "}
-                  {selectedPlan === "annual_with_trial"
-                    ? t("freeTrial3Days")
-                    : selectedPlan}{" "}
-                  {getProductPrice(selectedPlan)}
-                </Text>
-              )}
+              <LinearGradient
+                style={styles.subscribeButton}
+                colors={["rgba(250, 148, 55, 1)", "rgba(225, 220, 119, 1)"]}
+                start={{ x: 0, y: 1 }}
+                end={{ x: 0, y: 0 }}
+              >
+                {purchaseLoading === selectedPlan ? (
+                  <ActivityIndicator color="#fff" />
+                ) : (
+                  <Text style={styles.subscribeButtonText}>
+                    {selectedPlan !== "annual_with_trial" &&
+                      `${t("Pay")} ${selectedPlan} ${getProductPrice(
+                        selectedPlan
+                      ).join("")}`}{" "}
+                    {selectedPlan === "annual_with_trial" &&
+                      t("startFreeTrial")}
+                  </Text>
+                )}
+              </LinearGradient>
             </TouchableOpacity>
 
             <View style={styles.footer}>
@@ -566,8 +510,10 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   closeButton: {
-    fontSize: 24,
-    color: "#000",
+    width: 32,
+    height: 32,
+    justifyContent: "center",
+    alignItems: "center",
   },
   restoreButton: {
     padding: 4,
@@ -641,7 +587,8 @@ const styles = StyleSheet.create({
   planOption: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 18,
     backgroundColor: "rgba(0, 0, 0, 0.05)",
     borderRadius: 12,
     borderWidth: 1,
@@ -692,7 +639,7 @@ const styles = StyleSheet.create({
     right: 20,
   },
   popularText: {
-    color: "#fff",
+    color: "rgba(54, 28, 82, 1)",
     fontSize: 10,
     fontWeight: "600",
   },
@@ -715,7 +662,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "rgba(255, 255, 255, 1)",
     borderRadius: 100,
-    paddingVertical: 16,
+    paddingVertical: 18,
     alignItems: "center",
     marginBottom: 24,
   },

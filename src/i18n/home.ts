@@ -1,7 +1,7 @@
 const homeStrings = {
   en: {
     home: "Home",
-    freeTrial: "Free Trial",
+    freeTrial: "Upgrade to Premium",
     checkGrammar: "Check your\nGrammar !",
     enterText: "Enter your text",
     paste: "Paste",

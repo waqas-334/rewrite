@@ -11,12 +11,10 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Pressable,
-  ScrollView,
   ActivityIndicator,
   Linking,
   Share,
   Alert,
-  useColorScheme,
 } from "react-native";
 import {
   CrownIcon,
@@ -45,8 +43,15 @@ import { showMessage } from "react-native-flash-message";
 import { useTranslation } from "@/i18n";
 import { useSystemColor } from "@/hooks/useSystemColor";
 import * as StoreReview from "expo-store-review";
+import { LinearGradient } from "expo-linear-gradient";
 
-const Header = ({ onMenuPress }: { onMenuPress: () => void }) => {
+const Header = ({
+  onMenuPress,
+  onTrialPress,
+}: {
+  onMenuPress: () => void;
+  onTrialPress: () => void;
+}) => {
   const navigation: any = useNavigation();
   const isPremiumUser = useStore((state) => state.isPremiumUser);
   const globalLoading = useStore((state) => state.globalLoading);
@@ -66,7 +71,7 @@ const Header = ({ onMenuPress }: { onMenuPress: () => void }) => {
             { backgroundColor: getColor("trialButton") },
             globalLoading && { opacity: 0.5 },
           ]}
-          onPress={() => navigation.navigate("Subscription")}
+          onPress={onTrialPress}
           disabled={globalLoading}
         >
           {!globalLoading && (
@@ -74,11 +79,11 @@ const Header = ({ onMenuPress }: { onMenuPress: () => void }) => {
               <CrownIcon width={20} height={16} fill="#FF9200" />
 
               <Text
-                style={[styles.trialText, { color: getColor("lightInherit") }]}
+                style={[styles.trialText, { color: getColor("darkInherit") }]}
               >
                 {t("freeTrial")}
               </Text>
-              <RightIcon color={getColor("lightInherit")} />
+              <RightIcon color={getColor("darkInherit")} />
             </>
           )}
         </TouchableOpacity>
@@ -90,7 +95,7 @@ const Header = ({ onMenuPress }: { onMenuPress: () => void }) => {
         ]}
         onPress={onMenuPress}
       >
-        <MenuIcon width={16} height={10} color={getColor("lightInherit")} />
+        <MenuIcon width={16} height={10} color={getColor("iconColor")} />
       </TouchableOpacity>
     </View>
   );
@@ -108,6 +113,7 @@ const Home = ({ navigation }: { navigation: any }) => {
   const [showMoreModal, setShowMoreModal] = useState(false);
   const inputRef = useRef<TextInput>(null);
   const isPremiumUser = useStore((state) => state.isPremiumUser);
+  const offerTimeLeft = useStore((state) => state.offerTimeLeft);
   const [isKeyboardFocused, setIsKeyboardFocused] = useState(false);
   const [hasStoreReviewAction, setHasStoreReviewAction] = useState(false);
   const { t } = useTranslation("home");
@@ -140,7 +146,7 @@ const Home = ({ navigation }: { navigation: any }) => {
         {
           text: "Not really",
           onPress: () => {
-            Linking.openURL("https://deployglobal.ee/support");
+            // Linking.openURL("https://deployglobal.ee/support");
           },
         },
         {
@@ -149,6 +155,22 @@ const Home = ({ navigation }: { navigation: any }) => {
         },
       ]
     );
+  };
+
+  const handleTrialPress = () => {
+    const currentDate = new Date().getTime();
+
+    const timePassed = offerTimeLeft ? currentDate - offerTimeLeft : 9999999900;
+
+    if (timePassed > 2 * 60 * 1000) {
+      navigation.navigate("Subscription");
+    } else {
+      const timePassedInSeconds = Math.floor(timePassed / 1000);
+      const timeLeft = 120 - timePassedInSeconds;
+      const increasedTimeLeft = timeLeft < 20 ? 20 : timeLeft;
+
+      navigation.navigate("Offer", { timeLeft: increasedTimeLeft });
+    }
   };
 
   const handleClear = () => {
@@ -174,7 +196,21 @@ const Home = ({ navigation }: { navigation: any }) => {
         const todayChecks = checks[today] || 0;
 
         if (todayChecks === 3) {
-          navigation.navigate("Subscription");
+          Alert.alert(
+            "Limit Reached",
+            "You have reached the daily limit of 3 checks in the free version. Upgrade to Pro for unlimited checks.",
+            [
+              {
+                text: "Upgrade to Pro",
+                onPress: handleTrialPress,
+                style: "default",
+              },
+              {
+                text: "Close",
+                onPress: () => {},
+              },
+            ]
+          );
           return setIsLoading(false);
         }
 
@@ -194,15 +230,18 @@ const Home = ({ navigation }: { navigation: any }) => {
       setIsLoading(false);
 
       setTimeout(async () => {
-        const hasSeenStoreReview = await AsyncStorage.getItem(
-          "hasSeenStoreReview"
+        const seenReviewCount = Number(
+          (await AsyncStorage.getItem("seenReviewCount")) || "0"
         );
 
-        if (!hasSeenStoreReview) {
+        if (seenReviewCount === 1) {
           showReviewAlert();
-          AsyncStorage.setItem("hasSeenStoreReview", "true");
+          AsyncStorage.setItem(
+            "seenReviewCount",
+            (seenReviewCount + 1).toString()
+          );
         }
-      }, 1000);
+      }, 3000);
     }
   };
 
@@ -278,10 +317,13 @@ const Home = ({ navigation }: { navigation: any }) => {
 
   return (
     <SafeAreaView
-      style={[styles.container, { backgroundColor: getColor("primary") }]}
+      style={[styles.container, { backgroundColor: getColor("background") }]}
     >
       <>
-        <Header onMenuPress={() => setShowMoreModal(true)} />
+        <Header
+          onMenuPress={() => setShowMoreModal(true)}
+          onTrialPress={handleTrialPress}
+        />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -336,14 +378,14 @@ const Home = ({ navigation }: { navigation: any }) => {
                     style={[styles.pasteButtonContent]}
                   >
                     <PasteIcon
-                      color={getColor("lightInherit")}
+                      color={getColor("topIcons")}
                       width={12.92}
                       height={15.42}
                     />
                     <Text
                       style={[
                         styles.pasteText,
-                        { color: getColor("lightInherit") },
+                        { color: getColor("topIcons") },
                       ]}
                     >
                       {t("paste")}
@@ -362,7 +404,7 @@ const Home = ({ navigation }: { navigation: any }) => {
                     style={styles.closeButtonContent}
                   >
                     <CloseIcon
-                      color={getColor("lightInherit")}
+                      color={getColor("topIcons")}
                       width={10.57}
                       height={10.57}
                     />
@@ -404,7 +446,7 @@ const Home = ({ navigation }: { navigation: any }) => {
                       <TouchableOpacity
                         style={[
                           styles.shareIconWrapper,
-                          { backgroundColor: getColor("backOpacity") },
+                          { backgroundColor: getColor("backOpacity2") },
                         ]}
                         onPress={() => {
                           Share.share({
@@ -417,20 +459,20 @@ const Home = ({ navigation }: { navigation: any }) => {
                         <ShareIcon
                           width={20}
                           height={20}
-                          color={getColor("lightInherit")}
+                          color={getColor("grayOpacity")}
                         />
                       </TouchableOpacity>
                       <TouchableOpacity
                         style={[
                           styles.copyIconWrapper,
-                          { backgroundColor: getColor("backOpacityRes") },
+                          { backgroundColor: getColor("backOpacity2") },
                         ]}
                         onPress={handleCopy}
                       >
                         <CopyIcon
                           width={20}
                           height={20}
-                          color={getColor("lightInherit")}
+                          color={getColor("grayOpacity")}
                         />
                       </TouchableOpacity>
                     </>
@@ -448,66 +490,70 @@ const Home = ({ navigation }: { navigation: any }) => {
                   >
                     <EditIcon
                       color={getColor("lightInherit")}
-                      width={17.92}
-                      height={17.92}
+                      width={16.02}
+                      height={14.02}
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={[
-                      styles.againButton,
-                      { backgroundColor: getColor("lightInherit") },
-                      isLoading && styles.disabledButton,
-                    ]}
                     onPress={() => {
                       handleCheck();
                     }}
                     disabled={isLoading}
+                    style={{ flex: 1 }}
                   >
-                    <View style={styles.againContent}>
-                      {isLoading ? (
-                        <ActivityIndicator color="#fff" />
-                      ) : (
-                        <>
-                          <RepeatIcon
-                            width={16}
-                            height={16}
-                            color={getColor("darkInherit")}
-                          />
-                          <Text
-                            style={[
-                              styles.againText,
-                              { color: getColor("darkInherit") },
-                            ]}
-                          >
-                            {t("reCheck")}
-                          </Text>
-                        </>
-                      )}
-                    </View>
+                    <LinearGradient
+                      style={[
+                        styles.againButton,
+                        isLoading && styles.disabledButton,
+                      ]}
+                      colors={["rgba(109, 79, 142, 1)", "rgba(96, 67, 128, 1)"]}
+                    >
+                      <View style={styles.againContent}>
+                        {isLoading ? (
+                          <ActivityIndicator color="#fff" />
+                        ) : (
+                          <>
+                            <RepeatIcon
+                              width={16}
+                              height={16}
+                              color={getColor("darkInherit")}
+                            />
+                            <Text
+                              style={[
+                                styles.againText,
+                                { color: getColor("darkInherit") },
+                              ]}
+                            >
+                              {t("reCheck")}
+                            </Text>
+                          </>
+                        )}
+                      </View>
+                    </LinearGradient>
                   </TouchableOpacity>
                 </View>
               ) : (
-                <TouchableOpacity
-                  style={[
-                    styles.checkButton,
-                    { backgroundColor: getColor("lightInherit") },
-                    isLoading && styles.disabledButton,
-                  ]}
-                  onPress={handleCheck}
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <ActivityIndicator color={getColor("primary")} />
-                  ) : (
-                    <Text
-                      style={[
-                        styles.checkButtonText,
-                        { color: getColor("darkInherit") },
-                      ]}
-                    >
-                      {t("check")}
-                    </Text>
-                  )}
+                <TouchableOpacity onPress={handleCheck} disabled={isLoading}>
+                  <LinearGradient
+                    style={[
+                      styles.checkButton,
+                      isLoading && styles.disabledButton,
+                    ]}
+                    colors={["rgba(109, 79, 142, 1)", "rgba(96, 67, 128, 1)"]}
+                  >
+                    {isLoading ? (
+                      <ActivityIndicator color={getColor("primary")} />
+                    ) : (
+                      <Text
+                        style={[
+                          styles.checkButtonText,
+                          { color: getColor("darkInherit") },
+                        ]}
+                      >
+                        {t("check")}
+                      </Text>
+                    )}
+                  </LinearGradient>
                 </TouchableOpacity>
               )}
             </View>
@@ -520,7 +566,7 @@ const Home = ({ navigation }: { navigation: any }) => {
           navigation={navigation}
           onTrialPress={() => {
             setShowMoreModal(false);
-            navigation.navigate("Subscription");
+            handleTrialPress();
           }}
           onRatePress={showReviewAlert}
           onSharePress={() => {
@@ -578,7 +624,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 100,
     gap: 6,
-    width: 119,
+    width: 187.77,
     height: 36,
   },
   trialText: {
@@ -653,7 +699,7 @@ const styles = StyleSheet.create({
   checkButton: {
     backgroundColor: "#000",
     borderRadius: 100,
-    paddingVertical: 14,
+    paddingVertical: 18,
     alignItems: "center",
     marginBottom: 24,
   },
@@ -733,8 +779,8 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   trashButton: {
-    width: 48,
-    height: 48,
+    width: 56,
+    height: 56,
     backgroundColor: "rgba(0, 0, 0, 0.05)",
     borderRadius: 100,
     justifyContent: "center",
@@ -744,7 +790,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#000",
     borderRadius: 100,
-    height: 48,
+    height: 56,
     justifyContent: "center",
     alignItems: "center",
   },

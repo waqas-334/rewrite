@@ -50,6 +50,7 @@ const MoreModal = ({
 }: MoreModalProps) => {
   const opacity = useSharedValue(0);
   const isPremiumUser = useStore((s) => s.isPremiumUser);
+  const offerTimeLeft = useStore((s) => s.offerTimeLeft);
   const { t } = useTranslation("more");
   const { getColor } = useSystemColor();
 
@@ -70,6 +71,23 @@ const MoreModal = ({
       ["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0.5)"]
     ),
   }));
+
+  const handleTrialPress = () => {
+    const currentDate = new Date().getTime();
+
+    const timePassed = offerTimeLeft ? currentDate - offerTimeLeft : 9999999900;
+
+    if (timePassed > 2 * 60 * 1000) {
+      navigation.navigate("Subscription");
+    } else {
+      const timePassedInSeconds = Math.floor(timePassed / 1000);
+      const timeLeft = 120 - timePassedInSeconds;
+
+      const increasedTimeLeft = timeLeft < 20 ? 20 : timeLeft;
+
+      navigation.navigate("Offer", { timeLeft: increasedTimeLeft });
+    }
+  };
 
   return (
     <Modal
@@ -110,12 +128,30 @@ const MoreModal = ({
                 ]}
                 onPress={() => {
                   onClose();
-                  navigation.navigate("Subscription");
+                  handleTrialPress();
                 }}
               >
                 <View>
-                  <Text style={styles.trialText}>{t("trialNotClaimed")}</Text>
-                  <Text style={styles.tapText}>{t("tapToClaim")}</Text>
+                  <Text
+                    style={[
+                      styles.trialText,
+                      {
+                        color: getColor("white"),
+                      },
+                    ]}
+                  >
+                    {t("trialNotClaimed")}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.tapText,
+                      {
+                        color: getColor("trialDesc"),
+                      },
+                    ]}
+                  >
+                    {t("tapToClaim")}
+                  </Text>
                 </View>
                 <View style={styles.giftIcon}>
                   <Text style={{ fontSize: 38 }}>🎁</Text>
@@ -297,7 +333,7 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   trialBanner: {
-    backgroundColor: "rgba(254, 234, 207, 0.64)",
+    backgroundColor: "rgba(186, 63, 151, 1)",
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 9,

@@ -10,6 +10,8 @@ interface Store {
   setCurrentLanguage: (language: string) => void;
   globalLoading: boolean;
   setGlobalLoading: (loading: boolean) => void;
+  offerTimeLeft: number | null;
+  setOfferTimeLeft: (timeLeft: number | null) => void;
 }
 
 export const useStore = create<Store>((set) => ({
@@ -21,4 +23,7 @@ export const useStore = create<Store>((set) => ({
   setCurrentLanguage: (currentLanguage: string) => set({ currentLanguage }),
   globalLoading: true,
   setGlobalLoading: (loading: boolean) => set({ globalLoading: loading }),
+  offerTimeLeft: null,
+  setOfferTimeLeft: (timeLeft: number | null) =>
+    set({ offerTimeLeft: timeLeft }),
 }));

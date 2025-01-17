@@ -1,8 +1,8 @@
 const moreStrings = {
   en: {
     more: "More",
-    trialNotClaimed: "Your Free Trial hasn't been claimed",
-    tapToClaim: "Tap to claim",
+    trialNotClaimed: "Unlock Premium Features",
+    tapToClaim: "3 Day Free Trial",
     rateUs: "Rate us",
     share: "Share",
     privacyPolicy: "Privacy Policy",
@@ -11,8 +11,8 @@ const moreStrings = {
   },
   fil: {
     more: "Higit Pa",
-    trialNotClaimed: "Hindi pa nare-redeem ang iyong Libreng Pagsubok",
-    tapToClaim: "I-tap para i-claim",
+    trialNotClaimed: "I-unlock ang mga Premium na Feature",
+    tapToClaim: "3 Araw na Libreng Pagsubok",
     rateUs: "I-rate kami",
     share: "Ibahagi",
     privacyPolicy: "Patakaran sa Privacy",
@@ -21,8 +21,8 @@ const moreStrings = {
   },
   fr: {
     more: "Plus",
-    trialNotClaimed: "Votre essai gratuit n'a pas été réclamé",
-    tapToClaim: "Appuyez pour réclamer",
+    trialNotClaimed: "Débloquer les fonctionnalités Premium",
+    tapToClaim: "Essai gratuit de 3 jours",
     rateUs: "Évaluez-nous",
     share: "Partager",
     privacyPolicy: "Politique de confidentialité",
