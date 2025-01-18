@@ -11,6 +11,14 @@ const useInitApp = () => {
 
   const checkAppLaunched = async () => {
     const appLaunched = await AsyncStorage.getItem("appLaunched");
+    const today = new Date();
+    const targetDate = new Date("2025-01-22");
+
+    if (today < targetDate) {
+      setShowSubscription(false);
+      return;
+    }
+
     if (!appLaunched) {
       setShowSubscription(true);
       AsyncStorage.setItem("appLaunched", "true");
