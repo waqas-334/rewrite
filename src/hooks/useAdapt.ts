@@ -21,6 +21,19 @@ const useAdapt = () => {
         } catch (error) {
           console.error("Adapty activation failed");
           throw error;
+        } finally {
+          adapty.addEventListener(
+            "onLatestProfileLoad",
+            (profile: AdaptyProfile) => {
+              const isPremiumActive =
+                !!profile?.accessLevels?.premium?.isActive;
+              console.log(
+                "Profile update received, premium status:",
+                isPremiumActive
+              );
+              setIsPremiumUser(isPremiumActive);
+            }
+          );
         }
 
         let products = [];
@@ -64,11 +77,6 @@ const useAdapt = () => {
                   if (isSubscribed) {
                     console.log("Premium subscription restored");
                     setIsPremiumUser(true);
-                  } else {
-                    console.log(
-                      "No previous premium subscription found - this is normal for new users"
-                    );
-                    setIsPremiumUser(false);
                   }
                 })
                 .catch((error) => {
@@ -76,7 +84,6 @@ const useAdapt = () => {
                 });
             } catch (restoreError: any) {
               console.log("No purchases to restore");
-              setIsPremiumUser(false);
             }
           } else {
             console.log("Active premium subscription found");
@@ -85,18 +92,6 @@ const useAdapt = () => {
         } catch (profileError) {
           console.error("Profile check failed");
         }
-
-        adapty.addEventListener(
-          "onLatestProfileLoad",
-          (profile: AdaptyProfile) => {
-            const isPremiumActive = !!profile?.accessLevels?.premium?.isActive;
-            console.log(
-              "Profile update received, premium status:",
-              isPremiumActive
-            );
-            setIsPremiumUser(isPremiumActive);
-          }
-        );
       } catch (e) {
         console.error("Adapty initialization failed:", e);
       } finally {

@@ -78,12 +78,10 @@ const Header = ({
             <>
               <CrownIcon width={20} height={16} fill="#FF9200" />
 
-              <Text
-                style={[styles.trialText, { color: getColor("darkInherit") }]}
-              >
+              <Text style={[styles.trialText, { color: getColor("white") }]}>
                 {t("freeTrial")}
               </Text>
-              <RightIcon color={getColor("darkInherit")} />
+              <RightIcon color={getColor("white")} />
             </>
           )}
         </TouchableOpacity>
@@ -196,21 +194,17 @@ const Home = ({ navigation }: { navigation: any }) => {
         const todayChecks = checks[today] || 0;
 
         if (todayChecks === 3) {
-          Alert.alert(
-            "Limit Reached",
-            "You have reached the daily limit of 3 checks in the free version. Upgrade to Pro for unlimited checks.",
-            [
-              {
-                text: "Upgrade to Pro",
-                onPress: handleTrialPress,
-                style: "default",
-              },
-              {
-                text: "Close",
-                onPress: () => {},
-              },
-            ]
-          );
+          Alert.alert(t("limitReachedTitle"), t("limitReachedMessage"), [
+            {
+              text: t("upgradeToPro"),
+              onPress: handleTrialPress,
+              style: "default",
+            },
+            {
+              text: t("close"),
+              onPress: () => {},
+            },
+          ]);
           return setIsLoading(false);
         }
 
@@ -450,6 +444,7 @@ const Home = ({ navigation }: { navigation: any }) => {
                         ]}
                         onPress={() => {
                           Share.share({
+                            url: "https://apps.apple.com/us/app/ai-rewrite-spell-checker/id6739363989",
                             message: result,
                           })
                             .then((res) => console.log(res))
@@ -516,12 +511,12 @@ const Home = ({ navigation }: { navigation: any }) => {
                             <RepeatIcon
                               width={16}
                               height={16}
-                              color={getColor("darkInherit")}
+                              color={getColor("white")}
                             />
                             <Text
                               style={[
                                 styles.againText,
-                                { color: getColor("darkInherit") },
+                                { color: getColor("white") },
                               ]}
                             >
                               {t("reCheck")}
@@ -547,7 +542,7 @@ const Home = ({ navigation }: { navigation: any }) => {
                       <Text
                         style={[
                           styles.checkButtonText,
-                          { color: getColor("darkInherit") },
+                          { color: getColor("white") },
                         ]}
                       >
                         {t("check")}

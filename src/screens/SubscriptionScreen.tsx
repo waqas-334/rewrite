@@ -529,7 +529,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   imageContainer: {
-    marginBottom: 32,
+    marginBottom: 12,
+    top: -24,
   },
   illustrationPlaceholder: {
     width: 207,
@@ -581,7 +582,7 @@ const styles = StyleSheet.create({
   },
   plansContainer: {
     width: "100%",
-    gap: 12,
+    gap: 9,
     marginBottom: 24,
   },
   planOption: {
@@ -668,8 +669,9 @@ const styles = StyleSheet.create({
   },
   subscribeButtonText: {
     color: "rgba(55, 29, 82, 1)",
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 18,
+    fontWeight: "700",
+    lineHeight: 20,
   },
   footer: {
     flexDirection: "row",

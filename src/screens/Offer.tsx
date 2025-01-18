@@ -112,7 +112,7 @@ const Offer = ({ route }: { route: any }) => {
             <CircularProgress
               size={29}
               width={2.5}
-              fill={(timeLeft / 120) * 100}
+              fill={100}
               tintColor="#fff"
               backgroundColor="transparent"
               rotation={0}
@@ -311,13 +311,14 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "rgba(255, 255, 255, 0.05)",
     borderRadius: 12,
-    padding: 16,
+    padding: 24,
     marginBottom: 24,
+    gap: 12,
   },
   featureRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 12,
+    // marginBottom: 12,
   },
   checkmarkContainer: {
     width: 24,
@@ -361,8 +362,9 @@ const styles = StyleSheet.create({
   },
   continueButtonText: {
     color: "rgba(55, 29, 82, 1)",
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 18,
+    fontWeight: "700",
+    lineHeight: 20,
   },
   footer: {
     flexDirection: "row",
