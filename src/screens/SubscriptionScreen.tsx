@@ -174,6 +174,13 @@ const SubscriptionScreen = () => {
       return;
     }
 
+    const today = new Date();
+    const targetDate = new Date("2025-01-22");
+
+    if (today < targetDate) {
+      return;
+    }
+
     const hasViewedOffer = await AsyncStorage.getItem("hasViewedOffer");
 
     const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
