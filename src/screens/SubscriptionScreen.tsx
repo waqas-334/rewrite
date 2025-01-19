@@ -166,7 +166,18 @@ const SubscriptionScreen = () => {
   };
 
   const handleGoBack = async () => {
-    if (!canClose) return;
+    let _canClose = canClose;
+
+    const currentDate = new Date();
+    const targetDate = new Date("2025-01-22");
+
+    if (currentDate < targetDate) {
+      _canClose = true;
+    }
+
+    if (!_canClose) {
+      return;
+    }
 
     navigation.canGoBack() ? navigation.goBack() : navigation.navigate("Home");
 
@@ -174,10 +185,7 @@ const SubscriptionScreen = () => {
       return;
     }
 
-    const today = new Date();
-    const targetDate = new Date("2025-01-22");
-
-    if (today < targetDate) {
+    if (currentDate < targetDate) {
       return;
     }
 
@@ -235,11 +243,7 @@ const SubscriptionScreen = () => {
             <Text style={styles.restoreText}>{t("restore")}</Text>
           </TouchableOpacity>
 
-          <Pressable
-            style={styles.closeButton}
-            onPress={() => canClose && handleGoBack()}
-            disabled={!canClose}
-          >
+          <Pressable style={styles.closeButton} onPress={() => handleGoBack()}>
             <CircularProgress
               value={100}
               radius={16}
