@@ -11,21 +11,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Pressable,
-  ActivityIndicator,
   Linking,
   Share,
   Alert,
 } from "react-native";
-import {
-  CrownIcon,
-  MenuIcon,
-  PasteIcon,
-  CloseIcon,
-  ShareIcon,
-  CopyIcon,
-  RepeatIcon,
-} from "@/components/icon";
-import RightIcon from "@/components/icon/RightIcon";
+import { PasteIcon, CloseIcon } from "@/components/icon";
 import * as Clipboard from "expo-clipboard";
 import Animated, {
   withTiming,
@@ -35,69 +25,18 @@ import Animated, {
 } from "react-native-reanimated";
 import useGrammar from "@/hooks/useGrammar";
 import MoreModal from "@/components/MoreModal";
-import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useStore } from "@/store/useStore";
-import EditIcon from "@/components/icon/EditIcon";
 import { showMessage } from "react-native-flash-message";
 import { useTranslation } from "@/i18n";
 import { useSystemColor } from "@/hooks/useSystemColor";
 import * as StoreReview from "expo-store-review";
-import { LinearGradient } from "expo-linear-gradient";
-
-const Header = ({
-  onMenuPress,
-  onTrialPress,
-}: {
-  onMenuPress: () => void;
-  onTrialPress: () => void;
-}) => {
-  const navigation: any = useNavigation();
-  const isPremiumUser = useStore((state) => state.isPremiumUser);
-  const globalLoading = useStore((state) => state.globalLoading);
-  const { getColor } = useSystemColor();
-  const { t } = useTranslation("home");
-
-  return (
-    <View style={styles.header}>
-      <Text style={[styles.title, { color: getColor("lightInherit") }]}>
-        {t("home")}
-      </Text>
-
-      {!isPremiumUser && (
-        <TouchableOpacity
-          style={[
-            styles.trialButton,
-            { backgroundColor: getColor("trialButton") },
-            globalLoading && { opacity: 0.5 },
-          ]}
-          onPress={onTrialPress}
-          disabled={globalLoading}
-        >
-          {!globalLoading && (
-            <>
-              <CrownIcon width={20} height={16} fill="#FF9200" />
-
-              <Text style={[styles.trialText, { color: getColor("white") }]}>
-                {t("freeTrial")}
-              </Text>
-              <RightIcon color={getColor("white")} />
-            </>
-          )}
-        </TouchableOpacity>
-      )}
-      <TouchableOpacity
-        style={[
-          styles.menuButtonContainer,
-          { backgroundColor: getColor("backOpacity") },
-        ]}
-        onPress={onMenuPress}
-      >
-        <MenuIcon width={16} height={10} color={getColor("iconColor")} />
-      </TouchableOpacity>
-    </View>
-  );
-};
+import Header from "@/components/home/Header";
+import ResultBox from "@/components/home/ResultBox";
+import CheckButton from "@/components/home/CheckButton";
+import ResultFooter from "@/components/home/ResultFooter";
+import MoreModalContainer from "@/components/home/MoreModalContainer";
+import InputContainer from "@/components/home/InputContainer";
 
 const Home = ({ navigation }: { navigation: any }) => {
   const [text, setText] = useState("");
@@ -335,250 +274,45 @@ const Home = ({ navigation }: { navigation: any }) => {
                   {t("checkGrammar")}
                 </Animated.Text>
               )}
-              <Animated.View
-                style={[
-                  styles.inputContainer,
-                  { borderColor: getColor("border") },
-                  resultAnimatedStyle,
-                ]}
-              >
-                <TextInput
-                  style={[styles.input, { color: getColor("lightInherit") }]}
-                  multiline
-                  placeholder={t("enterText")}
-                  placeholderTextColor={getColor("placeholder")}
-                  value={text}
-                  onChangeText={handleTextChange}
-                  onFocus={() => {
-                    hideHeading.value = withTiming(0, { duration: 200 });
-                    setIsKeyboardFocused(true);
-                  }}
-                  onBlur={() => {
-                    if (text.length === 0) {
-                      hideHeading.value = withTiming(1, { duration: 200 });
-                    }
-                    setIsKeyboardFocused(false);
-                  }}
-                  ref={inputRef}
-                />
-                <Animated.View
-                  style={[
-                    styles.pasteButton,
-                    { backgroundColor: getColor("backOpacity") },
-                  ]}
-                >
-                  <TouchableOpacity
-                    onPress={handlePaste}
-                    style={[styles.pasteButtonContent]}
-                  >
-                    <PasteIcon
-                      color={getColor("topIcons")}
-                      width={12.92}
-                      height={15.42}
-                    />
-                    <Text
-                      style={[
-                        styles.pasteText,
-                        { color: getColor("topIcons") },
-                      ]}
-                    >
-                      {t("paste")}
-                    </Text>
-                  </TouchableOpacity>
-                </Animated.View>
-                <Animated.View
-                  style={[
-                    styles.closeButton,
-                    { backgroundColor: getColor("backOpacity") },
-                    closeButtonAnimatedStyle,
-                  ]}
-                >
-                  <Pressable
-                    onPress={handleClear}
-                    style={styles.closeButtonContent}
-                  >
-                    <CloseIcon
-                      color={getColor("topIcons")}
-                      width={10.57}
-                      height={10.57}
-                    />
-                  </Pressable>
-                </Animated.View>
-              </Animated.View>
+              <InputContainer
+                text={text}
+                setText={setText}
+                inputRef={inputRef}
+                closeButtonOpacity={closeButtonOpacity}
+                hideHeading={hideHeading}
+                resultAnimatedStyle={resultAnimatedStyle}
+                getColor={getColor}
+                setIsKeyboardFocused={setIsKeyboardFocused}
+                t={t}
+              />
               {/* result box */}
               {showResult && (
-                <Animated.View
-                  style={[
-                    styles.resultBox,
-                    {
-                      backgroundColor: getColor("resultBg"),
-                      borderColor: getColor("resultBorder"),
-                    },
-                    animatedResultStyle,
-                    isKeyboardFocused && {
-                      paddingBottom: 0,
-                    },
-                    { maxHeight: 300 },
-                  ]}
-                >
-                  <TextInput
-                    value={result}
-                    multiline
-                    style={[
-                      styles.correctedText,
-                      { color: getColor("lightInherit") },
-                      {
-                        padding: 16,
-                        paddingBottom: isKeyboardFocused ? 0 : 16,
-                      },
-                    ]}
-                    placeholderTextColor={getColor("placeholder")}
-                    editable={false}
-                  />
-                  {!isKeyboardFocused && (
-                    <>
-                      <TouchableOpacity
-                        style={[
-                          styles.shareIconWrapper,
-                          { backgroundColor: getColor("backOpacity2") },
-                        ]}
-                        onPress={() => {
-                          Share.share({
-                            url: "https://apps.apple.com/us/app/ai-rewrite-spell-checker/id6739363989",
-                            message: result,
-                          })
-                            .then((res) => console.log(res))
-                            .catch((error) => console.log(error));
-                        }}
-                      >
-                        <ShareIcon
-                          width={20}
-                          height={20}
-                          color={getColor("grayOpacity")}
-                        />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={[
-                          styles.copyIconWrapper,
-                          { backgroundColor: getColor("backOpacity2") },
-                        ]}
-                        onPress={handleCopy}
-                      >
-                        <CopyIcon
-                          width={20}
-                          height={20}
-                          color={getColor("grayOpacity")}
-                        />
-                      </TouchableOpacity>
-                    </>
-                  )}
-                </Animated.View>
+                <ResultBox
+                  result={result}
+                  isKeyboardFocused={isKeyboardFocused}
+                  animatedResultStyle={animatedResultStyle}
+                  onCopy={handleCopy}
+                />
               )}
               {showResult ? (
-                <View style={styles.resultFooter}>
-                  <TouchableOpacity
-                    style={[
-                      styles.trashButton,
-                      { backgroundColor: getColor("backOpacity") },
-                    ]}
-                    onPress={handleClear}
-                  >
-                    <EditIcon
-                      color={getColor("lightInherit")}
-                      width={16.02}
-                      height={14.02}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      handleCheck();
-                    }}
-                    disabled={isLoading}
-                    style={{ flex: 1 }}
-                  >
-                    <LinearGradient
-                      style={[
-                        styles.againButton,
-                        isLoading && styles.disabledButton,
-                      ]}
-                      colors={["rgba(109, 79, 142, 1)", "rgba(96, 67, 128, 1)"]}
-                    >
-                      <View style={styles.againContent}>
-                        {isLoading ? (
-                          <ActivityIndicator color="#fff" />
-                        ) : (
-                          <>
-                            <RepeatIcon
-                              width={16}
-                              height={16}
-                              color={getColor("white")}
-                            />
-                            <Text
-                              style={[
-                                styles.againText,
-                                { color: getColor("white") },
-                              ]}
-                            >
-                              {t("reCheck")}
-                            </Text>
-                          </>
-                        )}
-                      </View>
-                    </LinearGradient>
-                  </TouchableOpacity>
-                </View>
+                <ResultFooter
+                  onClear={handleClear}
+                  onCheck={handleCheck}
+                  isLoading={isLoading}
+                />
               ) : (
-                <TouchableOpacity onPress={handleCheck} disabled={isLoading}>
-                  <LinearGradient
-                    style={[
-                      styles.checkButton,
-                      isLoading && styles.disabledButton,
-                    ]}
-                    colors={["rgba(109, 79, 142, 1)", "rgba(96, 67, 128, 1)"]}
-                  >
-                    {isLoading ? (
-                      <ActivityIndicator color={getColor("primary")} />
-                    ) : (
-                      <Text
-                        style={[
-                          styles.checkButtonText,
-                          { color: getColor("white") },
-                        ]}
-                      >
-                        {t("check")}
-                      </Text>
-                    )}
-                  </LinearGradient>
-                </TouchableOpacity>
+                <CheckButton onPress={handleCheck} isLoading={isLoading} />
               )}
             </View>
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
 
-        <MoreModal
+        <MoreModalContainer
           visible={showMoreModal}
           onClose={() => setShowMoreModal(false)}
           navigation={navigation}
-          onTrialPress={() => {
-            setShowMoreModal(false);
-            handleTrialPress();
-          }}
-          onRatePress={showReviewAlert}
-          onSharePress={() => {
-            Share.share({
-              message: "AI Rewrite & Spell Checker app!",
-              url: "https://apps.apple.com/app/id6739363989",
-            }).catch((e) => console.log(e));
-          }}
-          onPrivacyPress={() => {
-            Linking.openURL("https://deployglobal.ee/corrector/privacy");
-          }}
-          onSupportPress={() => {
-            Linking.openURL("https://deployglobal.ee/support");
-          }}
-          onTermsPress={() => {
-            Linking.openURL("https://deployglobal.ee/corrector/terms");
-          }}
+          handleTrialPress={handleTrialPress}
+          showReviewAlert={showReviewAlert}
         />
       </>
     </SafeAreaView>
