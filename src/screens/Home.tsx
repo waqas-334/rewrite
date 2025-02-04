@@ -158,6 +158,13 @@ const Home = ({ navigation }: { navigation: any }) => {
       setIsLoading(false);
 
       setTimeout(async () => {
+        const today = new Date();
+        const targetDate = new Date("2025-02-06");
+
+        if (today < targetDate) {
+          return;
+        }
+
         const seenReviewCount = Number(
           (await AsyncStorage.getItem("seenReviewCount")) || "0"
         );
