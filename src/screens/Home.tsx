@@ -132,7 +132,7 @@ const Home = ({ navigation }: { navigation: any }) => {
 
         const todayChecks = checks[today] || 0;
 
-        if (todayChecks === 3) {
+        if (todayChecks === 1) {
           Alert.alert(t("limitReachedTitle"), t("limitReachedMessage"), [
             {
               text: t("upgradeToPro"),
@@ -167,13 +167,16 @@ const Home = ({ navigation }: { navigation: any }) => {
           (await AsyncStorage.getItem("seenReviewCount")) || "0"
         );
 
+        console.log({ seenReviewCount });
+
         if (seenReviewCount === 1) {
           showReviewAlert();
-          AsyncStorage.setItem(
-            "seenReviewCount",
-            (seenReviewCount + 1).toString()
-          );
         }
+
+        AsyncStorage.setItem(
+          "seenReviewCount",
+          (seenReviewCount + 1).toString()
+        );
       }, 3000);
     }
   };

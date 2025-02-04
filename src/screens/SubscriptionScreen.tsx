@@ -169,7 +169,7 @@ const SubscriptionScreen = () => {
     let _canClose = canClose;
 
     const currentDate = new Date();
-    const targetDate = new Date("2025-01-22");
+    const targetDate = new Date("2025-02-06");
 
     if (currentDate < targetDate) {
       _canClose = true;
