@@ -1,18 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
-  Text,
   View,
   TextInput,
-  TouchableOpacity,
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
-  Pressable,
   Linking,
-  Share,
   Alert,
 } from "react-native";
 import { PasteIcon, CloseIcon } from "@/components/icon";
@@ -24,7 +20,6 @@ import Animated, {
   interpolate,
 } from "react-native-reanimated";
 import useGrammar from "@/hooks/useGrammar";
-import MoreModal from "@/components/MoreModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useStore } from "@/store/useStore";
 import { showMessage } from "react-native-flash-message";
@@ -167,9 +162,7 @@ const Home = ({ navigation }: { navigation: any }) => {
           (await AsyncStorage.getItem("seenReviewCount")) || "0"
         );
 
-        console.log({ seenReviewCount });
-
-        if (seenReviewCount === 1) {
+        if (seenReviewCount === 2) {
           showReviewAlert();
         }
 
