@@ -28,8 +28,18 @@ const MoreModalContainer = ({
     Linking.openURL("https://deployglobal.ee/corrector/privacy");
   };
 
-  const handleSupportPress = () => {
-    Linking.openURL("https://deployglobal.ee/support");
+  const handleSupportPress = async () => {
+    try {
+      if (await Linking.canOpenURL("mailto:rewrite@deployglobal.ee")) {
+        Linking.openURL(
+          "mailto:rewrite@deployglobal.ee?subject=AI%20Rewrite%20Support"
+        );
+      } else {
+        Linking.openURL("https://deployglobal.ee/support");
+      }
+    } catch (error) {
+      Linking.openURL("https://deployglobal.ee/support");
+    }
   };
 
   const handleTermsPress = () => {
