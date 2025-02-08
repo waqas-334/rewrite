@@ -18,7 +18,6 @@ import { useStore } from "@/store/useStore";
 import { adapty } from "react-native-adapty";
 import { showMessage } from "react-native-flash-message";
 import { useTranslation } from "@/i18n";
-import { CircularProgress } from "react-native-circular-progress";
 import CheckIcon from "@/components/icon/CheckIcon";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -109,17 +108,9 @@ const Offer = ({ route }: { route: any }) => {
         <View style={styles.header}>
           <Text style={styles.restoreText}>{t("restore")}</Text>
           <TouchableOpacity onPress={handleGoBack} style={styles.closeButton}>
-            <CircularProgress
-              size={29}
-              width={2.5}
-              fill={100}
-              tintColor="#fff"
-              backgroundColor="transparent"
-              rotation={0}
-              lineCap="round"
-            >
-              {() => <CloseIcon width={11} height={11} color="#fff" />}
-            </CircularProgress>
+            <View style={styles.circularBorder}>
+              <CloseIcon width={11} height={11} color="#fff" />
+            </View>
           </TouchableOpacity>
         </View>
 
@@ -429,6 +420,16 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 14,
     fontWeight: "700",
+  },
+  circularBorder: {
+    width: 29,
+    height: 29,
+    borderWidth: 2.5,
+    borderColor: "#fff",
+    borderRadius: 29 / 2,
+    backgroundColor: "transparent",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

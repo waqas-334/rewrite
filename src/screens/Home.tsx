@@ -48,27 +48,13 @@ const Home = ({ navigation }: { navigation: any }) => {
   const offerTimeLeft = useStore((state) => state.offerTimeLeft);
   const [isKeyboardFocused, setIsKeyboardFocused] = useState(false);
   const [hasStoreReviewAction, setHasStoreReviewAction] = useState(false);
+  const showOffer = useStore((state) => state.showOffer);
+  const freeTries = useStore((state) => state.dailyFreeTries);
+  const showReviewPopup = useStore((state) => state.showReviewPopup);
   const { t } = useTranslation("home");
 
   const { checkGrammar } = useGrammar();
   const { getColor } = useSystemColor();
-
-  const handleTextChange = (newText: string) => {
-    setText(newText);
-    closeButtonOpacity.value = withTiming(newText.length > 0 ? 1 : 0, {
-      duration: 200,
-    });
-    opacity.value = withTiming(newText.length > 0 ? 0 : 1, {
-      duration: 200,
-    });
-  };
-
-  const handlePaste = async () => {
-    const clipboardText = await Clipboard.getStringAsync();
-    if (clipboardText) {
-      setText((prevState) => prevState + clipboardText);
-    }
-  };
 
   const showReviewAlert = () => {
     Alert.alert(
@@ -94,7 +80,7 @@ const Home = ({ navigation }: { navigation: any }) => {
 
     const timePassed = offerTimeLeft ? currentDate - offerTimeLeft : 9999999900;
 
-    if (timePassed > 2 * 60 * 1000) {
+    if (timePassed > 2 * 60 * 1000 || !showOffer) {
       navigation.navigate("Subscription");
     } else {
       const timePassedInSeconds = Math.floor(timePassed / 1000);
@@ -127,7 +113,7 @@ const Home = ({ navigation }: { navigation: any }) => {
 
         const todayChecks = checks[today] || 0;
 
-        if (todayChecks === 1) {
+        if (todayChecks >= freeTries) {
           Alert.alert(t("limitReachedTitle"), t("limitReachedMessage"), [
             {
               text: t("upgradeToPro"),
@@ -158,10 +144,7 @@ const Home = ({ navigation }: { navigation: any }) => {
       setIsLoading(false);
 
       setTimeout(async () => {
-        const today = new Date();
-        const targetDate = new Date("2025-02-06");
-
-        if (today < targetDate) {
+        if (!showReviewPopup) {
           return;
         }
 

@@ -53,6 +53,7 @@ const MoreModal = ({
   const offerTimeLeft = useStore((s) => s.offerTimeLeft);
   const { t } = useTranslation("more");
   const { getColor } = useSystemColor();
+  const showOffer = useStore((s) => s.showOffer);
 
   useEffect(() => {
     if (visible) {
@@ -77,7 +78,7 @@ const MoreModal = ({
 
     const timePassed = offerTimeLeft ? currentDate - offerTimeLeft : 9999999900;
 
-    if (timePassed > 2 * 60 * 1000) {
+    if (timePassed > 2 * 60 * 1000 || !showOffer) {
       navigation.navigate("Subscription");
     } else {
       const timePassedInSeconds = Math.floor(timePassed / 1000);

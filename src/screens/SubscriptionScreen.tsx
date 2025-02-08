@@ -43,6 +43,7 @@ const Circles = ({ topOffset }: { topOffset: number }) => (
 
 const SubscriptionScreen = () => {
   const navigation: any = useNavigation();
+  const showOffer = useStore((state) => state.showOffer);
   const { products, setIsPremiumUser, isPremiumUser, setOfferTimeLeft } =
     useStore();
   const [selectedPlan, setSelectedPlan] = useState<
@@ -51,6 +52,13 @@ const SubscriptionScreen = () => {
   const [purchaseLoading, setPurchaseLoading] = useState<string | null>(null);
   const { t } = useTranslation("subscription");
   const [canClose, setCanClose] = useState(false);
+  const closeDuration = useStore((state) => state.closeDuration);
+
+  useEffect(() => {
+    if (closeDuration === 0) {
+      setCanClose(true);
+    }
+  }, [closeDuration]);
 
   const handlePurchase = async (
     productType: "weekly" | "monthly" | "annual_with_trial"
@@ -165,27 +173,17 @@ const SubscriptionScreen = () => {
     return `${weeklyPrice.toFixed(2)}${currencySymbol}`;
   };
 
-  const handleGoBack = async () => {
-    let _canClose = canClose;
-
-    const currentDate = new Date();
-    const targetDate = new Date("2025-02-06");
-
-    if (currentDate < targetDate) {
-      _canClose = true;
-    }
-
-    if (!_canClose) {
-      return;
-    }
-
+  const goBack = () =>
     navigation.canGoBack() ? navigation.goBack() : navigation.navigate("Home");
 
-    if (isPremiumUser) {
+  const handleGoBack = async () => {
+    if (!canClose) {
       return;
     }
 
-    if (currentDate < targetDate) {
+    goBack();
+
+    if (isPremiumUser) {
       return;
     }
 
@@ -193,7 +191,10 @@ const SubscriptionScreen = () => {
 
     const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
-    if (!hasViewedOffer || new Date(hasViewedOffer) < oneWeekAgo) {
+    if (
+      (!hasViewedOffer || new Date(hasViewedOffer) < oneWeekAgo) &&
+      showOffer
+    ) {
       navigation.navigate("Offer", { timeLeft: 120 });
       const currentDate = new Date();
 
@@ -247,7 +248,7 @@ const SubscriptionScreen = () => {
             <CircularProgress
               value={100}
               radius={16}
-              duration={15000}
+              duration={closeDuration * 1000}
               progressValueColor={"transparent"}
               activeStrokeColor={"white"}
               inActiveStrokeColor={"rgba(255,255,255,0.3)"}

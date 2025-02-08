@@ -3,8 +3,10 @@ import * as RNLocalize from "react-native-localize";
 import { useStore } from "../store/useStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import strings from "@/i18n/strings";
+import useRemoteConfig from "./useRemoteConfig";
 
 const useInitApp = () => {
+  useRemoteConfig();
   const [appLoading, setAppLoading] = useState(true);
   const [showSubscription, setShowSubscription] = useState(false);
   const setCurrentLanguage = useStore((state) => state.setCurrentLanguage);
