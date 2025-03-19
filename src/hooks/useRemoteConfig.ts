@@ -33,7 +33,6 @@ export default function useRemoteConfig() {
         const closeDuration = remoteConfig.getNumber("close_duration");
         const showReviewPopup = remoteConfig.getBoolean("show_review_popup");
         const dailyFreeTries = remoteConfig.getNumber("daily_free_tries");
-        console.log(showOffer, closeDuration, showReviewPopup, dailyFreeTries);
 
         setShowOffer(showOffer);
         setCloseDuration(closeDuration);

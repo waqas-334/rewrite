@@ -1,16 +1,19 @@
 PODS:
-  - Adapty (3.0.3)
-  - AdaptyUI (3.0.3):
-    - Adapty (= 3.0.3)
-  - Adjust (5.0.1):
-    - Adjust/Adjust (= 5.0.1)
-  - Adjust/Adjust (5.0.1):
-    - AdjustSignature (~> 3.18)
+  - Adapty (3.3.4)
+  - AdaptyPlugin (3.3.4):
+    - Adapty (= 3.3.4)
+    - AdaptyUI (= 3.3.4)
+  - AdaptyUI (3.3.4):
+    - Adapty (= 3.3.4)
+  - Adjust (5.1.1):
+    - Adjust/Adjust (= 5.1.1)
+  - Adjust/Adjust (5.1.1):
+    - AdjustSignature (= 3.35.2)
   - AdjustSignature (3.35.2)
   - boost (1.84.0)
-  - Clarity (3.0.2)
+  - Clarity (3.0.6)
   - DoubleConversion (1.1.6)
-  - EXConstants (17.0.3):
+  - EXConstants (17.0.8):
     - ExpoModulesCore
   - Exify (0.2.7):
     - DoubleConversion
@@ -36,20 +39,20 @@ PODS:
   - EXInAppPurchases (14.5.0):
     - ExpoModulesCore
   - EXJSONUtils (0.14.0)
-  - EXManifests (0.15.4):
+  - EXManifests (0.15.7):
     - ExpoModulesCore
-  - Expo (52.0.18):
+  - Expo (52.0.39):
     - ExpoModulesCore
-  - expo-dev-client (5.0.6):
+  - expo-dev-client (5.0.14):
     - EXManifests
     - expo-dev-launcher
     - expo-dev-menu
     - expo-dev-menu-interface
     - EXUpdatesInterface
-  - expo-dev-launcher (5.0.19):
+  - expo-dev-launcher (5.0.30):
     - DoubleConversion
     - EXManifests
-    - expo-dev-launcher/Main (= 5.0.19)
+    - expo-dev-launcher/Main (= 5.0.30)
     - expo-dev-menu
     - expo-dev-menu-interface
     - ExpoModulesCore
@@ -75,7 +78,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-launcher/Main (5.0.19):
+  - expo-dev-launcher/Main (5.0.30):
     - DoubleConversion
     - EXManifests
     - expo-dev-launcher/Unsafe
@@ -104,7 +107,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-launcher/Unsafe (5.0.19):
+  - expo-dev-launcher/Unsafe (5.0.30):
     - DoubleConversion
     - EXManifests
     - expo-dev-menu
@@ -132,10 +135,10 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-menu (6.0.14):
+  - expo-dev-menu (6.0.21):
     - DoubleConversion
-    - expo-dev-menu/Main (= 6.0.14)
-    - expo-dev-menu/ReactNativeCompatibles (= 6.0.14)
+    - expo-dev-menu/Main (= 6.0.21)
+    - expo-dev-menu/ReactNativeCompatibles (= 6.0.21)
     - glog
     - hermes-engine
     - RCT-Folly (= 2024.01.01.00)
@@ -155,8 +158,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-menu-interface (1.9.2)
-  - expo-dev-menu/Main (6.0.14):
+  - expo-dev-menu-interface (1.9.3)
+  - expo-dev-menu/Main (6.0.21):
     - DoubleConversion
     - EXManifests
     - expo-dev-menu-interface
@@ -183,7 +186,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-menu/ReactNativeCompatibles (6.0.14):
+  - expo-dev-menu/ReactNativeCompatibles (6.0.21):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -204,7 +207,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-menu/SafeAreaView (6.0.14):
+  - expo-dev-menu/SafeAreaView (6.0.21):
     - DoubleConversion
     - ExpoModulesCore
     - glog
@@ -226,7 +229,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - expo-dev-menu/Vendored (6.0.14):
+  - expo-dev-menu/Vendored (6.0.21):
     - DoubleConversion
     - expo-dev-menu/SafeAreaView
     - glog
@@ -248,19 +251,19 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - ExpoAsset (11.0.1):
+  - ExpoAsset (11.0.4):
     - ExpoModulesCore
-  - ExpoClipboard (7.0.0):
+  - ExpoClipboard (7.0.1):
     - ExpoModulesCore
-  - ExpoFileSystem (18.0.5):
+  - ExpoFileSystem (18.0.11):
     - ExpoModulesCore
-  - ExpoFont (13.0.1):
+  - ExpoFont (13.0.4):
     - ExpoModulesCore
-  - ExpoKeepAwake (14.0.1):
+  - ExpoKeepAwake (14.0.3):
     - ExpoModulesCore
   - ExpoLinearGradient (14.0.2):
     - ExpoModulesCore
-  - ExpoModulesCore (2.1.1):
+  - ExpoModulesCore (2.2.3):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -283,81 +286,81 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - ExpoSplashScreen (0.29.18):
+  - ExpoSplashScreen (0.29.22):
     - ExpoModulesCore
   - ExpoStoreReview (8.0.1):
     - ExpoModulesCore
   - EXUpdatesInterface (1.0.0):
     - ExpoModulesCore
   - FBLazyVector (0.76.5)
-  - Firebase/Analytics (11.7.0):
+  - Firebase/Analytics (11.8.0):
     - Firebase/Core
-  - Firebase/Core (11.7.0):
+  - Firebase/Core (11.8.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (~> 11.7.0)
-  - Firebase/CoreOnly (11.7.0):
-    - FirebaseCore (~> 11.7.0)
-  - Firebase/RemoteConfig (11.7.0):
+    - FirebaseAnalytics (~> 11.8.0)
+  - Firebase/CoreOnly (11.8.0):
+    - FirebaseCore (~> 11.8.0)
+  - Firebase/RemoteConfig (11.8.0):
     - Firebase/CoreOnly
-    - FirebaseRemoteConfig (~> 11.7.0)
-  - FirebaseABTesting (11.7.0):
-    - FirebaseCore (~> 11.7.0)
-  - FirebaseAnalytics (11.7.0):
-    - FirebaseAnalytics/AdIdSupport (= 11.7.0)
-    - FirebaseCore (~> 11.7.0)
+    - FirebaseRemoteConfig (~> 11.8.0)
+  - FirebaseABTesting (11.8.0):
+    - FirebaseCore (~> 11.8.0)
+  - FirebaseAnalytics (11.8.0):
+    - FirebaseAnalytics/AdIdSupport (= 11.8.0)
+    - FirebaseCore (~> 11.8.0)
     - FirebaseInstallations (~> 11.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 8.0)
     - GoogleUtilities/MethodSwizzler (~> 8.0)
     - GoogleUtilities/Network (~> 8.0)
     - "GoogleUtilities/NSData+zlib (~> 8.0)"
     - nanopb (~> 3.30910.0)
-  - FirebaseAnalytics/AdIdSupport (11.7.0):
-    - FirebaseCore (~> 11.7.0)
+  - FirebaseAnalytics/AdIdSupport (11.8.0):
+    - FirebaseCore (~> 11.8.0)
     - FirebaseInstallations (~> 11.0)
-    - GoogleAppMeasurement (= 11.7.0)
+    - GoogleAppMeasurement (= 11.8.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 8.0)
     - GoogleUtilities/MethodSwizzler (~> 8.0)
     - GoogleUtilities/Network (~> 8.0)
     - "GoogleUtilities/NSData+zlib (~> 8.0)"
     - nanopb (~> 3.30910.0)
-  - FirebaseCore (11.7.0):
-    - FirebaseCoreInternal (~> 11.7.0)
+  - FirebaseCore (11.8.1):
+    - FirebaseCoreInternal (~> 11.8.0)
     - GoogleUtilities/Environment (~> 8.0)
     - GoogleUtilities/Logger (~> 8.0)
-  - FirebaseCoreInternal (11.7.0):
+  - FirebaseCoreInternal (11.8.0):
     - "GoogleUtilities/NSData+zlib (~> 8.0)"
-  - FirebaseInstallations (11.7.0):
-    - FirebaseCore (~> 11.7.0)
+  - FirebaseInstallations (11.8.0):
+    - FirebaseCore (~> 11.8.0)
     - GoogleUtilities/Environment (~> 8.0)
     - GoogleUtilities/UserDefaults (~> 8.0)
     - PromisesObjC (~> 2.4)
-  - FirebaseRemoteConfig (11.7.0):
+  - FirebaseRemoteConfig (11.8.0):
     - FirebaseABTesting (~> 11.0)
-    - FirebaseCore (~> 11.7.0)
+    - FirebaseCore (~> 11.8.0)
     - FirebaseInstallations (~> 11.0)
     - FirebaseRemoteConfigInterop (~> 11.0)
     - FirebaseSharedSwift (~> 11.0)
     - GoogleUtilities/Environment (~> 8.0)
     - "GoogleUtilities/NSData+zlib (~> 8.0)"
-  - FirebaseRemoteConfigInterop (11.7.0)
-  - FirebaseSharedSwift (11.7.0)
+  - FirebaseRemoteConfigInterop (11.10.0)
+  - FirebaseSharedSwift (11.10.0)
   - fmt (9.1.0)
   - glog (0.3.5)
-  - GoogleAppMeasurement (11.7.0):
-    - GoogleAppMeasurement/AdIdSupport (= 11.7.0)
+  - GoogleAppMeasurement (11.8.0):
+    - GoogleAppMeasurement/AdIdSupport (= 11.8.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 8.0)
     - GoogleUtilities/MethodSwizzler (~> 8.0)
     - GoogleUtilities/Network (~> 8.0)
     - "GoogleUtilities/NSData+zlib (~> 8.0)"
     - nanopb (~> 3.30910.0)
-  - GoogleAppMeasurement/AdIdSupport (11.7.0):
-    - GoogleAppMeasurement/WithoutAdIdSupport (= 11.7.0)
+  - GoogleAppMeasurement/AdIdSupport (11.8.0):
+    - GoogleAppMeasurement/WithoutAdIdSupport (= 11.8.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 8.0)
     - GoogleUtilities/MethodSwizzler (~> 8.0)
     - GoogleUtilities/Network (~> 8.0)
     - "GoogleUtilities/NSData+zlib (~> 8.0)"
     - nanopb (~> 3.30910.0)
-  - GoogleAppMeasurement/WithoutAdIdSupport (11.7.0):
+  - GoogleAppMeasurement/WithoutAdIdSupport (11.8.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 8.0)
     - GoogleUtilities/MethodSwizzler (~> 8.0)
     - GoogleUtilities/Network (~> 8.0)
@@ -1635,15 +1638,16 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-adapty-sdk (3.0.2-canary.0):
-    - Adapty (= 3.0.3)
-    - AdaptyUI (= 3.0.3)
+  - react-native-adapty-sdk (3.3.1):
+    - Adapty (= 3.3.4)
+    - AdaptyPlugin (= 3.3.4)
+    - AdaptyUI (= 3.3.4)
     - React
-  - react-native-adjust (5.0.3):
-    - Adjust (= 5.0.1)
+  - react-native-adjust (5.1.0):
+    - Adjust (= 5.1.1)
     - React-Core
-  - react-native-clarity (4.0.4):
-    - Clarity (= 3.0.2)
+  - react-native-clarity (4.1.8):
+    - Clarity (= 3.0.6)
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -2004,20 +2008,20 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNFBAnalytics (21.7.4):
-    - Firebase/Analytics (= 11.7.0)
+  - RNFBAnalytics (21.12.0):
+    - Firebase/Analytics (= 11.8.0)
     - React-Core
     - RNFBApp
-  - RNFBApp (21.7.4):
-    - Firebase/CoreOnly (= 11.7.0)
+  - RNFBApp (21.12.0):
+    - Firebase/CoreOnly (= 11.8.0)
     - React-Core
-  - RNFBRemoteConfig (21.7.4):
-    - Firebase/RemoteConfig (= 11.7.0)
+  - RNFBRemoteConfig (21.12.0):
+    - Firebase/RemoteConfig (= 11.8.0)
     - React-Core
     - RNFBApp
   - RNFS (2.20.0):
     - React-Core
-  - RNLocalize (3.3.0):
+  - RNLocalize (3.4.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2038,7 +2042,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNReanimated (3.16.5):
+  - RNReanimated (3.16.7):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2058,10 +2062,10 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated (= 3.16.5)
-    - RNReanimated/worklets (= 3.16.5)
+    - RNReanimated/reanimated (= 3.16.7)
+    - RNReanimated/worklets (= 3.16.7)
     - Yoga
-  - RNReanimated/reanimated (3.16.5):
+  - RNReanimated/reanimated (3.16.7):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2081,9 +2085,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated/apple (= 3.16.5)
+    - RNReanimated/reanimated/apple (= 3.16.7)
     - Yoga
-  - RNReanimated/reanimated/apple (3.16.5):
+  - RNReanimated/reanimated/apple (3.16.7):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2104,7 +2108,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNReanimated/worklets (3.16.5):
+  - RNReanimated/worklets (3.16.7):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2170,7 +2174,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNSVG (15.11.1):
+  - RNSVG (15.11.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2190,9 +2194,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNSVG/common (= 15.11.1)
+    - RNSVG/common (= 15.11.2)
     - Yoga
-  - RNSVG/common (15.11.1):
+  - RNSVG/common (15.11.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2319,6 +2323,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Adapty
+    - AdaptyPlugin
     - AdaptyUI
     - Adjust
     - AdjustSignature
@@ -2535,46 +2540,47 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  Adapty: 1e48516a56a5a888875091c326593d6bb2d4e177
-  AdaptyUI: 6529315c657960743ce3c2df58620a4d154605fa
-  Adjust: f27daaa40d0df5550b89dd428cd8545d812e1f6d
+  Adapty: 5a4d9feb206a870456e87043541ba1572f2f6273
+  AdaptyPlugin: f02a6637a091efd8c1a49c122fd30eddba4a3142
+  AdaptyUI: 6d0be19e8b24d2cbfb00b44b774c957656c20414
+  Adjust: 5f5e998cf1446d44d93f91ec8b7b7dd40eaa922d
   AdjustSignature: 23b9e5d4adcadffc303bb6b410fde617dd88504f
   boost: 1dca942403ed9342f98334bf4c3621f011aa7946
-  Clarity: 1050b2588ff68a80baf6080ca9558929ccad7897
+  Clarity: fc3e44b276bf127686b5040871e31e242904977d
   DoubleConversion: f16ae600a246532c4020132d54af21d0ddb2a385
-  EXConstants: dd2fe64c6cdb1383b694c309a63028a8e9f2be6d
+  EXConstants: a1f35b9aabbb3c6791f8e67722579b1ffcdd3f18
   Exify: 77596352fe44e1c599bb7bc4ed7cac4b762c113a
   EXInAppPurchases: 7cb409539cf093b0f5d266f9577c984003a15f72
   EXJSONUtils: 01fc7492b66c234e395dcffdd5f53439c5c29c93
-  EXManifests: f30a0c5d3d6cad8db9c01bab579e0aa0df5d3cb2
-  Expo: dc7907584c3517c592315a59719180037703ff33
-  expo-dev-client: 8bb4cc68d1c23b585dddd3169787e37337c5ab4a
-  expo-dev-launcher: 8972c34d0946cc0fb1d6c1b0578dbf9e4bcff2c3
-  expo-dev-menu: d770b290f8f3a4affb738fbdee371f085c4db287
-  expo-dev-menu-interface: 4baf2f8b3b79ce37cf4b900e4b3ba6df3384f0a1
-  ExpoAsset: 8138f2a9ec55ae1ad7c3871448379f7d97692d15
-  ExpoClipboard: 166ca8c13ca1041f5ba619a211f59427ab5da8a7
-  ExpoFileSystem: 2161e16165279fb46e138d8ea8795c71cc6718be
-  ExpoFont: 7522d869d84ee2ee8093ee997fef5b86f85d856b
-  ExpoKeepAwake: 783e68647b969b210a786047c3daa7b753dcac1f
+  EXManifests: 4e8c6aa537f44e72c2b4e2b71698234b623007da
+  Expo: d01030025d6965c98bd968ea9b71ae5bb9727cb8
+  expo-dev-client: 9783aebb7c93d68bcf6b614eb8240504c389a638
+  expo-dev-launcher: bb38763eb056480f2100447a57808cae19288e96
+  expo-dev-menu: d7df3531103e0a7927f62709037fdd0d3b25012c
+  expo-dev-menu-interface: 00dc42302a72722fdecec3fa048de84a9133bcc4
+  ExpoAsset: a4cbc27a7cd24a6e87eb719603790b2cfa8dd326
+  ExpoClipboard: 5250b207b6d545f4e9aac5ea3c6e61c4f16d0aed
+  ExpoFileSystem: 4d2e7f77a41cfde8c3ae98580d872cd49437f993
+  ExpoFont: 773955186469acc5108ff569712a2d243857475f
+  ExpoKeepAwake: 2a5f15dd4964cba8002c9a36676319a3394c85c7
   ExpoLinearGradient: ee9efc5acb988b911320e964fab9b4cbdeb198c4
-  ExpoModulesCore: 62a6f1e14bbe4d61cf7d23cebda68090f9f6915f
-  ExpoSplashScreen: 5818efe67bdbcc862b97fef589571c5b4d53fa7d
+  ExpoModulesCore: 9566a9ca8f0882e12a7c24d43309773df80653b6
+  ExpoSplashScreen: 643666b96a84e8d97d55fac43926fb4183c692d9
   ExpoStoreReview: 32f7186925fdecacddf3c1bc9628dd11b10c3ddd
   EXUpdatesInterface: 1dcebac98ac5dad4289e6ff2bd5616822e894397
   FBLazyVector: 1bf99bb46c6af9a2712592e707347315f23947aa
-  Firebase: a64bf6a8546e6eab54f1c715cd6151f39d2329f4
-  FirebaseABTesting: 08b3e19b28504632a9cd03e7a796b355c5d39b27
-  FirebaseAnalytics: bc9e565af9044ba8d6c6e4157e4edca8e5fdf7ec
-  FirebaseCore: 3227e35f4197a924206fbcdc0349325baf4f5de4
-  FirebaseCoreInternal: d6c17dafc8dc33614733a8b52df78fcb4394c881
-  FirebaseInstallations: 9347e719c3d52d8d7b9074b2c32407dd027305e9
-  FirebaseRemoteConfig: aa1d4cb05ef4caad203448dfc87842de12f1ea8d
-  FirebaseRemoteConfigInterop: ca12abf9da0003efd3a476b2dff4f7a04fd31b4f
-  FirebaseSharedSwift: a45efd84d60ebbfdcdbaebc66948af3630459e62
+  Firebase: d80354ed7f6df5f9aca55e9eb47cc4b634735eaf
+  FirebaseABTesting: 7d6eee42b9137541eac2610e5fea3568d956707a
+  FirebaseAnalytics: 4fd42def128146e24e480e89f310e3d8534ea42b
+  FirebaseCore: 99fe0c4b44a39f37d99e6404e02009d2db5d718d
+  FirebaseCoreInternal: df24ce5af28864660ecbd13596fc8dd3a8c34629
+  FirebaseInstallations: 6c963bd2a86aca0481eef4f48f5a4df783ae5917
+  FirebaseRemoteConfig: f63724461fd97f0d62f20021314b59388f3e8ef8
+  FirebaseRemoteConfigInterop: 7c9a9c65eff32cbb0f7bf8d18140612ad57dfcc6
+  FirebaseSharedSwift: 1baacae75939499b5def867cbe34129464536a38
   fmt: 10c6e61f4be25dc963c36bd73fc7b1705fe975be
   glog: 08b301085f15bcbb6ff8632a8ebaf239aae04e6a
-  GoogleAppMeasurement: 0471a5b5bff51f3a91b1e76df22c952d04c63967
+  GoogleAppMeasurement: fc0817122bd4d4189164f85374e06773b9561896
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   hermes-engine: 06a9c6900587420b90accc394199527c64259db4
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
@@ -2609,9 +2615,9 @@ SPEC CHECKSUMS:
   React-logger: 697873f06b8ba436e3cddf28018ab4741e8071b6
   React-Mapbuffer: c79216258c659d70cdebaf76f8c110cc46dce8db
   React-microtasksnativemodule: 8d918db5d7c4526de2a0a4692d878a21b338c3f0
-  react-native-adapty-sdk: 890829ba2b88139ae812f38b336cfcd6bdae1397
-  react-native-adjust: 59b523d8ef1dc2c0516fb7120ed04cdfc5510a90
-  react-native-clarity: 135b5b0f334d7ef0cae082f2ea20f0beabf649b7
+  react-native-adapty-sdk: 78e9a672c6ca1ef30d2c03012b4a73f26fa213c7
+  react-native-adjust: 60fd7e811de33d36923c8c208d60e322a1b1207b
+  react-native-clarity: e3615f4ec00316d608195b01ed4bf1e05f98f6ed
   react-native-safe-area-context: 908ee3cf872b29ed987a0514f1a6ccbf57f0fef4
   React-nativeconfig: 565ebf4340d9ede95b523f0e3640f48286985ef5
   React-NativeModulesApple: ea083a4663dae82c99fe4c2186b11504ac4147e1
@@ -2641,14 +2647,14 @@ SPEC CHECKSUMS:
   ReactCodegen: 8d7f9f05befdeb108948bbaa18d149b25a964f72
   ReactCommon: 858d61cce81635d57be89348568b603e838b3cac
   RNCAsyncStorage: 722620dc87fb48ad321505fcfccd1782455c7448
-  RNFBAnalytics: 6b4adf773cab5dffa46a49eb5d7e8fd8751ebabe
-  RNFBApp: 03c1a79b85847e1f8e40e12612de80a7ccda5547
-  RNFBRemoteConfig: 1c33d2f9a32d22ea9aa16a16b3f85a45d10f7cb4
+  RNFBAnalytics: 373bae432ac6e0725b154884f1c9384ce52a0adc
+  RNFBApp: 7cf039683867cbf8514bc3aafd756e6c5fb18898
+  RNFBRemoteConfig: a5b7ff6dd4bdef6e487d33eeb9706d5d61a43ce3
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
-  RNLocalize: 88276d6628aa5056203fdf6b32a349f6a721fa33
-  RNReanimated: c1e1a4cfb360c774af62b1e45f5cd03e49394ad0
+  RNLocalize: 6430116749d2a7b087c80c4e17f0e9ab8f449dee
+  RNReanimated: ddc60075b382b872662cadaf9972b07d52a8fce7
   RNScreens: e9cfdcedde2fb10f17f390fb239ee8a2ee7a4fd9
-  RNSVG: 3cd6669b7ad658c8b482db630dccf364c3b59cfb
+  RNSVG: c2bdc41865cd5f94098dd05453dadaae6176b2dd
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: d2b3aca40280e37f5eac5e3b02ddedffb8db7471
 

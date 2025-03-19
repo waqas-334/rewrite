@@ -32,6 +32,7 @@ import CheckButton from "@/components/home/CheckButton";
 import ResultFooter from "@/components/home/ResultFooter";
 import MoreModalContainer from "@/components/home/MoreModalContainer";
 import InputContainer from "@/components/home/InputContainer";
+import usePaywall from "@/hooks/usePaywall";
 
 const Home = ({ navigation }: { navigation: any }) => {
   const [text, setText] = useState("");
@@ -52,6 +53,7 @@ const Home = ({ navigation }: { navigation: any }) => {
   const freeTries = useStore((state) => state.dailyFreeTries);
   const showReviewPopup = useStore((state) => state.showReviewPopup);
   const { t } = useTranslation("home");
+  const { showPaywall } = usePaywall();
 
   const { checkGrammar } = useGrammar();
   const { getColor } = useSystemColor();
@@ -81,7 +83,8 @@ const Home = ({ navigation }: { navigation: any }) => {
     const timePassed = offerTimeLeft ? currentDate - offerTimeLeft : 9999999900;
 
     if (timePassed > 2 * 60 * 1000 || !showOffer) {
-      navigation.navigate("Subscription");
+      // navigation.navigate("Subscription");
+      showPaywall();
     } else {
       const timePassedInSeconds = Math.floor(timePassed / 1000);
       const timeLeft = 120 - timePassedInSeconds;

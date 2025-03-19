@@ -24,6 +24,7 @@ import Animated, {
 import { useStore } from "@/store/useStore";
 import { useTranslation } from "@/i18n";
 import { useSystemColor } from "@/hooks/useSystemColor";
+import usePaywall from "@/hooks/usePaywall";
 
 interface MoreModalProps {
   visible: boolean;
@@ -54,6 +55,7 @@ const MoreModal = ({
   const { t } = useTranslation("more");
   const { getColor } = useSystemColor();
   const showOffer = useStore((s) => s.showOffer);
+  const { showPaywall } = usePaywall();
 
   useEffect(() => {
     if (visible) {
@@ -79,7 +81,8 @@ const MoreModal = ({
     const timePassed = offerTimeLeft ? currentDate - offerTimeLeft : 9999999900;
 
     if (timePassed > 2 * 60 * 1000 || !showOffer) {
-      navigation.navigate("Subscription");
+      // navigation.navigate("Subscription");
+      showPaywall();
     } else {
       const timePassedInSeconds = Math.floor(timePassed / 1000);
       const timeLeft = 120 - timePassedInSeconds;

@@ -11,6 +11,8 @@ import useInitApp from "./hooks/useInitApp";
 import useAdjust from "./hooks/useAdjust";
 import { initializeClarity } from "./configs/clarity";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import usePaywall from "./hooks/usePaywall";
+// import { createPaywallView } from 'react-native-adapty/dist/ui';
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -32,6 +34,8 @@ initializeClarity();
 
 export default function App() {
   useAdjust();
+
+  const { showPaywall } = usePaywall();
   const { isPremiumUser, initLoading } = useAdapt();
   const { appLoading, showSubscription } = useInitApp();
 
@@ -42,7 +46,8 @@ export default function App() {
   let initialScreen: keyof RootStackParamList = "Home";
 
   if (showSubscription && !isPremiumUser) {
-    initialScreen = "Subscription";
+    // initialScreen = "Subscription";
+    showPaywall();
   }
 
   return (
