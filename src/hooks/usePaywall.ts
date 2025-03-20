@@ -14,9 +14,11 @@ const usePaywall = () => {
       onCloseButtonPress: () => {
         view.dismiss();
       },
-      onPurchaseCompleted: () => {
-        view.dismiss();
-        setIsPremiumUser(true);
+      onPurchaseCompleted(purchaseResult) {
+        if (purchaseResult.type === "success") {
+          view.dismiss();
+          setIsPremiumUser(true);
+        }
       },
     });
     view.present();
