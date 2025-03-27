@@ -9,7 +9,7 @@ export default function useRemoteConfig() {
   const setCloseDuration = useStore((state) => state.setCloseDuration);
   const setShowReviewPopup = useStore((state) => state.setShowReviewPopup);
   const setDailyFreeTries = useStore((state) => state.setDailyFreeTries);
-
+  const setApiKey = useStore((state) => state.setApiKey);
   useEffect(() => {
     remoteConfig
       .setConfigSettings({
@@ -22,6 +22,7 @@ export default function useRemoteConfig() {
           close_duration: 18,
           show_review_popup: false,
           daily_free_tries: 1,
+          api_key: "",
         })
       )
       .then(() => {
@@ -33,11 +34,12 @@ export default function useRemoteConfig() {
         const closeDuration = remoteConfig.getNumber("close_duration");
         const showReviewPopup = remoteConfig.getBoolean("show_review_popup");
         const dailyFreeTries = remoteConfig.getNumber("daily_free_tries");
-
+        const apiKey = remoteConfig.getString("api_key");
         setShowOffer(showOffer);
         setCloseDuration(closeDuration);
         setShowReviewPopup(showReviewPopup);
         setDailyFreeTries(dailyFreeTries);
+        setApiKey(apiKey);
       })
       .catch((error) => {});
   }, []);

@@ -20,6 +20,8 @@ interface Store {
   setCloseDuration: (duration: number) => void;
   showReviewPopup: boolean;
   setShowReviewPopup: (show: boolean) => void;
+  apiKey: string;
+  setApiKey: (key: string) => void;
 }
 
 export const useStore = create<Store>((set) => ({
@@ -42,4 +44,6 @@ export const useStore = create<Store>((set) => ({
   setCloseDuration: (duration: number) => set({ closeDuration: duration }),
   showReviewPopup: false,
   setShowReviewPopup: (show: boolean) => set({ showReviewPopup: show }),
+  apiKey: "",
+  setApiKey: (key: string) => set({ apiKey: key }),
 }));
