@@ -17,7 +17,8 @@ const useAdapt = () => {
       try {
         const locale = "en";
         try {
-          await adapty.activate("public_live_GTSAGdVj.BGgKoTo4Q88NKnjtMora");
+          console.log(process.env.ADAPTY_PUBLIC_KEY);
+          await adapty.activate(process.env.ADAPTY_PUBLIC_KEY);
         } catch (error) {
           console.error("Adapty activation failed");
           throw error;

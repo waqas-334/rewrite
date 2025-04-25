@@ -47,7 +47,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.deploy.grammarai",
-      "buildNumber": "1.1.3",
+      "buildNumber": "1.1.6",
       "googleServicesFile": "./GoogleService-Info.plist",
       "icon": "./assets/icon.png",
       "appStoreUrl": "https://apps.apple.com/us/app/ai-rewrite-spell-checker/id6739363989"
