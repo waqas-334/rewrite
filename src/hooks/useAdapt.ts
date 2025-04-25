@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { adapty, AdaptyProfile } from "react-native-adapty";
-import { createPaywallView } from "react-native-adapty/dist/ui";
 import { useStore } from "../store/useStore";
 
 const useAdapt = () => {
@@ -50,16 +49,16 @@ const useAdapt = () => {
           }
 
           products = await adapty.getPaywallProducts(paywall);
+          console.log({ products });
 
           if (products && products.length > 0) {
-            // console.log(`Successfully fetched ${products.length} products`);
+            console.log(`Successfully fetched ${products.length} products`);
             setProducts(products);
           } else {
-            // console.warn("No products found in paywall");
+            console.warn("No products found in paywall");
           }
         } catch (error: any) {
-          console.log(JSON.stringify(error));
-          // console.error("Paywall or products fetch failed");
+          console.error("Paywall or products fetch failed");
         }
 
         try {
@@ -68,7 +67,7 @@ const useAdapt = () => {
 
           if (!isPremium) {
             try {
-              // console.log("Checking for previous purchases...");
+              console.log("Checking for previous purchases...");
               adapty
                 .restorePurchases()
                 .then((profile) => {
@@ -76,25 +75,25 @@ const useAdapt = () => {
                     !!profile?.accessLevels?.premium?.isActive;
 
                   if (isSubscribed) {
-                    // console.log("Premium subscription restored");
+                    console.log("Premium subscription restored");
                     setIsPremiumUser(true);
                   }
                 })
                 .catch((error) => {
-                  // console.error("Error restoring purchases:", error);
+                  console.error("Error restoring purchases:", error);
                 });
             } catch (restoreError: any) {
-              // console.log("No purchases to restore");
+              console.log("No purchases to restore");
             }
           } else {
-            // console.log("Active premium subscription found");
+            console.log("Active premium subscription found");
             setIsPremiumUser(true);
           }
         } catch (profileError) {
-          // console.error("Profile check failed");
+          console.error("Profile check failed");
         }
       } catch (e) {
-        // console.error("Adapty initialization failed:", e);
+        console.error("Adapty initialization failed:", e);
       } finally {
         setInitLoading(false);
         setGlobalLoading(false);
