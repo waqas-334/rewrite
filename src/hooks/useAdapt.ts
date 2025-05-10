@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { adapty, AdaptyProfile } from "react-native-adapty";
+import {
+  adapty,
+  AdaptyProfile,
+  LogLevel,
+  AdaptyError,
+} from "react-native-adapty";
 import { useStore } from "../store/useStore";
 
 const useAdapt = () => {

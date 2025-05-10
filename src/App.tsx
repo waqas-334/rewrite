@@ -31,6 +31,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 initializeClarity();
 
 export default function App() {
+  console.log("App started");
   useAdjust();
   const { isPremiumUser, initLoading } = useAdapt();
   const { appLoading, showSubscription } = useInitApp();
