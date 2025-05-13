@@ -31,7 +31,6 @@
     "react": "19.0.0",
     "react-native": "0.79.2",
     "react-native-adapty": "^3.0.2-canary.0",
-    "react-native-adjust": "^5.0.3",
     "react-native-circular-progress-indicator": "^4.4.2",
     "react-native-clarity": "^4.0.4",
     "react-native-dotenv": "^3.4.11",

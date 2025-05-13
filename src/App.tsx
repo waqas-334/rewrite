@@ -8,7 +8,6 @@ import useAdapt from "./hooks/useAdapt";
 import FlashMessage from "react-native-flash-message";
 import Offer from "./screens/Offer";
 import useInitApp from "./hooks/useInitApp";
-import useAdjust from "./hooks/useAdjust";
 import { initializeClarity } from "./configs/clarity";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import firebase from "@react-native-firebase/app";
@@ -45,8 +44,6 @@ export default function App() {
       console.log("Firebase already initialized");
     }
   }, []);
-
-  useAdjust();
   const { isPremiumUser, initLoading } = useAdapt();
   const { appLoading, showSubscription } = useInitApp();
 
