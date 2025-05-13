@@ -24,6 +24,8 @@ import CheckIcon from "@/components/icon/CheckIcon";
 import { LinearGradient } from "expo-linear-gradient";
 import CircularProgress from "react-native-circular-progress-indicator";
 
+import { PRIVACY_POLICY_URL, TERMS_OF_SERVICE_URL } from "@/configs/constants";
+
 const { width } = Dimensions.get("window");
 const starsHeight = width / (1152 / 600);
 
@@ -488,16 +490,12 @@ const SubscriptionScreen = () => {
 
             <View style={styles.footer}>
               <TouchableOpacity
-                onPress={() =>
-                  Linking.openURL("https://deployglobal.ee/corrector/terms")
-                }
+                onPress={() => Linking.openURL(TERMS_OF_SERVICE_URL)}
               >
                 <Text style={styles.footerLink}>{t("termsOfUse")}</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() =>
-                  Linking.openURL("https://deployglobal.ee/corrector/privacy")
-                }
+                onPress={() => Linking.openURL(PRIVACY_POLICY_URL)}
               >
                 <Text style={styles.footerLink}>{t("privacyPolicy")}</Text>
               </TouchableOpacity>
