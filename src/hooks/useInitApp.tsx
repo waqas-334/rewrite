@@ -13,13 +13,6 @@ const useInitApp = () => {
 
   const checkAppLaunched = async () => {
     const appLaunched = await AsyncStorage.getItem("appLaunched");
-    const today = new Date();
-    const targetDate = new Date("2025-02-06");
-
-    if (today < targetDate) {
-      setShowSubscription(false);
-      return;
-    }
 
     if (!appLaunched) {
       setShowSubscription(true);
