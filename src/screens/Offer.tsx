@@ -20,6 +20,7 @@ import { showMessage } from "react-native-flash-message";
 import { useTranslation } from "@/i18n";
 import CheckIcon from "@/components/icon/CheckIcon";
 import { LinearGradient } from "expo-linear-gradient";
+import AnalyticsLogger from "@/hooks/remoteLogger";
 
 const Offer = ({ route }: { route: any }) => {
   const navigation = useNavigation();
@@ -57,6 +58,7 @@ const Offer = ({ route }: { route: any }) => {
   };
 
   const handlePurchase = async () => {
+    AnalyticsLogger.logEvent("offer_handlePurchase");
     setPurchaseLoading(true);
     try {
       if (!product) {
@@ -66,9 +68,11 @@ const Offer = ({ route }: { route: any }) => {
       const purchaseResult = await adapty.makePurchase(product);
 
       if (purchaseResult?.accessLevels?.premium?.isActive) {
+        AnalyticsLogger.logEvent("offer_handlePurchase_success");
         navigation.goBack();
       }
     } catch (error: any) {
+      AnalyticsLogger.logEvent("offer_handlePurchase_error");
       console.error("Purchase failed:", error);
       showMessage({
         message: "Purchase Failed",
@@ -81,6 +85,7 @@ const Offer = ({ route }: { route: any }) => {
   };
 
   const handleGoBack = () => {
+    AnalyticsLogger.logEvent("offer_handleGoBack");
     Alert.alert("Sure closing? 💔", "It's our biggest discount ever.", [
       {
         text: "Close the discount",

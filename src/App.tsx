@@ -11,6 +11,8 @@ import useInitApp from "./hooks/useInitApp";
 import useAdjust from "./hooks/useAdjust";
 import { initializeClarity } from "./configs/clarity";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import firebase from "@react-native-firebase/app";
+import { useEffect } from "react";
 
 // SplashScreen.preventAutoHideAsync();
 
@@ -32,6 +34,18 @@ initializeClarity();
 
 export default function App() {
   console.log("App started");
+
+  useEffect(() => {
+    // Check if Firebase is already initialized
+    if (!firebase.apps.length) {
+      // Initialize Firebase
+      firebase.initializeApp();
+      console.log("Firebase initialized");
+    } else {
+      console.log("Firebase already initialized");
+    }
+  }, []);
+
   useAdjust();
   const { isPremiumUser, initLoading } = useAdapt();
   const { appLoading, showSubscription } = useInitApp();

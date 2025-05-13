@@ -32,6 +32,7 @@ import CheckButton from "@/components/home/CheckButton";
 import ResultFooter from "@/components/home/ResultFooter";
 import MoreModalContainer from "@/components/home/MoreModalContainer";
 import InputContainer from "@/components/home/InputContainer";
+import AnalyticsLogger from "@/hooks/remoteLogger";
 
 const Home = ({ navigation }: { navigation: any }) => {
   const [text, setText] = useState("");
@@ -57,6 +58,7 @@ const Home = ({ navigation }: { navigation: any }) => {
   const { getColor } = useSystemColor();
 
   const showReviewAlert = () => {
+    AnalyticsLogger.logEvent("home_showReviewAlert");
     Alert.alert(
       "Are you enjoying our app?",
       "Your feedback help us improve. Let us know if you're enjoying our app!",
@@ -78,6 +80,8 @@ const Home = ({ navigation }: { navigation: any }) => {
   const handleTrialPress = () => {
     const currentDate = new Date().getTime();
 
+    AnalyticsLogger.logEvent("home_handleTrialPress");
+
     const timePassed = offerTimeLeft ? currentDate - offerTimeLeft : 9999999900;
 
     if (timePassed > 2 * 60 * 1000 || !showOffer) {
@@ -92,10 +96,12 @@ const Home = ({ navigation }: { navigation: any }) => {
   };
 
   const handleClear = () => {
+    AnalyticsLogger.logEvent("home_handleClear");
     setText("");
     closeButtonOpacity.value = withTiming(0, { duration: 200 });
     setShowResult(false);
   };
+
   const handleCheck = async () => {
     if (text.length === 0) {
       return;
@@ -107,6 +113,7 @@ const Home = ({ navigation }: { navigation: any }) => {
       setIsLoading(true);
 
       if (!isPremiumUser) {
+        AnalyticsLogger.logEvent("home_handleCheck_no_premium");
         const today = new Date().toDateString();
         const storedData = await AsyncStorage.getItem("grammarChecks");
         checks = storedData ? JSON.parse(storedData) : {};
@@ -114,6 +121,7 @@ const Home = ({ navigation }: { navigation: any }) => {
         const todayChecks = checks[today] || 0;
 
         if (todayChecks >= freeTries) {
+          AnalyticsLogger.logEvent("home_handleCheck_no_more_tries");
           Alert.alert(t("limitReachedTitle"), t("limitReachedMessage"), [
             {
               text: t("upgradeToPro"),
@@ -130,15 +138,19 @@ const Home = ({ navigation }: { navigation: any }) => {
 
         checks[today] = todayChecks + 1;
         AsyncStorage.setItem("grammarChecks", JSON.stringify(checks));
+      } else {
+        AnalyticsLogger.logEvent("home_handleCheck_premium");
       }
 
       inputRef?.current?.blur?.();
       Keyboard.dismiss();
 
       const result = await checkGrammar(text);
+      AnalyticsLogger.logEvent("home_handleCheck_success");
       setResult(result);
       setShowResult(true);
     } catch (error) {
+      AnalyticsLogger.logEvent("home_handleCheck_error");
       console.error("Error:", error);
     } finally {
       setIsLoading(false);
@@ -165,6 +177,7 @@ const Home = ({ navigation }: { navigation: any }) => {
   };
 
   const handleCopy = async () => {
+    AnalyticsLogger.logEvent("home_handleCopy");
     try {
       await Clipboard.setStringAsync(result);
       showMessage({
@@ -209,6 +222,7 @@ const Home = ({ navigation }: { navigation: any }) => {
     if (hasStoreReviewAction) {
       await StoreReview.requestReview();
     } else {
+      AnalyticsLogger.logEvent("home_reviewApp_open_app_store");
       Linking.openURL(
         "https://apps.apple.com/us/app/ai-rewrite-spell-checker/id6739363989?action=write-review"
       );
