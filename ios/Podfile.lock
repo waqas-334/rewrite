@@ -5,11 +5,6 @@ PODS:
     - AdaptyUI (= 3.4.2)
   - AdaptyUI (3.4.2):
     - Adapty (= 3.4.2)
-  - Adjust (5.1.1):
-    - Adjust/Adjust (= 5.1.1)
-  - Adjust/Adjust (5.1.1):
-    - AdjustSignature (= 3.35.2)
-  - AdjustSignature (3.35.2)
   - boost (1.84.0)
   - Clarity (3.0.7)
   - DoubleConversion (1.1.6)
@@ -1791,9 +1786,6 @@ PODS:
     - AdaptyPlugin (= 3.4.2)
     - AdaptyUI (= 3.4.2)
     - React
-  - react-native-adjust (5.1.0):
-    - Adjust (= 5.1.1)
-    - React-Core
   - react-native-clarity (4.2.2):
     - Clarity (= 3.0.7)
     - RCT-Folly
@@ -2549,7 +2541,6 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - react-native-adapty-sdk (from `../node_modules/react-native-adapty`)
-  - react-native-adjust (from `../node_modules/react-native-adjust`)
   - "react-native-clarity (from `../node_modules/@microsoft/react-native-clarity`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
@@ -2599,8 +2590,6 @@ SPEC REPOS:
     - Adapty
     - AdaptyPlugin
     - AdaptyUI
-    - Adjust
-    - AdjustSignature
     - Clarity
     - Firebase
     - FirebaseABTesting
@@ -2738,8 +2727,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
   react-native-adapty-sdk:
     :path: "../node_modules/react-native-adapty"
-  react-native-adjust:
-    :path: "../node_modules/react-native-adjust"
   react-native-clarity:
     :path: "../node_modules/@microsoft/react-native-clarity"
   react-native-safe-area-context:
@@ -2831,8 +2818,6 @@ SPEC CHECKSUMS:
   Adapty: b76f43cf00844ee057c48327d0891f0ea0e9fdec
   AdaptyPlugin: ef41094c25adb05824aa8b36066c32643b1d3eaa
   AdaptyUI: 0a3c81424acc3de4c10a36c3e639f24791dea63f
-  Adjust: 5f5e998cf1446d44d93f91ec8b7b7dd40eaa922d
-  AdjustSignature: 23b9e5d4adcadffc303bb6b410fde617dd88504f
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
   Clarity: 36b23457f3b8a2f95a7a193c18b42136ce34c31b
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
@@ -2907,7 +2892,6 @@ SPEC CHECKSUMS:
   React-Mapbuffer: da73f30b000114058d6bc41490dcce204a8ede32
   React-microtasksnativemodule: 444c5701aece79629bb73bd9e7ad8937ae65238c
   react-native-adapty-sdk: aecd0d98192184bda5745f6f3b5b1b3fed3ba744
-  react-native-adjust: 797a7c92ef21b156b87ce96e8074b7d0ded8066c
   react-native-clarity: e91c6a151cd2af068cb3be2eef435563f097b02a
   react-native-safe-area-context: 5928d84c879db2f9eb6969ca70e68f58623dbf25
   React-NativeModulesApple: df8e5bc59e78ca3040ffbf41336889f3bd0fad68
