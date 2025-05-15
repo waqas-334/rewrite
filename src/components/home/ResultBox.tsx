@@ -64,7 +64,7 @@ const ResultBox: React.FC<ResultBoxProps> = ({
             onPress={() => {
               Share.share({
                 url: "https://apps.apple.com/us/app/ai-rewrite-spell-checker/id6739363989",
-                message: result,
+                message: `${result}\n\nCheck out this awesome app.`,
               });
             }}
           >
