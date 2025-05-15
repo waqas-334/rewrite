@@ -25,7 +25,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import CircularProgress from "react-native-circular-progress-indicator";
 
 import { PRIVACY_POLICY_URL, TERMS_OF_SERVICE_URL } from "@/configs/constants";
-import AnalyticsLogger from "@/hooks/remoteLogger";
+import AnalyticsLogger from "@/hooks/logger/remoteLogger";
 
 const { width } = Dimensions.get("window");
 const starsHeight = width / (1152 / 600);
@@ -67,7 +67,7 @@ const SubscriptionScreen = () => {
     productType: "weekly" | "monthly" | "annual_with_trial"
   ) => {
     setPurchaseLoading(productType);
-    AnalyticsLogger.logEvent("handlePurchase_pt_" + productType);
+    AnalyticsLogger.logEvent("subSrn_hP_pt_" + productType);
 
     try {
       const product = products.find((p) => {
@@ -82,20 +82,24 @@ const SubscriptionScreen = () => {
         );
       });
 
-      AnalyticsLogger.logEvent("handlePurchase_p_" + product);
-
       if (!product) {
-        AnalyticsLogger.logEvent("handlePurchase_no_p_" + productType);
+        AnalyticsLogger.logEvent("subSrn_hP_no_p_" + productType);
         throw new Error(`No ${productType} product found`);
       }
 
-      AnalyticsLogger.logEvent("handlePurchase_mp_" + product);
+      AnalyticsLogger.logProductEvent(
+        "subS_hP_mkePrchz",
+        product.vendorProductId
+      );
 
       const purchaseResult = await adapty.makePurchase(product);
 
       if (purchaseResult?.accessLevels?.premium?.isActive) {
         setIsPremiumUser(true);
-        AnalyticsLogger.logEvent("handlePurchase_ps_" + product);
+        AnalyticsLogger.logProductEvent(
+          "subS_hP_prchzSucss",
+          product.vendorProductId
+        );
         navigation.navigate("Home");
         console.log(`Successfully purchased ${productType} plan`);
       } else {
@@ -105,10 +109,13 @@ const SubscriptionScreen = () => {
           type: "danger",
         });
 
-        AnalyticsLogger.logEvent("handlePurchase_pf_" + product);
+        AnalyticsLogger.logProductEvent(
+          "subS_hP_prchzFail",
+          product.vendorProductId
+        );
       }
     } catch (error: any) {
-      AnalyticsLogger.logEvent("handlePurchase_pf_2_" + productType);
+      AnalyticsLogger.logEvent("subS_hP_prchzFail_2_" + productType);
       console.error(`Purchase failed for ${productType}:`, error);
     } finally {
       setPurchaseLoading(null);
@@ -134,7 +141,7 @@ const SubscriptionScreen = () => {
   };
 
   const handleRestore = async () => {
-    AnalyticsLogger.logEvent("handleRestore");
+    AnalyticsLogger.logEvent("subS_hndlRstr");
     try {
       const result = await adapty.restorePurchases();
       if (result?.accessLevels?.premium?.isActive) {
@@ -144,7 +151,7 @@ const SubscriptionScreen = () => {
           description: t("premiumRestored"),
           type: "success",
         });
-        AnalyticsLogger.logEvent("handleRestore_success");
+        AnalyticsLogger.logEvent("subS_hndlRstr_success");
       } else {
         showMessage({
           message: t("noPurchases"),
@@ -152,7 +159,7 @@ const SubscriptionScreen = () => {
           type: "info",
         });
       }
-      AnalyticsLogger.logEvent("handleRestore_no_restore");
+      AnalyticsLogger.logEvent("subS_hndlRstr_no_restore");
     } catch (error) {
       console.error("Restore failed:", error);
       showMessage({
@@ -160,7 +167,7 @@ const SubscriptionScreen = () => {
         description: t("restoreFailedMessage"),
         type: "danger",
       });
-      AnalyticsLogger.logEvent("handleRestore_restore_failed");
+      AnalyticsLogger.logEvent("subS_hndlRstr_failed");
     }
   };
 

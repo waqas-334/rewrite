@@ -32,7 +32,7 @@ import CheckButton from "@/components/home/CheckButton";
 import ResultFooter from "@/components/home/ResultFooter";
 import MoreModalContainer from "@/components/home/MoreModalContainer";
 import InputContainer from "@/components/home/InputContainer";
-import AnalyticsLogger from "@/hooks/remoteLogger";
+import AnalyticsLogger from "@/hooks/logger/remoteLogger";
 
 const Home = ({ navigation }: { navigation: any }) => {
   const [text, setText] = useState("");

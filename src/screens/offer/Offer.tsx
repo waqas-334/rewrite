@@ -20,7 +20,7 @@ import { showMessage } from "react-native-flash-message";
 import { useTranslation } from "@/i18n";
 import CheckIcon from "@/components/icon/CheckIcon";
 import { LinearGradient } from "expo-linear-gradient";
-import AnalyticsLogger from "@/hooks/remoteLogger";
+import AnalyticsLogger from "@/hooks/logger/remoteLogger";
 
 const Offer = ({ route }: { route: any }) => {
   const navigation = useNavigation();
