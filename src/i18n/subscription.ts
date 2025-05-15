@@ -27,6 +27,9 @@ const subscriptionStrings: any = {
     feature1: "Gain unlimited access to all features",
     feature2: "Enjoy faster and higher-quality results",
     feature3: "Unlock the most advanced AI model",
+    purchaseFailed: "Purchase Failed",
+    purchaseFailedMessage:
+      "Unable to complete purchase. Please try again later.",
   },
   fil: {
     restore: "Ibalik",
@@ -57,6 +60,9 @@ const subscriptionStrings: any = {
     feature1: "Magkaroon ng walang limitasyong access sa lahat ng features",
     feature2: "Mag-enjoy ng mas mabilis at mas mataas na kalidad na resulta",
     feature3: "I-unlock ang pinakamaunlad na AI model",
+    purchaseFailed: "Hindi Nagtagumpay ang Pagbili",
+    purchaseFailedMessage:
+      "Hindi maipagbabayad ang pagbili. Pakisubukan muli mamaya.",
   },
   fr: {
     restore: "Restaurer",
@@ -87,6 +93,9 @@ const subscriptionStrings: any = {
     feature1: "Accédez de manière illimitée à toutes les fonctionnalités",
     feature2: "Profitez de résultats plus rapides et de meilleure qualité",
     feature3: "Débloquez le modèle d'IA le plus avancé",
+    purchaseFailed: "Échec de la transaction",
+    purchaseFailedMessage:
+      "Impossible de finaliser la transaction. Veuillez réessayer plus tard.",
   },
   de: {
     restore: "Wiederherstellen",
@@ -117,6 +126,9 @@ const subscriptionStrings: any = {
     feature1: "Erhalten Sie unbegrenzten Zugriff auf alle Funktionen",
     feature2: "Genießen Sie schnellere und qualitativ hochwertigere Ergebnisse",
     feature3: "Schalten Sie das fortschrittlichste KI-Modell frei",
+    purchaseFailed: "Transaktion fehlgeschlagen",
+    purchaseFailedMessage:
+      "Transaktion konnte nicht abgeschlossen werden. Bitte versuchen Sie es später erneut.",
   },
   it: {
     restore: "Ripristina",
@@ -147,6 +159,9 @@ const subscriptionStrings: any = {
     feature1: "Ottieni accesso illimitato a tutte le funzionalità",
     feature2: "Goditi risultati più veloci e di qualità superiore",
     feature3: "Sblocca il modello di IA più avanzato",
+    purchaseFailed: "Transazione fallita",
+    purchaseFailedMessage:
+      "Impossibile completare la transazione. Per favore, riprova più tardi.",
   },
   ja: {
     restore: "復元",
@@ -175,6 +190,9 @@ const subscriptionStrings: any = {
     feature1: "すべての機能への無制限アクセスを獲得",
     feature2: "より速く、より高品質な結果を体験",
     feature3: "最先端のAIモデルをアンロック",
+    purchaseFailed: "購入に失敗しました",
+    purchaseFailedMessage:
+      "購入を完了できませんでした。後でもう一度お試しください。",
   },
   ko: {
     restore: "복원",
@@ -204,6 +222,9 @@ const subscriptionStrings: any = {
     feature1: "모든 기능에 무제한 액세스",
     feature2: "더 빠르고 높은 품질의 결과 경험",
     feature3: "가장 진보된 AI 모델 잠금 해제",
+    purchaseFailed: "구매 실패",
+    purchaseFailedMessage:
+      "구매를 완료할 수 없습니다. 나중에 다시 시도해 주세요.",
   },
   ms: {
     restore: "Pulihkan",
@@ -234,6 +255,9 @@ const subscriptionStrings: any = {
     feature1: "Dapatkan akses tanpa had ke semua ciri",
     feature2: "Nikmati hasil yang lebih cepat dan berkualiti tinggi",
     feature3: "Buka kunci model AI yang paling canggih",
+    purchaseFailed: "Pembelian Gagal",
+    purchaseFailedMessage:
+      "Tidak dapat menyelesaikan pembelian. Silakan coba lagi nanti.",
   },
   pl: {
     restore: "Przywróć",
@@ -264,6 +288,9 @@ const subscriptionStrings: any = {
     feature1: "Uzyskaj nieograniczony dostęp do wszystkich funkcji",
     feature2: "Ciesz się szybszymi i lepszej jakości wynikami",
     feature3: "Odblokuj najbardziej zaawansowany model AI",
+    purchaseFailed: "Płatność nie powiodła się",
+    purchaseFailedMessage:
+      "Nie udało się zapłacić. Proszę spróbować ponownie później.",
   },
   pt: {
     restore: "Restaurar",
@@ -294,6 +321,8 @@ const subscriptionStrings: any = {
     feature1: "Obtenha acesso ilimitado a todos os recursos",
     feature2: "Desfrute de resultados mais rápidos e de maior qualidade",
     feature3: "Desbloqueie o modelo de IA mais avançado",
+    purchaseFailed: "Pagar Gagal",
+    purchaseFailedMessage: "Tidak dapat membayar. Silakan coba lagi nanti.",
   },
   ru: {
     restore: "Восстановить",
@@ -324,6 +353,8 @@ const subscriptionStrings: any = {
     feature1: "Получите неограниченный доступ ко всем функциям",
     feature2: "Наслаждайтесь более быстрыми и качественными результатами",
     feature3: "Разблокируйте самую продвинутую модель ИИ",
+    purchaseFailed: "Ошибка при оплате",
+    purchaseFailedMessage: "Не удалось оплатить. Пожалуйста, попробуйте позже.",
   },
   zh: {
     restore: "恢复",
@@ -352,6 +383,8 @@ const subscriptionStrings: any = {
     feature1: "获得所有功能的无限访问权限",
     feature2: "享受更快速和更高品质的成果",
     feature3: "解锁最先进的人工智能模型",
+    purchaseFailed: "支付失败",
+    purchaseFailedMessage: "无法完成支付。请稍后重试。",
   },
   es: {
     restore: "Restaurar",
@@ -382,6 +415,9 @@ const subscriptionStrings: any = {
     feature1: "Obtén acceso ilimitado a todas las funciones",
     feature2: "Disfruta de resultados más rápidos y de mayor calidad",
     feature3: "Desbloquea el modelo de IA más avanzado",
+    purchaseFailed: "Pago fallido",
+    purchaseFailedMessage:
+      "No se pudo completar el pago. Por favor, inténtalo más tarde.",
   },
   th: {
     restore: "กู้คืน",
@@ -410,6 +446,8 @@ const subscriptionStrings: any = {
     feature1: "รับสิทธิ์การเข้าถึงฟีเจอร์ทั้งหมดแบบไม่จำกัด",
     feature2: "เพลิดเพลินกับผลลัพธ์ที่เร็วขึ้นและมีคุณภาพสูงขึ้น",
     feature3: "ปลดล็อกโมเดล AI ที่ล้ำสมัยที่สุด",
+    purchaseFailed: "การชำระเงินล้มเหลว",
+    purchaseFailedMessage: "ไม่สามารถชำระเงินได้ กรุณาลองใหม่ภายหลัง",
   },
   "zh-Hant": {
     restore: "恢復",
@@ -438,6 +476,8 @@ const subscriptionStrings: any = {
     feature1: "獲得所有功能的無限訪問權限",
     feature2: "享受更快速和更高品質的結果",
     feature3: "解鎖最先進的人工智能模型",
+    purchaseFailed: "支付失敗",
+    purchaseFailedMessage: "無法完成支付。請稍後重試。",
   },
 };
 
