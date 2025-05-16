@@ -10,6 +10,7 @@ import {
   Keyboard,
   Linking,
   Alert,
+  Share,
 } from "react-native";
 import { PasteIcon, CloseIcon } from "@/components/icon";
 import * as Clipboard from "expo-clipboard";
@@ -33,6 +34,7 @@ import ResultFooter from "@/components/home/ResultFooter";
 import MoreModalContainer from "@/components/home/MoreModalContainer";
 import InputContainer from "@/components/home/InputContainer";
 import AnalyticsLogger from "@/hooks/logger/remoteLogger";
+import { HOME_EVENTS, MORE_MODAL_EVENTS } from "../../utils/events/events";
 
 const Home = ({ navigation }: { navigation: any }) => {
   const [text, setText] = useState("");
@@ -58,7 +60,6 @@ const Home = ({ navigation }: { navigation: any }) => {
   const { getColor } = useSystemColor();
 
   const showReviewAlert = () => {
-    AnalyticsLogger.logEvent("home_showReviewAlert");
     Alert.alert(
       "Are you enjoying our app?",
       "Your feedback help us improve. Let us know if you're enjoying our app!",
@@ -67,6 +68,7 @@ const Home = ({ navigation }: { navigation: any }) => {
           text: "Not really",
           onPress: () => {
             // Linking.openURL("https://deployglobal.ee/support");
+            AnalyticsLogger.logEvent(HOME_EVENTS.REVIEW.NOT_REALLY);
           },
         },
         {
@@ -80,7 +82,7 @@ const Home = ({ navigation }: { navigation: any }) => {
   const handleTrialPress = () => {
     const currentDate = new Date().getTime();
 
-    AnalyticsLogger.logEvent("home_handleTrialPress");
+    AnalyticsLogger.logEvent(HOME_EVENTS.UPGRADE);
 
     const timePassed = offerTimeLeft ? currentDate - offerTimeLeft : 9999999900;
 
@@ -96,7 +98,7 @@ const Home = ({ navigation }: { navigation: any }) => {
   };
 
   const handleClear = () => {
-    AnalyticsLogger.logEvent("home_handleClear");
+    AnalyticsLogger.logEvent(HOME_EVENTS.HANDLE_CLEAR);
     setText("");
     closeButtonOpacity.value = withTiming(0, { duration: 200 });
     setShowResult(false);
@@ -113,7 +115,7 @@ const Home = ({ navigation }: { navigation: any }) => {
       setIsLoading(true);
 
       if (!isPremiumUser) {
-        AnalyticsLogger.logEvent("home_handleCheck_no_premium");
+        AnalyticsLogger.logEvent(HOME_EVENTS.HANDLE_CHECK_NO_PREMIUM);
         const today = new Date().toDateString();
         const storedData = await AsyncStorage.getItem("grammarChecks");
         checks = storedData ? JSON.parse(storedData) : {};
@@ -121,7 +123,7 @@ const Home = ({ navigation }: { navigation: any }) => {
         const todayChecks = checks[today] || 0;
 
         if (todayChecks >= freeTries) {
-          AnalyticsLogger.logEvent("home_handleCheck_no_more_tries");
+          AnalyticsLogger.logEvent(HOME_EVENTS.HANDLE_CHECK_NO_MORE_TRIES);
           Alert.alert(t("limitReachedTitle"), t("limitReachedMessage"), [
             {
               text: t("upgradeToPro"),
@@ -139,18 +141,18 @@ const Home = ({ navigation }: { navigation: any }) => {
         checks[today] = todayChecks + 1;
         AsyncStorage.setItem("grammarChecks", JSON.stringify(checks));
       } else {
-        AnalyticsLogger.logEvent("home_handleCheck_premium");
+        AnalyticsLogger.logEvent(HOME_EVENTS.HANDLE_CHECK_PREMIUM);
       }
 
       inputRef?.current?.blur?.();
       Keyboard.dismiss();
 
       const result = await checkGrammar(text);
-      AnalyticsLogger.logEvent("home_handleCheck_success");
+      AnalyticsLogger.logEvent(HOME_EVENTS.HANDLE_CHECK_SUCCESS);
       setResult(result);
       setShowResult(true);
     } catch (error) {
-      AnalyticsLogger.logEvent("home_handleCheck_error");
+      AnalyticsLogger.logEvent(HOME_EVENTS.HANDLE_CHECK_ERROR);
       console.error("Error:", error);
     } finally {
       setIsLoading(false);
@@ -165,6 +167,7 @@ const Home = ({ navigation }: { navigation: any }) => {
         );
 
         if (seenReviewCount === 2) {
+          AnalyticsLogger.logEvent(HOME_EVENTS.REVIEW.SHOW);
           showReviewAlert();
         }
 
@@ -177,7 +180,7 @@ const Home = ({ navigation }: { navigation: any }) => {
   };
 
   const handleCopy = async () => {
-    AnalyticsLogger.logEvent("home_handleCopy");
+    AnalyticsLogger.logEvent(HOME_EVENTS.HANDLE_COPY);
     try {
       await Clipboard.setStringAsync(result);
       showMessage({
@@ -193,7 +196,20 @@ const Home = ({ navigation }: { navigation: any }) => {
         },
       });
     } catch (error) {
+      AnalyticsLogger.logEvent(HOME_EVENTS.HANDLE_COPY_FAILED);
       console.error("Failed to copy text:", error);
+    }
+  };
+
+  const handleShare = async () => {
+    AnalyticsLogger.logEvent(HOME_EVENTS.HANDLE_SHARE);
+    try {
+      await Share.share({
+        url: "https://apps.apple.com/us/app/ai-rewrite-spell-checker/id6739363989",
+        message: `${result}\n\nCheck out this awesome app.`,
+      });
+    } catch (error) {
+      console.error("Error sharing:", error);
     }
   };
 
@@ -221,8 +237,9 @@ const Home = ({ navigation }: { navigation: any }) => {
   const reviewApp = async () => {
     if (hasStoreReviewAction) {
       await StoreReview.requestReview();
+      AnalyticsLogger.logEvent(HOME_EVENTS.REVIEW.IN_APP_REVIEW_SHOWN);
     } else {
-      AnalyticsLogger.logEvent("home_reviewApp_open_app_store");
+      AnalyticsLogger.logEvent(HOME_EVENTS.REVIEW.OPEN_APP_STORE);
       Linking.openURL(
         "https://apps.apple.com/us/app/ai-rewrite-spell-checker/id6739363989?action=write-review"
       );
@@ -254,7 +271,10 @@ const Home = ({ navigation }: { navigation: any }) => {
     >
       <>
         <Header
-          onMenuPress={() => setShowMoreModal(true)}
+          onMenuPress={() => {
+            AnalyticsLogger.logEvent(HOME_EVENTS.OPEN_MORE_MODAL);
+            setShowMoreModal(true);
+          }}
           onTrialPress={handleTrialPress}
         />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -292,6 +312,7 @@ const Home = ({ navigation }: { navigation: any }) => {
                   isKeyboardFocused={isKeyboardFocused}
                   animatedResultStyle={animatedResultStyle}
                   onCopy={handleCopy}
+                  onShare={handleShare}
                 />
               )}
               {showResult ? (
@@ -312,7 +333,10 @@ const Home = ({ navigation }: { navigation: any }) => {
           onClose={() => setShowMoreModal(false)}
           navigation={navigation}
           handleTrialPress={handleTrialPress}
-          showReviewAlert={showReviewAlert}
+          showReviewAlert={() => {
+            AnalyticsLogger.logEvent(MORE_MODAL_EVENTS.RATE);
+            showReviewAlert();
+          }}
         />
       </>
     </SafeAreaView>

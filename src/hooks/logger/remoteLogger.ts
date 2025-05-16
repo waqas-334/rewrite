@@ -6,7 +6,6 @@ import { getProductShortName } from "./productLoggerHelper";
 class AnalyticsLogger {
   static async logEvent(eventName: string) {
     const normalisedEvent = replaceWithUnderscore(eventName);
-    console.log(`[Analytics] ${eventName} normalised to ${normalisedEvent}`);
     try {
       const analytics = getAnalytics();
 

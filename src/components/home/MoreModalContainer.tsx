@@ -1,6 +1,15 @@
 import React from "react";
 import { Share, Linking } from "react-native";
 import MoreModal from "@/components/MoreModal";
+import {
+  APP_STORE_URL,
+  PRIVACY_POLICY_URL,
+  TERMS_OF_SERVICE_URL,
+  SUPPORT_EMAIL,
+  SUPPORT_URL,
+} from "@/configs/constants";
+import { MORE_MODAL_EVENTS } from "@/utils/events/events";
+import AnalyticsLogger from "@/hooks/logger/remoteLogger";
 
 interface MoreModalContainerProps {
   visible: boolean;
@@ -18,35 +27,37 @@ const MoreModalContainer = ({
   showReviewAlert,
 }: MoreModalContainerProps) => {
   const handleSharePress = () => {
+    AnalyticsLogger.logEvent(MORE_MODAL_EVENTS.SHARE);
     Share.share({
       message: "AI Rewrite & Spell Checker app!",
-      url: "https://apps.apple.com/app/id6739363989",
+      url: APP_STORE_URL,
     }).catch((e) => console.log(e));
   };
 
   const handlePrivacyPress = () => {
-    Linking.openURL("https://deployglobal.ee/corrector/privacy");
+    Linking.openURL(PRIVACY_POLICY_URL);
   };
 
   const handleSupportPress = async () => {
     try {
-      if (await Linking.canOpenURL("mailto:rewrite@deployglobal.ee")) {
+      if (await Linking.canOpenURL(`mailto:${SUPPORT_EMAIL}`)) {
         Linking.openURL(
-          "mailto:rewrite@deployglobal.ee?subject=AI%20Rewrite%20Support"
+          `mailto:${SUPPORT_EMAIL}?subject=AI%20Rewrite%20Support`
         );
       } else {
-        Linking.openURL("https://deployglobal.ee/support");
+        Linking.openURL(SUPPORT_URL);
       }
     } catch (error) {
-      Linking.openURL("https://deployglobal.ee/support");
+      Linking.openURL(SUPPORT_URL);
     }
   };
 
   const handleTermsPress = () => {
-    Linking.openURL("https://deployglobal.ee/corrector/terms");
+    Linking.openURL(TERMS_OF_SERVICE_URL);
   };
 
   const handleTrialModalPress = () => {
+    AnalyticsLogger.logEvent(MORE_MODAL_EVENTS.UPGRADE);
     onClose();
     handleTrialPress();
   };

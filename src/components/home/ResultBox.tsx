@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Share,
-} from "react-native";
+import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { ShareIcon, CopyIcon } from "@/components/icon";
 import { useSystemColor } from "@/hooks/useSystemColor";
 import Animated from "react-native-reanimated";
@@ -15,6 +9,7 @@ interface ResultBoxProps {
   isKeyboardFocused: boolean;
   animatedResultStyle: any;
   onCopy: () => void;
+  onShare: () => void;
 }
 
 const ResultBox: React.FC<ResultBoxProps> = ({
@@ -22,6 +17,7 @@ const ResultBox: React.FC<ResultBoxProps> = ({
   isKeyboardFocused,
   animatedResultStyle,
   onCopy,
+  onShare,
 }) => {
   const { getColor } = useSystemColor();
 
@@ -61,12 +57,7 @@ const ResultBox: React.FC<ResultBoxProps> = ({
               styles.shareIconWrapper,
               { backgroundColor: getColor("backOpacity2") },
             ]}
-            onPress={() => {
-              Share.share({
-                url: "https://apps.apple.com/us/app/ai-rewrite-spell-checker/id6739363989",
-                message: `${result}\n\nCheck out this awesome app.`,
-              });
-            }}
+            onPress={onShare}
           >
             <ShareIcon width={20} height={20} color={getColor("grayOpacity")} />
           </TouchableOpacity>
