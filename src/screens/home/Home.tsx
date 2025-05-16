@@ -35,6 +35,7 @@ import MoreModalContainer from "@/components/home/MoreModalContainer";
 import InputContainer from "@/components/home/InputContainer";
 import AnalyticsLogger from "@/hooks/logger/remoteLogger";
 import { HOME_EVENTS, MORE_MODAL_EVENTS } from "../../utils/events/events";
+import { showReviewAlert } from "@/components/ReviewAlert";
 
 const Home = ({ navigation }: { navigation: any }) => {
   const [text, setText] = useState("");
@@ -58,26 +59,6 @@ const Home = ({ navigation }: { navigation: any }) => {
 
   const { checkGrammar } = useGrammar();
   const { getColor } = useSystemColor();
-
-  const showReviewAlert = () => {
-    Alert.alert(
-      "Are you enjoying our app?",
-      "Your feedback help us improve. Let us know if you're enjoying our app!",
-      [
-        {
-          text: "Not really",
-          onPress: () => {
-            // Linking.openURL("https://deployglobal.ee/support");
-            AnalyticsLogger.logEvent(HOME_EVENTS.REVIEW.NOT_REALLY);
-          },
-        },
-        {
-          text: "Yes, I love it!",
-          onPress: reviewApp,
-        },
-      ]
-    );
-  };
 
   const handleTrialPress = () => {
     const currentDate = new Date().getTime();
@@ -315,6 +296,7 @@ const Home = ({ navigation }: { navigation: any }) => {
                   onShare={handleShare}
                 />
               )}
+
               {showResult ? (
                 <ResultFooter
                   onClear={handleClear}
