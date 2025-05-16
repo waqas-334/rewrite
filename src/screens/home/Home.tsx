@@ -35,7 +35,7 @@ import MoreModalContainer from "@/components/home/MoreModalContainer";
 import InputContainer from "@/components/home/InputContainer";
 import AnalyticsLogger from "@/hooks/logger/remoteLogger";
 import { HOME_EVENTS, MORE_MODAL_EVENTS } from "../../utils/events/events";
-import { showReviewAlert } from "@/components/ReviewAlert";
+import { useReviewAlert } from "@/components/ReviewAlert";
 
 const Home = ({ navigation }: { navigation: any }) => {
   const [text, setText] = useState("");
@@ -51,14 +51,13 @@ const Home = ({ navigation }: { navigation: any }) => {
   const isPremiumUser = useStore((state) => state.isPremiumUser);
   const offerTimeLeft = useStore((state) => state.offerTimeLeft);
   const [isKeyboardFocused, setIsKeyboardFocused] = useState(false);
-  const [hasStoreReviewAction, setHasStoreReviewAction] = useState(false);
   const showOffer = useStore((state) => state.showOffer);
   const freeTries = useStore((state) => state.dailyFreeTries);
   const showReviewPopup = useStore((state) => state.showReviewPopup);
   const { t } = useTranslation("home");
-
   const { checkGrammar } = useGrammar();
   const { getColor } = useSystemColor();
+  const { showReviewAlert } = useReviewAlert();
 
   const handleTrialPress = () => {
     const currentDate = new Date().getTime();
@@ -201,31 +200,6 @@ const Home = ({ navigation }: { navigation: any }) => {
       resultAnim.value = withTiming(1, { duration: 200 });
     }
   }, [showResult]);
-
-  useEffect(() => {
-    const hasStoreReviewAction = async () => {
-      try {
-        const hasAction = await StoreReview.hasAction();
-        setHasStoreReviewAction(hasAction);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    hasStoreReviewAction();
-  }, []);
-
-  const reviewApp = async () => {
-    if (hasStoreReviewAction) {
-      await StoreReview.requestReview();
-      AnalyticsLogger.logEvent(HOME_EVENTS.REVIEW.IN_APP_REVIEW_SHOWN);
-    } else {
-      AnalyticsLogger.logEvent(HOME_EVENTS.REVIEW.OPEN_APP_STORE);
-      Linking.openURL(
-        "https://apps.apple.com/us/app/ai-rewrite-spell-checker/id6739363989?action=write-review"
-      );
-    }
-  };
 
   const closeButtonAnimatedStyle = useAnimatedStyle(() => ({
     opacity: closeButtonOpacity.value,

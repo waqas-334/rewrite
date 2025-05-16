@@ -1,13 +1,15 @@
+import homeStrings from "./home";
+import moreStrings from "./more";
 import subscriptionStrings from "./subscription";
 import offerStrings from "./offer";
-import moreStrings from "./more";
-import homeStrings from "./home";
+import reviewStrings from "./review";
 
-const strings: any = {
+const strings = {
+  home: homeStrings,
+  more: moreStrings,
   subscription: subscriptionStrings,
   offer: offerStrings,
-  more: moreStrings,
-  home: homeStrings,
+  review: reviewStrings,
 };
 
 export default strings;
